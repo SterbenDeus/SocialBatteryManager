@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="jscc_charcoal">#393f44</color>
+    <color name="jscc_gold_start">#c8a04a</color>
+    <color name="jscc_gold_end">#f3e085</color>
+    <color name="jscc_white">#ffffff</color>
+    <color name="jscc_light_gray">#e5e7eb</color>
+</resources>

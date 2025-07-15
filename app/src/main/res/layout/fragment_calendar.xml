@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/jscc_gold_start"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvCalendarTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/calendar_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="20dp"/>
+    <Button
+        android:id="@+id/btnAddCalendarEvent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_to_calendar"
+        android:backgroundTint="@color/jscc_charcoal"
+        android:textColor="@color/jscc_white"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"/>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp" />
+
+
+</LinearLayout>

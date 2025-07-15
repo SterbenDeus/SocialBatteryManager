@@ -1,0 +1,26 @@
+<resources>
+    <string name="social_energy_battery">Social Energy Battery</string>
+    <string name="test_battery">Test Battery</string>
+    <string name="energy_data">Energy Data</string>
+    <string name="capacity">Capacity</string>
+    <string name="remaining">Remaining</string>
+    <string name="est_to_target">Est. to Target</string>
+    <string name="battery_percent_65">65%</string>
+    <string name="remove_energy">- Remove Energy</string>
+    <string name="add_energy">+ Add Energy</string>
+    <string name="app_name">Social Battery Manager</string>
+    <string name="activities_title">Activities</string>
+    <string name="activities_empty">No activities yet. Tap the + button to add one!</string>
+    <string name="add_activity">+ Add Activity</string>
+    <string name="activity_name">Activity Name</string>
+    <string name="activity_type">Type</string>
+    <string name="activity_energy">Energy</string>
+    <string name="activity_people">People</string>
+    <string name="activity_mood">Mood</string>
+    <string name="activity_notes">Notes</string>
+    <string name="calendar_title">Calendar</string>
+    <string name="add_to_calendar">Add to Calendar</string>
+    
+
+
+</resources>

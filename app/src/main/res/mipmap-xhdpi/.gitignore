@@ -1,0 +1,22 @@
+# Gradle files
+.gradle/
+/build/
+/local.properties
+.idea/
+*.iml
+
+# Captures
+/captures/
+
+# Mac files
+.DS_Store
+
+# External native build
+.externalNativeBuild
+
+# Android Studio specific
+.cxx/
+.settings/
+.classpath
+.project
+.cache/

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="6dp">
+
+    <TextView android:id="@+id/tvName"   android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+    <TextView android:id="@+id/tvType"   android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+    <TextView android:id="@+id/tvEnergy" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+    <TextView android:id="@+id/tvPeople" android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+    <TextView android:id="@+id/tvMood"   android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+    <TextView android:id="@+id/tvNotes"  android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:textColor="@color/jscc_charcoal"/>
+</LinearLayout>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/jscc_light_gray"
+    android:padding="16dp">
+
+    <TextView
+        android:id="@+id/tvActivitiesTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activities_title"
+        android:textSize="22sp"
+        android:textStyle="bold"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Column headers -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="@color/jscc_white"
+        android:padding="8dp"
+        android:elevation="2dp"
+        android:layout_marginBottom="4dp">
+
+        <TextView android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:text="@string/activity_name" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/activity_type" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/activity_energy" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/activity_people" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+        <TextView android:layout_width="0dp" android:layout_weight="1" android:layout_height="wrap_content" android:text="@string/activity_mood" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+        <TextView android:layout_width="0dp" android:layout_weight="2" android:layout_height="wrap_content" android:text="@string/activity_notes" android:textStyle="bold" android:textColor="@color/jscc_charcoal" android:textSize="14sp" />
+    </LinearLayout>
+
+    <!-- Activities RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvActivities"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@color/jscc_white"
+        android:padding="4dp" />
+
+    <Button
+        android:id="@+id/btnAddActivity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_activity"
+        android:layout_gravity="center_horizontal"
+        android:backgroundTint="@color/jscc_gold_start"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_marginTop="12dp"/>
+</LinearLayout>
