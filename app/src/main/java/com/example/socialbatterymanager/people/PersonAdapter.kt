@@ -42,9 +42,18 @@ class PersonAdapter(
             tvEmail.visibility = if (person.email.isNullOrEmpty()) View.GONE else View.VISIBLE
             tvPhone.visibility = if (person.phone.isNullOrEmpty()) View.GONE else View.VISIBLE
 
-            // TODO: Load avatar image if available
-            // For now, use default icon
-            ivAvatar.setImageResource(R.drawable.ic_person)
+            // Load avatar image if available
+            if (!person.avatarPath.isNullOrEmpty()) {
+                try {
+                    val uri = android.net.Uri.parse(person.avatarPath)
+                    ivAvatar.setImageURI(uri)
+                } catch (e: Exception) {
+                    // If avatar can't be loaded, use default icon
+                    ivAvatar.setImageResource(R.drawable.ic_person)
+                }
+            } else {
+                ivAvatar.setImageResource(R.drawable.ic_person)
+            }
 
             itemView.setOnClickListener { onItemClick(person) }
             ivMore.setOnClickListener { onMoreClick(person) }

@@ -11,6 +11,8 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.socialbatterymanager.R
@@ -18,6 +20,11 @@ import com.example.socialbatterymanager.data.AppDatabase
 import com.example.socialbatterymanager.model.Person
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
+import java.io.File
+import java.io.IOException
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class EditPersonDialog(
     private val fragment: Fragment,
@@ -33,6 +40,16 @@ class EditPersonDialog(
     private lateinit var etPhone: TextInputEditText
     private lateinit var etNotes: TextInputEditText
     private var selectedImageUri: Uri? = null
+    
+    private val imagePickerLauncher: ActivityResultLauncher<Intent> = 
+        fragment.registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                result.data?.data?.let { uri ->
+                    selectedImageUri = uri
+                    ivAvatar.setImageURI(uri)
+                }
+            }
+        }
 
     fun show() {
         val view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_person, null)
@@ -53,7 +70,17 @@ class EditPersonDialog(
             etEmail.setText(it.email)
             etPhone.setText(it.phone)
             etNotes.setText(it.notes)
-            // TODO: Load avatar image
+            
+            // TODO: Load avatar image if available
+            if (!it.avatarPath.isNullOrEmpty()) {
+                try {
+                    val uri = Uri.parse(it.avatarPath)
+                    ivAvatar.setImageURI(uri)
+                    selectedImageUri = uri
+                } catch (e: Exception) {
+                    // If avatar can't be loaded, keep default
+                }
+            }
         }
 
         btnChangeAvatar.setOnClickListener {
@@ -78,9 +105,8 @@ class EditPersonDialog(
 
     private fun openImagePicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        // Note: This would need to be handled by the fragment using ActivityResultLauncher
-        // For now, just show a toast
-        Toast.makeText(context, "Image picker not implemented yet", Toast.LENGTH_SHORT).show()
+        intent.type = "image/*"
+        imagePickerLauncher.launch(intent)
     }
 
     private fun savePerson() {
@@ -93,20 +119,23 @@ class EditPersonDialog(
         val email = etEmail.text.toString().trim().ifEmpty { null }
         val phone = etPhone.text.toString().trim().ifEmpty { null }
         val notes = etNotes.text.toString().trim().ifEmpty { null }
+        val avatarPath = selectedImageUri?.toString()
 
         val personToSave = if (person == null) {
             Person(
                 name = name,
                 email = email,
                 phone = phone,
-                notes = notes
+                notes = notes,
+                avatarPath = avatarPath
             )
         } else {
             person.copy(
                 name = name,
                 email = email,
                 phone = phone,
-                notes = notes
+                notes = notes,
+                avatarPath = avatarPath
             )
         }
 

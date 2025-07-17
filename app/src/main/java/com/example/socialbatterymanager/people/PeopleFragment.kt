@@ -18,6 +18,7 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.AppDatabase
 import com.example.socialbatterymanager.model.Person
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class PeopleFragment : Fragment() {
     
@@ -132,8 +133,7 @@ class PeopleFragment : Fragment() {
     }
 
     private fun showPersonStats(person: Person) {
-        // TODO: Implement person stats from activities
-        Toast.makeText(requireContext(), "Person stats not implemented yet", Toast.LENGTH_SHORT).show()
+        PersonStatsDialog(this, person).show()
     }
 
     private fun importContacts() {
@@ -151,8 +151,43 @@ class PeopleFragment : Fragment() {
     }
 
     private fun performContactsImport() {
-        // TODO: Implement contacts import
-        Toast.makeText(requireContext(), "Contacts import not implemented yet", Toast.LENGTH_SHORT).show()
+        lifecycleScope.launch {
+            try {
+                val importer = ContactsImporter(requireContext())
+                val contacts = importer.importContacts()
+                
+                val db = AppDatabase.getDatabase(requireContext())
+                val personDao = db.personDao()
+                
+                // Get existing people to avoid duplicates
+                val existingPeople = personDao.getAllPeople().first()
+                val existingNames = existingPeople.map { it.name.lowercase() }.toSet()
+                
+                val newContacts = contacts.filter { contact ->
+                    !existingNames.contains(contact.name.lowercase())
+                }
+                
+                newContacts.forEach { contact ->
+                    personDao.insertPerson(contact)
+                }
+                
+                requireActivity().runOnUiThread {
+                    Toast.makeText(
+                        requireContext(),
+                        "Imported ${newContacts.size} contacts (${contacts.size - newContacts.size} duplicates skipped)",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            } catch (e: Exception) {
+                requireActivity().runOnUiThread {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error importing contacts: ${e.message}",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+            }
+        }
     }
 
     override fun onRequestPermissionsResult(
