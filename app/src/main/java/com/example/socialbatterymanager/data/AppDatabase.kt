@@ -7,6 +7,12 @@ import androidx.room.RoomDatabase
 import com.example.socialbatterymanager.model.Person
 
 
+@Database(entities = [ActivityEntity::class, CalendarEvent::class], version = 2)
+abstract class AppDatabase : RoomDatabase() {
+    abstract fun activityDao(): ActivityDao
+    abstract fun calendarEventDao(): CalendarEventDao
+
+
 @Database(entities = [ActivityEntity::class, Person::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
@@ -41,6 +47,7 @@ abstract class AppDatabase : RoomDatabase() {
 
 
 
+
     companion object {
         @Volatile
         private var INSTANCE: AppDatabase? = null
@@ -65,6 +72,9 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "social_battery_db"
+
+                ).fallbackToDestructiveMigration().build()
+
 
                 ).fallbackToDestructiveMigration().build()
 

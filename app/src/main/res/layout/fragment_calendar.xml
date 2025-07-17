@@ -5,7 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@color/jscc_gold_start"
-    android:padding="24dp">
+    android:padding="16dp">
 
     <TextView
         android:id="@+id/tvCalendarTitle"
@@ -16,22 +16,58 @@
         android:textStyle="bold"
         android:textColor="@color/jscc_charcoal"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="20dp"/>
-    <Button
-        android:id="@+id/btnAddCalendarEvent"
-        android:layout_width="wrap_content"
+        android:layout_marginBottom="16dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_to_calendar"
-        android:backgroundTint="@color/jscc_charcoal"
-        android:textColor="@color/jscc_white"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="24dp"/>
+        android:orientation="horizontal"
+        android:layout_marginBottom="16dp">
+
+        <Button
+            android:id="@+id/btnAddCalendarEvent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/add_to_calendar"
+            android:backgroundTint="@color/jscc_charcoal"
+            android:textColor="@color/jscc_white"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnImportEvents"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/import_events"
+            android:backgroundTint="@color/jscc_charcoal"
+            android:textColor="@color/jscc_white"
+            android:layout_marginStart="8dp"/>
+
+    </LinearLayout>
 
     <CalendarView
         android:id="@+id/calendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp" />
+        android:layout_marginBottom="16dp" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/events_for_day"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_marginBottom="8dp"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvEvents"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:clipToPadding="false"
+        android:padding="8dp"/>
 
 </LinearLayout>
