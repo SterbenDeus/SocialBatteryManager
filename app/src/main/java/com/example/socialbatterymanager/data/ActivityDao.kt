@@ -12,4 +12,13 @@ interface ActivityDao {
 
     @Query("SELECT * FROM activities ORDER BY date DESC")
     fun getAllActivities(): Flow<List<ActivityEntity>>
+    
+    @Query("SELECT * FROM activities WHERE date >= :startDate AND date <= :endDate ORDER BY date ASC")
+    fun getActivitiesByDateRange(startDate: Long, endDate: Long): Flow<List<ActivityEntity>>
+    
+    @Query("SELECT AVG(energy) FROM activities WHERE date >= :startDate AND date <= :endDate")
+    suspend fun getAverageEnergyByDateRange(startDate: Long, endDate: Long): Double?
+    
+    @Query("SELECT * FROM activities WHERE date >= :startDate AND date <= :endDate ORDER BY date DESC")
+    suspend fun getActivitiesByDateRangeSync(startDate: Long, endDate: Long): List<ActivityEntity>
 }
