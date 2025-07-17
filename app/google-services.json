@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "123456789",
+    "project_id": "social-battery-manager",
+    "storage_bucket": "social-battery-manager.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:123456789:android:abcdef1234567890",
+        "android_client_info": {
+          "package_name": "com.example.socialbatterymanager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "123456789-abcdef1234567890.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.socialbatterymanager",
+            "certificate_hash": "abcdef1234567890"
+          }
+        },
+        {
+          "client_id": "123456789-1234567890abcdef.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyExample1234567890"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "123456789-1234567890abcdef.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

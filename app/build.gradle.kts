@@ -3,7 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
-
+    alias(libs.plugins.google.services)
 }
 
 android {
@@ -58,6 +58,16 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 // For Kotlin coroutine support:
     implementation("androidx.room:room-ktx:2.6.1")
+    
+    // Firebase
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.auth)
+    implementation(libs.firebase.ui.auth)
+    implementation(libs.play.services.auth)
+    
+    // ViewModel
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation("androidx.fragment:fragment-ktx:1.8.5")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
