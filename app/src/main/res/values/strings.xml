@@ -21,6 +21,14 @@
     <string name="calendar_title">Calendar</string>
     <string name="add_to_calendar">Add to Calendar</string>
     
-
+    <!-- Mood Options -->
+    <string-array name="mood_options">
+        <item>Energetic</item>
+        <item>Happy</item>
+        <item>Neutral</item>
+        <item>Tired</item>
+        <item>Stressed</item>
+        <item>Overwhelmed</item>
+    </string-array>
 
 </resources>

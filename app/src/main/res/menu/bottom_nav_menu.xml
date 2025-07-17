@@ -12,5 +12,9 @@
         android:id="@+id/peopleFragment"
         android:title="People"
         android:icon="@drawable/ic_people"/>
+    <item
+        android:id="@+id/profileFragment"
+        android:title="Profile"
+        android:icon="@drawable/ic_profile"/>
     <!-- Add more items as needed -->
 </menu>
