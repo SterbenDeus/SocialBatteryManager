@@ -10,17 +10,33 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.navigation.fragment.findNavController
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
 import com.airbnb.lottie.value.LottieValueCallback
 import com.example.socialbatterymanager.R
+import com.example.socialbatterymanager.auth.AuthRepository
+import com.example.socialbatterymanager.auth.UserViewModel
 
 class HomeFragment : Fragment() {
 
     private lateinit var lottieBattery: LottieAnimationView
     private lateinit var tvBatteryPercent: TextView
     private lateinit var btnTestBattery: Button
+    private lateinit var btnLogout: Button
+    
+    private val authRepository = AuthRepository()
+    private val userViewModel: UserViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                return UserViewModel(authRepository) as T
+            }
+        }
+    }
 
     // Battery percent (0-100)
     private var batteryLevel = 65
@@ -38,6 +54,7 @@ class HomeFragment : Fragment() {
         lottieBattery = view.findViewById(R.id.lottieBattery)
         tvBatteryPercent = view.findViewById(R.id.tvBatteryPercent)
         btnTestBattery = view.findViewById(R.id.btnTestBattery)
+        btnLogout = view.findViewById(R.id.btnLogout)
 
         updateUI()
 
@@ -45,6 +62,11 @@ class HomeFragment : Fragment() {
             val nextLevel = testLevels[testIndex]
             animateBatteryLevelChange(nextLevel)
             testIndex = (testIndex + 1) % testLevels.size
+        }
+        
+        btnLogout.setOnClickListener {
+            userViewModel.signOut()
+            findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
 
         return view
