@@ -4,12 +4,16 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.socialbatterymanager.auth.AuthRepository
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.badge.BadgeDrawable
 
 class MainActivity : AppCompatActivity() {
     
     private lateinit var bottomNavigationView: BottomNavigationView
+
+    private val authRepository = AuthRepository()
+
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,6 +26,7 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
         
+
         // Set up badges for demonstration
         setupBadges()
     }
@@ -64,5 +69,23 @@ class MainActivity : AppCompatActivity() {
     fun setBadgeVisible(menuItemId: Int, visible: Boolean) {
         val badge = bottomNavigationView.getOrCreateBadge(menuItemId)
         badge.isVisible = visible
+
+        // Listen for navigation changes to show/hide bottom navigation
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when (destination.id) {
+                R.id.loginFragment -> {
+                    bottomNavigationView.visibility = android.view.View.GONE
+                }
+                else -> {
+                    bottomNavigationView.visibility = android.view.View.VISIBLE
+                }
+            }
+        }
+        
+        // Check if user is already logged in
+        if (authRepository.isUserLoggedIn()) {
+            navController.navigate(R.id.homeFragment)
+        }
+
     }
 }

@@ -181,6 +181,16 @@
                 android:layout_marginStart="12dp"/>
         </LinearLayout>
 
+        <!-- Logout Button -->
+        <Button
+            android:id="@+id/btnLogout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Logout"
+            android:textColor="@color/jscc_charcoal"
+            android:backgroundTint="@color/jscc_light_gray"
+            android:layout_marginBottom="16dp"/>
+
         <!-- CalendarView under buttons -->
         <CalendarView
             android:id="@+id/calendarView"
