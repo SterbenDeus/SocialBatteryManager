@@ -1,24 +1,26 @@
 package com.example.socialbatterymanager
 
 import android.os.Bundle
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.example.socialbatterymanager.preferences.PreferencesManager
+import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     
     private lateinit var preferencesManager: PreferencesManager
+    private lateinit var syncManager: SyncManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         preferencesManager = PreferencesManager(this)
+        syncManager = SyncManager(this)
         
         // Apply theme before setting content
         applyTheme()
@@ -32,8 +34,43 @@ class MainActivity : AppCompatActivity() {
         val bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
         
+        // Check onboarding status and navigate accordingly
+        checkOnboardingStatus(navController)
+        
+        // Initialize sync
+        initializeSync()
+        
         // Observe theme changes
         observeThemeChanges()
+    }
+    
+    private fun initializeSync() {
+        lifecycleScope.launch {
+            try {
+                syncManager.schedulePeriodicSync()
+            } catch (e: Exception) {
+                // Handle sync initialization error
+                e.printStackTrace()
+            }
+        }
+    }
+    
+    private fun checkOnboardingStatus(navController: androidx.navigation.NavController) {
+        lifecycleScope.launch {
+            preferencesManager.onboardingCompletedFlow.collect { completed ->
+                if (completed) {
+                    // User has completed onboarding, navigate to home if currently on onboarding
+                    if (navController.currentDestination?.id == R.id.onboardingFragment) {
+                        navController.navigate(R.id.action_onboarding_to_home)
+                    }
+                } else {
+                    // User hasn't completed onboarding, navigate to onboarding if not already there
+                    if (navController.currentDestination?.id != R.id.onboardingFragment) {
+                        navController.navigate(R.id.onboardingFragment)
+                    }
+                }
+            }
+        }
     }
     
     private fun applyTheme() {
