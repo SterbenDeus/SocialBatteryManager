@@ -5,9 +5,10 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [ActivityEntity::class], version = 1)
+@Database(entities = [ActivityEntity::class, CalendarEvent::class], version = 2)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
+    abstract fun calendarEventDao(): CalendarEventDao
 
     companion object {
         @Volatile
@@ -19,7 +20,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "social_battery_db"
-                ).build()
+                ).fallbackToDestructiveMigration().build()
                 INSTANCE = instance
                 instance
             }

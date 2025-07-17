@@ -19,7 +19,9 @@
     <string name="activity_mood">Mood</string>
     <string name="activity_notes">Notes</string>
     <string name="calendar_title">Calendar</string>
-    <string name="add_to_calendar">Add to Calendar</string>
+    <string name="add_to_calendar">Add Event</string>
+    <string name="import_events">Import Events</string>
+    <string name="events_for_day">Events for Selected Day</string>
     
 
 
