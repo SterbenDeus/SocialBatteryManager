@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+<<<<<<< HEAD
     <!-- Network permissions for offline sync -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -14,6 +15,8 @@
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     
     <!-- Notification permissions -->
+=======
+>>>>>>> copilot/fix-5
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application

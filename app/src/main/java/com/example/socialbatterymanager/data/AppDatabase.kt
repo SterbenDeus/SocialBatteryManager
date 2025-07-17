@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
+<<<<<<< HEAD
 import androidx.room.TypeConverters
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
@@ -14,8 +15,14 @@ import androidx.sqlite.db.SupportSQLiteDatabase
     exportSchema = false
 )
 @TypeConverters(Converters::class)
+=======
+import com.example.socialbatterymanager.model.EnergyLog
+
+@Database(entities = [ActivityEntity::class, EnergyLog::class], version = 2)
+>>>>>>> copilot/fix-5
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
+    abstract fun energyLogDao(): EnergyLogDao
 
     companion object {
         @Volatile
@@ -41,9 +48,14 @@ abstract class AppDatabase : RoomDatabase() {
                     context.applicationContext,
                     AppDatabase::class.java,
                     "social_battery_db"
+<<<<<<< HEAD
                 )
                 .addMigrations(MIGRATION_1_2)
                 .build()
+=======
+                ).fallbackToDestructiveMigration()
+                 .build()
+>>>>>>> copilot/fix-5
                 INSTANCE = instance
                 instance
             }

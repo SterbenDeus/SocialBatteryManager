@@ -18,8 +18,15 @@ interface ActivityDao {
     @Delete
     suspend fun deleteActivity(activity: ActivityEntity)
 
+    @Update
+    suspend fun updateActivity(activity: ActivityEntity)
+
+    @Delete
+    suspend fun deleteActivity(activity: ActivityEntity)
+
     @Query("SELECT * FROM activities ORDER BY date DESC")
     fun getAllActivities(): Flow<List<ActivityEntity>>
+<<<<<<< HEAD
     
     @Query("SELECT * FROM activities WHERE id = :id")
     suspend fun getActivityById(id: Int): ActivityEntity?
@@ -53,4 +60,9 @@ interface ActivityDao {
     
     @Query("SELECT AVG(socialInteractionLevel) FROM activities WHERE date >= :startDate")
     suspend fun getAverageSocialLevel(startDate: Long): Double?
+=======
+
+    @Query("SELECT * FROM activities WHERE id = :id")
+    suspend fun getActivityById(id: Int): ActivityEntity?
+>>>>>>> copilot/fix-5
 }

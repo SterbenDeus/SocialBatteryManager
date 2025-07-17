@@ -49,7 +49,12 @@ android {
 dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
 <<<<<<< HEAD
+<<<<<<< HEAD
     implementation("com.google.android.material:material:1.10.0")
+=======
+    implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+>>>>>>> copilot/fix-5
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
