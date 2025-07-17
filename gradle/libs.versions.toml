@@ -1,5 +1,6 @@
 [versions]
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 agp = "8.1.0"
 
@@ -10,6 +11,9 @@ agp = "8.2.2"
 =======
 agp = "8.2.2"
 >>>>>>> copilot/fix-9
+=======
+agp = "8.2.2"
+>>>>>>> copilot/fix-12
 kotlin = "2.0.21"
 
 agp = "7.4.2"

@@ -2,21 +2,29 @@ package com.example.socialbatterymanager
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.socialbatterymanager.auth.AuthRepository
+import com.example.socialbatterymanager.preferences.PreferencesManager
+import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.badge.BadgeDrawable
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     
-    private lateinit var bottomNavigationView: BottomNavigationView
-
-    private val authRepository = AuthRepository()
-
+    private lateinit var preferencesManager: PreferencesManager
+    private lateinit var syncManager: SyncManager
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        
+        preferencesManager = PreferencesManager(this)
+        syncManager = SyncManager(this)
+        
+        // Apply theme before setting content
+        applyTheme()
+        
         setContentView(R.layout.activity_main)
 
         val navHostFragment = supportFragmentManager
@@ -26,66 +34,84 @@ class MainActivity : AppCompatActivity() {
         bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
         bottomNavigationView.setupWithNavController(navController)
         
-
-        // Set up badges for demonstration
-        setupBadges()
-    }
-    
-    private fun setupBadges() {
-        // Example: Add badge to Activities tab
-        val activitiesBadge = bottomNavigationView.getOrCreateBadge(R.id.activitiesFragment)
-        activitiesBadge.isVisible = true
-        activitiesBadge.number = 3
+        // Check onboarding status and navigate accordingly
+        checkOnboardingStatus(navController)
         
-        // Example: Add badge to Reports tab  
-        val reportsBadge = bottomNavigationView.getOrCreateBadge(R.id.reportsFragment)
-        reportsBadge.isVisible = true
-        reportsBadge.number = 1
+        // Initialize sync
+        initializeSync()
+        
+        // Observe theme changes
+        observeThemeChanges()
     }
     
-    // Method to update badge count
-    fun updateBadge(menuItemId: Int, count: Int) {
-        val badge = bottomNavigationView.getBadge(menuItemId)
-        if (count > 0) {
-            if (badge == null) {
-                val newBadge = bottomNavigationView.getOrCreateBadge(menuItemId)
-                newBadge.isVisible = true
-                newBadge.number = count
-            } else {
-                badge.isVisible = true
-                badge.number = count
+    private fun initializeSync() {
+        lifecycleScope.launch {
+            try {
+                syncManager.schedulePeriodicSync()
+            } catch (e: Exception) {
+                // Handle sync initialization error
+                e.printStackTrace()
             }
-        } else {
-            badge?.isVisible = false
         }
     }
     
-    // Method to clear badge
-    fun clearBadge(menuItemId: Int) {
-        bottomNavigationView.getBadge(menuItemId)?.isVisible = false
-    }
-    
-    // Method to show/hide badge without number
-    fun setBadgeVisible(menuItemId: Int, visible: Boolean) {
-        val badge = bottomNavigationView.getOrCreateBadge(menuItemId)
-        badge.isVisible = visible
-
-        // Listen for navigation changes to show/hide bottom navigation
-        navController.addOnDestinationChangedListener { _, destination, _ ->
-            when (destination.id) {
-                R.id.loginFragment -> {
-                    bottomNavigationView.visibility = android.view.View.GONE
-                }
-                else -> {
-                    bottomNavigationView.visibility = android.view.View.VISIBLE
+    private fun checkOnboardingStatus(navController: androidx.navigation.NavController) {
+        lifecycleScope.launch {
+            preferencesManager.onboardingCompletedFlow.collect { completed ->
+                if (completed) {
+                    // User has completed onboarding, navigate to home if currently on onboarding
+                    if (navController.currentDestination?.id == R.id.onboardingFragment) {
+                        navController.navigate(R.id.action_onboarding_to_home)
+                    }
+                } else {
+                    // User hasn't completed onboarding, navigate to onboarding if not already there
+                    if (navController.currentDestination?.id != R.id.onboardingFragment) {
+                        navController.navigate(R.id.onboardingFragment)
+                    }
                 }
             }
         }
-        
-        // Check if user is already logged in
-        if (authRepository.isUserLoggedIn()) {
-            navController.navigate(R.id.homeFragment)
+    }
+    
+    private fun applyTheme() {
+        lifecycleScope.launch {
+            preferencesManager.themeFlow.collect { theme ->
+                when (theme) {
+                    PreferencesManager.THEME_LIGHT -> {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                    }
+                    PreferencesManager.THEME_DARK -> {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                    }
+                    PreferencesManager.THEME_SYSTEM -> {
+                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                    }
+                }
+            }
         }
-
+    }
+    
+    private fun observeThemeChanges() {
+        lifecycleScope.launch {
+            preferencesManager.themeFlow.collect { theme ->
+                when (theme) {
+                    PreferencesManager.THEME_LIGHT -> {
+                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                        }
+                    }
+                    PreferencesManager.THEME_DARK -> {
+                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                        }
+                    }
+                    PreferencesManager.THEME_SYSTEM -> {
+                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                        }
+                    }
+                }
+            }
+        }
     }
 }
