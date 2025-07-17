@@ -18,6 +18,7 @@
     <string name="activity_people">People</string>
     <string name="activity_mood">Mood</string>
     <string name="activity_notes">Notes</string>
+    <string name="activity_rating">Rating</string>
     <string name="calendar_title">Calendar</string>
     <string name="add_to_calendar">Add to Calendar</string>
     

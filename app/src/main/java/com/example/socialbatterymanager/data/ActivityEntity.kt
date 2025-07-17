@@ -12,5 +12,7 @@ data class ActivityEntity(
     val people: String,
     val mood: String,
     val notes: String,
-    val date: Long
+    val date: Long,
+    val usageCount: Int = 0,
+    val rating: Float = 0.0f
 )
