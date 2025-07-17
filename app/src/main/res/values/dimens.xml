@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Accessibility dimensions -->
+    <dimen name="min_touch_target_size">48dp</dimen>
+    
+    <!-- Text sizes for accessibility -->
+    <dimen name="text_size_small">12sp</dimen>
+    <dimen name="text_size_medium">16sp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
+    <dimen name="text_size_extra_large">24sp</dimen>
+    
+    <!-- Spacing -->
+    <dimen name="spacing_small">8dp</dimen>
+    <dimen name="spacing_medium">16dp</dimen>
+    <dimen name="spacing_large">24dp</dimen>
+    <dimen name="spacing_extra_large">32dp</dimen>
+    
+    <!-- Content padding -->
+    <dimen name="content_padding">16dp</dimen>
+    <dimen name="content_padding_large">24dp</dimen>
+    
+    <!-- Button dimensions -->
+    <dimen name="button_height">56dp</dimen>
+    <dimen name="button_corner_radius">8dp</dimen>
+    
+    <!-- Card dimensions -->
+    <dimen name="card_corner_radius">12dp</dimen>
+    <dimen name="card_elevation">4dp</dimen>
+</resources>

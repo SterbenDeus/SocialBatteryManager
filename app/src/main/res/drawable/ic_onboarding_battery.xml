@@ -1,0 +1,42 @@
+<!-- Onboarding Battery Icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Battery outline -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorPrimary"
+        android:strokeWidth="4"
+        android:pathData="M60,70L140,70L140,150L60,150Z" />
+    <!-- Battery tip -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M140,85L150,85L150,105L140,105Z" />
+    <!-- Battery fill level -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M65,75L135,75L135,125L65,125Z" />
+    <!-- Energy waves -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorSecondary"
+        android:strokeWidth="2"
+        android:pathData="M40,50C50,50 50,40 60,40C70,40 70,50 80,50" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorSecondary"
+        android:strokeWidth="2"
+        android:pathData="M120,50C130,50 130,40 140,40C150,40 150,50 160,50" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorSecondary"
+        android:strokeWidth="2"
+        android:pathData="M30,110C40,110 40,100 50,100C60,100 60,110 70,110" />
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorSecondary"
+        android:strokeWidth="2"
+        android:pathData="M130,110C140,110 140,100 150,100C160,100 160,110 170,110" />
+</vector>

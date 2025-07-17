@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Requirements-Based Code Generation"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Enter your project requirements in JSON, YAML, or plain text format:"
+            android:textSize="16sp"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/requirementsInput"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:hint="Enter your requirements here..."
+            android:gravity="top"
+            android:inputType="textMultiLine"
+            android:background="@android:drawable/edit_text"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="16dp">
+
+            <Button
+                android:id="@+id/assessButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Assess Complexity"
+                android:layout_marginEnd="8dp"
+                android:backgroundTint="#FF9800" />
+
+            <Button
+                android:id="@+id/generateButton"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Generate Code"
+                android:layout_marginStart="8dp"
+                android:backgroundTint="#4CAF50" />
+
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Complexity Assessment:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/complexityText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Click 'Assess Complexity' to analyze your requirements"
+            android:textSize="14sp"
+            android:background="#F5F5F5"
+            android:padding="12dp"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Generated Code:"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/resultText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Click 'Generate Code' to see the generated project structure"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:background="#F5F5F5"
+            android:padding="12dp"
+            android:minHeight="200dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="The system can handle:\n• Simple apps (1-2 features)\n• Moderate apps (3-5 features)\n• Complex apps (6-10 features)\n• Very complex apps (10+ features)"
+            android:textSize="14sp"
+            android:layout_marginTop="16dp"
+            android:background="#E3F2FD"
+            android:padding="12dp" />
+
+    </LinearLayout>
+
+</ScrollView>

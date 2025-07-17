@@ -1,0 +1,54 @@
+<!-- Onboarding Analytics Icon -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="200dp"
+    android:height="200dp"
+    android:viewportWidth="200"
+    android:viewportHeight="200">
+    <!-- Chart background -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorOnSurfaceVariant"
+        android:strokeWidth="2"
+        android:pathData="M40,40L40,160L160,160" />
+    <!-- Bar chart -->
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M55,140L70,140L70,100L55,100Z" />
+    <path
+        android:fillColor="?attr/colorSecondary"
+        android:pathData="M80,140L95,140L95,80L80,80Z" />
+    <path
+        android:fillColor="?attr/colorPrimary"
+        android:pathData="M105,140L120,140L120,120L105,120Z" />
+    <path
+        android:fillColor="?attr/colorSecondary"
+        android:pathData="M130,140L145,140L145,70L130,70Z" />
+    <!-- Trend line -->
+    <path
+        android:fillColor="@android:color/transparent"
+        android:strokeColor="?attr/colorTertiary"
+        android:strokeWidth="3"
+        android:pathData="M62,120L87,100L112,130L137,85"
+        android:strokeLineCap="round" />
+    <!-- Data points -->
+    <circle
+        android:fillColor="?attr/colorTertiary"
+        android:cx="62"
+        android:cy="120"
+        android:r="4" />
+    <circle
+        android:fillColor="?attr/colorTertiary"
+        android:cx="87"
+        android:cy="100"
+        android:r="4" />
+    <circle
+        android:fillColor="?attr/colorTertiary"
+        android:cx="112"
+        android:cy="130"
+        android:r="4" />
+    <circle
+        android:fillColor="?attr/colorTertiary"
+        android:cx="137"
+        android:cy="85"
+        android:r="4" />
+</vector>
