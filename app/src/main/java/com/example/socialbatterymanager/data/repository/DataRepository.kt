@@ -12,7 +12,7 @@ import java.security.MessageDigest
 import java.util.UUID
 
 class DataRepository private constructor(
-    private val database: AppDatabase,
+    internal val database: AppDatabase,
     private val gson: Gson = Gson()
 ) {
     
