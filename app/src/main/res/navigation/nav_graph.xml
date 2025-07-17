@@ -17,5 +17,13 @@
         android:id="@+id/peopleFragment"
         android:name="com.example.socialbatterymanager.people.PeopleFragment"
         android:label="People" />
+    <fragment
+        android:id="@+id/activitiesFragment"
+        android:name="com.example.socialbatterymanager.ui.activities.ActivitiesFragment"
+        android:label="Activities" />
+    <fragment
+        android:id="@+id/reportsFragment"
+        android:name="com.example.socialbatterymanager.reports.ReportsFragment"
+        android:label="Reports" />
     <!-- Add more fragments as needed -->
 </navigation>
