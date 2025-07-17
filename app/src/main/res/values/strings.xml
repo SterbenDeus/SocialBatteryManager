@@ -21,6 +21,7 @@
     <string name="calendar_title">Calendar</string>
     <string name="add_to_calendar">Add to Calendar</string>
     
-
+    <!-- Firebase Auth -->
+    <string name="default_web_client_id">123456789-1234567890abcdef.apps.googleusercontent.com</string>
 
 </resources>
