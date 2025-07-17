@@ -58,6 +58,12 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 // For Kotlin coroutine support:
     implementation("androidx.room:room-ktx:2.6.1")
+    
+    // DataStore for preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+    
+    // File Provider for camera functionality
+    implementation("androidx.core:core-ktx:1.10.1")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
