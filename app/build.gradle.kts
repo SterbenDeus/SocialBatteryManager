@@ -58,6 +58,9 @@ dependencies {
     kapt("androidx.room:room-compiler:2.5.0")
     implementation("androidx.room:room-ktx:2.5.0")
     
+    // Material Design
+    implementation("com.google.android.material:material:1.9.0")
+    
     // Charts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
     
