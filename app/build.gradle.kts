@@ -48,13 +48,9 @@ android {
 
 dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
-<<<<<<< HEAD
-<<<<<<< HEAD
     implementation("com.google.android.material:material:1.10.0")
-=======
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.work:work-runtime-ktx:2.9.0")
->>>>>>> copilot/fix-5
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -68,12 +64,14 @@ dependencies {
     
     // Room database
     implementation("androidx.room:room-runtime:2.6.1")
-<<<<<<< HEAD
-=======
     kapt("androidx.room:room-compiler:2.6.1")
->>>>>>> copilot/fix-12
     implementation("androidx.room:room-ktx:2.6.1")
+   
+    // DataStore for preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
     
+    // File Provider for camera functionality
+    implementation("androidx.core:core-ktx:1.10.1")
     // ViewPager2 for onboarding
     implementation("androidx.viewpager2:viewpager2:1.0.0")
     
@@ -144,6 +142,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
     implementation("androidx.fragment:fragment-ktx:1.8.5")
 
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -151,7 +150,7 @@ dependencies {
     androidTestImplementation(libs.androidx.ui.test.junit4)
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
-=======
+
     implementation("androidx.core:core-ktx:1.10.1")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
     implementation("androidx.activity:activity-compose:1.7.2")
@@ -175,7 +174,7 @@ dependencies {
     // Export functionality
     implementation("com.opencsv:opencsv:5.7.1")
     implementation("com.itextpdf:itextg:5.5.10")
->>>>>>> copilot/fix-9
+
 
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")

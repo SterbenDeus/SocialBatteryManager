@@ -21,10 +21,20 @@
     <string name="calendar_title">Calendar</string>
     <string name="add_to_calendar">Add to Calendar</string>
     
-<<<<<<< HEAD
+
+    <!-- Mood Options -->
+    <string-array name="mood_options">
+        <item>Energetic</item>
+        <item>Happy</item>
+        <item>Neutral</item>
+        <item>Tired</item>
+        <item>Stressed</item>
+        <item>Overwhelmed</item>
+    </string-array>
+
     <!-- Firebase Auth -->
     <string name="default_web_client_id">123456789-1234567890abcdef.apps.googleusercontent.com</string>
-=======
+
     <!-- Onboarding strings -->
     <string name="onboarding_title_1">Welcome to Social Battery Manager</string>
     <string name="onboarding_description_1">Track your social energy and manage your interactions to maintain optimal well-being.</string>
@@ -70,7 +80,5 @@
     <string name="battery_percent_description">Current battery level: %1$d percent</string>
     <string name="test_battery_description">Test battery level change</string>
     <string name="battery_level_changed">Battery level changed to %1$d percent</string>
-
->>>>>>> copilot/fix-12
 
 </resources>

@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nav_graph"
-<<<<<<< HEAD
+
     app:startDestination="@id/loginFragment">
 
     <fragment
@@ -14,7 +14,7 @@
             android:id="@+id/action_loginFragment_to_homeFragment"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/loginFragment"
-=======
+
     app:startDestination="@id/onboardingFragment">
 
     <fragment
@@ -25,7 +25,7 @@
             android:id="@+id/action_onboarding_to_home"
             app:destination="@id/homeFragment"
             app:popUpTo="@id/onboardingFragment"
->>>>>>> copilot/fix-12
+
             app:popUpToInclusive="true" />
     </fragment>
 
@@ -48,7 +48,12 @@
         android:name="com.example.socialbatterymanager.people.PeopleFragment"
         android:label="People" />
     <fragment
-<<<<<<< HEAD
+
+        android:id="@+id/profileFragment"
+        android:name="com.example.socialbatterymanager.profile.ProfileFragment"
+        android:label="Profile" />
+
+
         android:id="@+id/activitiesFragment"
         android:name="com.example.socialbatterymanager.ui.activities.ActivitiesFragment"
         android:label="Activities" />
@@ -56,10 +61,11 @@
         android:id="@+id/reportsFragment"
         android:name="com.example.socialbatterymanager.reports.ReportsFragment"
         android:label="Reports" />
-=======
+
         android:id="@+id/reportsFragment"
         android:name="com.example.socialbatterymanager.reports.ReportsFragment"
         android:label="Reports" />
+
     <!-- Add more fragments as needed -->
->>>>>>> copilot/fix-9
+
 </navigation>
