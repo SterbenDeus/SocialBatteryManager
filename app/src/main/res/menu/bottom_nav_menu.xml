@@ -13,11 +13,8 @@
         android:title="People"
         android:icon="@drawable/ic_people"/>
     <item
-        android:id="@+id/activitiesFragment"
-        android:title="Activities"
-        android:icon="@drawable/ic_activities"/>
-    <item
         android:id="@+id/reportsFragment"
         android:title="Reports"
         android:icon="@drawable/ic_reports"/>
+    <!-- Add more items as needed -->
 </menu>
