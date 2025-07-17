@@ -14,10 +14,20 @@
         android:icon="@drawable/ic_people"/>
     <item
 
+
         android:id="@+id/profileFragment"
         android:title="Profile"
         android:icon="@drawable/ic_profile"/>
 
+        android:id="@+id/reportsFragment"
+        android:title="Reports"
+        android:icon="@drawable/ic_reports"/>
+
+
+        android:id="@+id/activitiesFragment"
+        android:title="Activities"
+        android:icon="@drawable/ic_activities"/>
+    <item
         android:id="@+id/reportsFragment"
         android:title="Reports"
         android:icon="@drawable/ic_reports"/>

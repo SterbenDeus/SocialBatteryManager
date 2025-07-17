@@ -49,9 +49,11 @@
         android:label="People" />
     <fragment
 
+
         android:id="@+id/profileFragment"
         android:name="com.example.socialbatterymanager.profile.ProfileFragment"
         android:label="Profile" />
+
 
 
         android:id="@+id/activitiesFragment"
@@ -62,9 +64,11 @@
         android:name="com.example.socialbatterymanager.reports.ReportsFragment"
         android:label="Reports" />
 
+
         android:id="@+id/reportsFragment"
         android:name="com.example.socialbatterymanager.reports.ReportsFragment"
         android:label="Reports" />
+
 
     <!-- Add more fragments as needed -->
 
