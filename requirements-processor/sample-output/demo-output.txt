@@ -1,0 +1,41 @@
+> Task :compileKotlin UP-TO-DATE
+> Task :compileJava NO-SOURCE
+> Task :processResources NO-SOURCE
+> Task :classes UP-TO-DATE
+> Task :jar UP-TO-DATE
+> Task :inspectClassesForKotlinIC UP-TO-DATE
+
+> Task :run
+Running requirements processor demo...
+
+=== Processing JSON Requirements ===
+Project: TaskManager
+Summary: Generated 7 files for 3 features
+Generated files:
+  - app/src/main/java/com/example/taskmanager/MainActivity.kt (KOTLIN)
+  - app/src/main/java/com/example/requirements/services/AuthenticationService.kt (KOTLIN)
+  - app/src/main/java/com/example/requirements/components/TaskListFragment.kt (KOTLIN)
+  - app/src/main/res/layout/fragment_tasklist.xml (XML)
+  - app/src/main/java/com/example/requirements/services/TaskStorageService.kt (KOTLIN)
+  - app/build.gradle.kts (GRADLE)
+  - app/src/main/AndroidManifest.xml (XML)
+
+=== Processing YAML Requirements ===
+Project: WeatherApp
+Summary: Generated 3 files for 0 features
+Generated files:
+  - app/src/main/java/com/example/weatherapp/MainActivity.kt (KOTLIN)
+  - app/build.gradle.kts (GRADLE)
+  - app/src/main/AndroidManifest.xml (XML)
+
+=== Processing Text Requirements ===
+Project: E-commerce Mobile App
+Summary: Generated 4 files for 1 features
+Generated files:
+  - app/src/main/java/com/example/e-commerce mobile app/MainActivity.kt (KOTLIN)
+  - app/src/main/java/com/example/requirements/services/AuthenticationSystemService.kt (KOTLIN)
+  - app/build.gradle.kts (GRADLE)
+  - app/src/main/AndroidManifest.xml (XML)
+
+BUILD SUCCESSFUL in 1s
+4 actionable tasks: 1 executed, 3 up-to-date
