@@ -14,5 +14,19 @@ data class ActivityEntity(
     val notes: String,
     val date: Long,
     val usageCount: Int = 0,
-    val rating: Float = 0.0f
+    val rating: Float = 0.0f,
+    val duration: Long = 0,
+    val location: String? = null,
+    val socialInteractionLevel: Int = 0,
+    val stressLevel: Int = 0,
+    val isManualEntry: Boolean = true,
+    val syncStatus: SyncStatus = SyncStatus.PENDING_SYNC,
+    val lastModified: Long = System.currentTimeMillis(),
+    val firebaseId: String? = null
 )
+
+enum class SyncStatus {
+    PENDING_SYNC,
+    SYNCED,
+    SYNC_ERROR
+}
