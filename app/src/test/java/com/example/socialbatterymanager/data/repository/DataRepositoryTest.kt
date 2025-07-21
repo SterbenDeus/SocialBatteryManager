@@ -1,6 +1,6 @@
 package com.example.socialbatterymanager.data.repository
 
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import com.example.socialbatterymanager.data.model.UserPreferences
 import org.junit.Test
 import org.junit.Assert.*

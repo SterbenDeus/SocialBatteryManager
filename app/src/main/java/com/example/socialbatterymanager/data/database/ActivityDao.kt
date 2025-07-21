@@ -4,7 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

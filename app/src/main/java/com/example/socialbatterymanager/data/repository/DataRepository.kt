@@ -2,7 +2,7 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
 import com.google.gson.Gson

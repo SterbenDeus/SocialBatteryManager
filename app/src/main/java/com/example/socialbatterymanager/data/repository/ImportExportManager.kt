@@ -1,7 +1,7 @@
 package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import com.itextpdf.text.Document
 import com.itextpdf.text.DocumentException
 import com.itextpdf.text.Element

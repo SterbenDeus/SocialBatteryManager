@@ -6,7 +6,7 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
 import net.sqlcipher.database.SQLiteDatabase

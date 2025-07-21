@@ -1,7 +1,7 @@
 package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
-import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.ActivityEntity
 import kotlinx.coroutines.runBlocking
 
 /**
