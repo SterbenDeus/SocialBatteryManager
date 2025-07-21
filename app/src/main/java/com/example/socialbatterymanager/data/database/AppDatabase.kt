@@ -21,18 +21,18 @@ import net.sqlcipher.database.SupportFactory
     version = 2,
     exportSchema = false
 )
-abstract class AppDatabase : RoomDatabase() {
+abstract class SecureAppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun backupMetadataDao(): BackupMetadataDao
 
     companion object {
         @Volatile
-        private var INSTANCE: AppDatabase? = null
+        private var INSTANCE: SecureAppDatabase? = null
         
         private const val DATABASE_NAME = "social_battery_db"
 
-        fun getDatabase(context: Context, passphrase: String? = null): AppDatabase {
+        fun getDatabase(context: Context, passphrase: String? = null): SecureAppDatabase {
             return INSTANCE ?: synchronized(this) {
                 val instance = buildDatabase(context, passphrase)
                 INSTANCE = instance
@@ -40,10 +40,10 @@ abstract class AppDatabase : RoomDatabase() {
             }
         }
         
-        private fun buildDatabase(context: Context, passphrase: String?): AppDatabase {
+        private fun buildDatabase(context: Context, passphrase: String?): SecureAppDatabase {
             val builder = Room.databaseBuilder(
                 context.applicationContext,
-                AppDatabase::class.java,
+                SecureAppDatabase::class.java,
                 DATABASE_NAME
             )
             

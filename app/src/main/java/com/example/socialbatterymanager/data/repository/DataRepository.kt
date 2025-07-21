@@ -1,7 +1,7 @@
 package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
-import com.example.socialbatterymanager.data.database.AppDatabase
+import com.example.socialbatterymanager.data.database.SecureAppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
@@ -12,7 +12,7 @@ import java.security.MessageDigest
 import java.util.UUID
 
 class DataRepository private constructor(
-    internal val database: AppDatabase,
+    internal val database: SecureAppDatabase,
     private val gson: Gson = Gson()
 ) {
     
@@ -163,7 +163,7 @@ class DataRepository private constructor(
         
         fun getInstance(context: Context, passphrase: String? = null): DataRepository {
             return INSTANCE ?: synchronized(this) {
-                val database = AppDatabase.getDatabase(context, passphrase)
+                val database = SecureAppDatabase.getDatabase(context, passphrase)
                 val instance = DataRepository(database)
                 INSTANCE = instance
                 instance

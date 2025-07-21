@@ -9,13 +9,14 @@ import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 
 @Database(
-    entities = [ActivityEntity::class], 
+    entities = [ActivityEntity::class, CalendarEvent::class], 
     version = 2,
     exportSchema = false
 )
 @TypeConverters(Converters::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
+    abstract fun calendarEventDao(): CalendarEventDao
 
     companion object {
         @Volatile
@@ -34,6 +35,21 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE activities ADD COLUMN firebaseId TEXT")
                 database.execSQL("ALTER TABLE activities ADD COLUMN usageCount INTEGER NOT NULL DEFAULT 0")
                 database.execSQL("ALTER TABLE activities ADD COLUMN rating REAL NOT NULL DEFAULT 0.0")
+                
+                // Create calendar_events table
+                database.execSQL("""
+                    CREATE TABLE IF NOT EXISTS calendar_events (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL,
+                        title TEXT NOT NULL,
+                        description TEXT NOT NULL DEFAULT '',
+                        startTime INTEGER NOT NULL,
+                        endTime INTEGER NOT NULL,
+                        location TEXT NOT NULL DEFAULT '',
+                        source TEXT NOT NULL DEFAULT '',
+                        externalId TEXT NOT NULL DEFAULT '',
+                        isImported INTEGER NOT NULL DEFAULT 0
+                    )
+                """.trimIndent())
             }
         }
 
