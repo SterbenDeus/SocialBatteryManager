@@ -35,13 +35,13 @@ class EditActivityDialog(
         
         // Populate fields if editing
         activity?.let {
-            etName.setText(it.name)
+            etName.setText(it.name as CharSequence)
             spinnerType.setSelection(it.type.ordinal)
-            etEnergy.setText(it.energy.toString())
-            etPeople.setText(it.people)
-            etMood.setText(it.mood)
-            etNotes.setText(it.notes)
-            etRating.setText(it.rating.toString())
+            etEnergy.setText(it.energy.toString() as CharSequence)
+            etPeople.setText(it.people as CharSequence)
+            etMood.setText(it.mood as CharSequence)
+            etNotes.setText(it.notes as CharSequence)
+            etRating.setText(it.rating.toString() as CharSequence)
         }
         
         val dialog = AlertDialog.Builder(context)

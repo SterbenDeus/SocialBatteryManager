@@ -46,9 +46,9 @@ class ImportExportManager private constructor(
                             activity.people,
                             activity.mood,
                             activity.notes,
-                            dateFormat.format(Date(activity.date)),
-                            dateFormat.format(Date(activity.createdAt)),
-                            dateFormat.format(Date(activity.updatedAt))
+                            dateFormat.format(java.util.Date(activity.date)),
+                            dateFormat.format(java.util.Date(activity.createdAt)),
+                            dateFormat.format(java.util.Date(activity.updatedAt))
                         )
                     )
                 }
@@ -90,7 +90,7 @@ class ImportExportManager private constructor(
             contentStream.beginText()
             contentStream.setFont(PDType1Font.HELVETICA, 10f)
             contentStream.newLineAtOffset(margin, yPosition)
-            contentStream.showText("Exported on: ${dateFormat.format(Date())}")
+            contentStream.showText("Exported on: ${dateFormat.format(java.util.Date())}")
             contentStream.endText()
             yPosition -= 24f
 
@@ -117,7 +117,7 @@ class ImportExportManager private constructor(
                         activity.energy.toString(),
                         activity.people,
                         activity.mood,
-                        dateFormat.format(Date(activity.date))
+                        dateFormat.format(java.util.Date(activity.date))
                     ).joinToString("    ")
                 )
                 contentStream.endText()

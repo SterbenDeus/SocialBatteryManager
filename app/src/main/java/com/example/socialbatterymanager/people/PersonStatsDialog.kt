@@ -74,7 +74,7 @@ class PersonStatsDialog(
                     // Set last interaction
                     val lastInteractionText = if (stats.lastInteraction != null) {
                         val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-                        "Last interaction: ${dateFormat.format(Date(stats.lastInteraction))}"
+                        "Last interaction: ${dateFormat.format(java.util.Date(stats.lastInteraction))}"
                     } else {
                         "No recorded interactions"
                     }
