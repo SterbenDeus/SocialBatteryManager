@@ -103,7 +103,7 @@ class ReportsFragment : Fragment() {
 
         // Group activities by date and calculate average energy
         val groupedByDate = activities.groupBy { activity ->
-            val date = Date(activity.date)
+            val date = java.util.Date(activity.date)
             dateFormat.format(date)
         }
 
@@ -129,7 +129,7 @@ class ReportsFragment : Fragment() {
     }
 
     private fun updateMoodChart(activities: List<ActivityEntity>) {
-        val moodCounts = activities.groupBy { it.mood }.mapValues { it.value.size }
+        val moodCounts = activities.groupBy { it.mood }.mapValues { entry -> entry.value.size }
         val entries = moodCounts.map { (mood, count) ->
             PieEntry(count.toFloat(), mood)
         }
@@ -148,12 +148,12 @@ class ReportsFragment : Fragment() {
     private fun updateTrendsList(activities: List<ActivityEntity>) {
         val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
         val trends = activities.groupBy { activity ->
-            val date = Date(activity.date)
+            val date = java.util.Date(activity.date)
             dateFormat.format(date)
         }.map { (date, activitiesForDate) ->
             val avgEnergy = activitiesForDate.map { it.energy }.average()
             val mostCommonMood = activitiesForDate.groupBy { it.mood }
-                .maxByOrNull { it.value.size }?.key ?: "Unknown"
+                .maxByOrNull { (_, activities) -> activities.size }?.key ?: "Unknown"
 
             TrendData(
                 date = date,
@@ -161,7 +161,7 @@ class ReportsFragment : Fragment() {
                 avgMood = mostCommonMood,
                 activityCount = activitiesForDate.size
             )
-        }.sortedByDescending { it.date }
+        }.sortedByDescending { trendData -> trendData.date }
 
         trendsAdapter.updateTrends(trends)
     }
@@ -182,7 +182,7 @@ class ReportsFragment : Fragment() {
                 // Write data
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
                 activities.forEach { activity ->
-                    val date = dateFormat.format(Date(activity.date))
+                    val date = dateFormat.format(java.util.Date(activity.date))
                     writer.append("$date,${activity.name},${activity.type},${activity.energy},${activity.mood},${activity.people},${activity.notes}\n")
                 }
 
@@ -218,12 +218,12 @@ class ReportsFragment : Fragment() {
                 // Group activities by date for trends
                 val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
                 val trends = activities.groupBy { activity ->
-                    val date = Date(activity.date)
+                    val date = java.util.Date(activity.date)
                     dateFormat.format(date)
                 }.map { (date, activitiesForDate) ->
                     val avgEnergy = activitiesForDate.map { it.energy }.average()
                     val mostCommonMood = activitiesForDate.groupBy { it.mood }
-                        .maxByOrNull { it.value.size }?.key ?: "Unknown"
+                        .maxByOrNull { (_, activities) -> activities.size }?.key ?: "Unknown"
 
                     TrendData(
                         date = date,
@@ -231,14 +231,14 @@ class ReportsFragment : Fragment() {
                         avgMood = mostCommonMood,
                         activityCount = activitiesForDate.size
                     )
-                }.sortedByDescending { it.date }
+                }.sortedByDescending { trendData -> trendData.date }
 
                 // Create simple text report (PDF generation would require more complex implementation)
                 val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.txt")
                 val writer = FileWriter(file)
 
                 writer.append("Social Battery Manager Report\n")
-                writer.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}\n\n")
+                writer.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(java.util.Date())}\n\n")
 
                 writer.append("DAILY TRENDS:\n")
                 trends.forEach { trend ->
@@ -247,7 +247,7 @@ class ReportsFragment : Fragment() {
 
                 writer.append("\nDETAILED ACTIVITIES:\n")
                 activities.forEach { activity ->
-                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(activity.date))
+                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(java.util.Date(activity.date))
                     writer.append("$date - ${activity.name} (${activity.type}): Energy: ${activity.energy}, Mood: ${activity.mood}\n")
                 }
 

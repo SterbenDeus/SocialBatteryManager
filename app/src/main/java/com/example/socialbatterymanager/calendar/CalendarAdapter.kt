@@ -38,7 +38,7 @@ class CalendarAdapter(
 
         fun bind(event: CalendarEvent, onEventClick: (CalendarEvent) -> Unit) {
             titleTextView.text = event.title
-            timeTextView.text = "${timeFormat.format(Date(event.startTime))} - ${timeFormat.format(Date(event.endTime))}"
+            timeTextView.text = "${timeFormat.format(java.util.Date(event.startTime))} - ${timeFormat.format(java.util.Date(event.endTime))}"
             
             if (event.description.isNotEmpty()) {
                 descriptionTextView.text = event.description

@@ -35,7 +35,7 @@ class PersonStatsCalculator(private val context: Context) {
         val mostCommonMood = personActivities
             .groupingBy { it.mood }
             .eachCount()
-            .maxByOrNull { it.value }
+            .maxByOrNull { (_, count) -> count }
             ?.key ?: "Unknown"
         
         val lastInteraction = personActivities.maxOfOrNull { it.date }

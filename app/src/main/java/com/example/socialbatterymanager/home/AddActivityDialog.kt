@@ -29,9 +29,9 @@ class AddActivityDialog(
 
         // Pre-fill if editing existing activity
         existingActivity?.let { activity ->
-            etName.setText(activity.name)
-            etPeople.setText(activity.people)
-            etNotes.setText(activity.notes)
+            etName.setText(activity.name as CharSequence)
+            etPeople.setText(activity.people as CharSequence)
+            etNotes.setText(activity.notes as CharSequence)
             
             // Set spinner selections
             val typeAdapter = spinnerType.adapter as ArrayAdapter<String>

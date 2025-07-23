@@ -66,10 +66,10 @@ class EditPersonDialog(
 
         // Pre-populate fields if editing existing person
         person?.let {
-            etName.setText(it.name)
-            etEmail.setText(it.email)
-            etPhone.setText(it.phone)
-            etNotes.setText(it.notes)
+            etName.setText(it.name as CharSequence)
+            etEmail.setText(it.email as CharSequence)
+            etPhone.setText(it.phone as CharSequence)
+            etNotes.setText(it.notes as CharSequence)
             
             // TODO: Load avatar image if available
             if (!it.avatarPath.isNullOrEmpty()) {

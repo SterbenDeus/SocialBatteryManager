@@ -127,8 +127,8 @@ class EditProfileDialog : DialogFragment() {
                 currentMood = mood
             )
 
-            nameEditText.setText(name)
-            emailEditText.setText(email)
+            nameEditText.setText(name as CharSequence)
+            emailEditText.setText(email as CharSequence)
             capacitySeekBar.progress = capacity
             capacityText.text = "$capacity%"
             warningSeekBar.progress = warning

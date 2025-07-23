@@ -240,8 +240,8 @@ class ProfileFragment : Fragment() {
 
     private fun updateUI() {
         currentUser?.let { user ->
-            nameEditText.setText(user.name)
-            emailEditText.setText(user.email)
+            nameEditText.setText(user.name as CharSequence)
+            emailEditText.setText(user.email as CharSequence)
             capacitySeekBar.progress = user.batteryCapacity
             capacityText.text = "${user.batteryCapacity}%"
             warningSeekBar.progress = user.warningLevel

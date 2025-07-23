@@ -93,7 +93,7 @@ class RequirementsFragment : Fragment() {
             }
         """.trimIndent()
         
-        requirementsInput.setText(sampleRequirement)
+        requirementsInput.setText(sampleRequirement as CharSequence)
     }
     
     private fun generateCode() {
