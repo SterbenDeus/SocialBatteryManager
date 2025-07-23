@@ -103,7 +103,7 @@ class PeopleFragment : Fragment() {
 
     private fun showPersonOptions(person: Person) {
         // Show options menu (edit, delete, etc.)
-        val options = arrayOf("Edit", "Delete", "View Stats")
+        val options = arrayOf<String>("Edit", "Delete", "View Stats")
         
         val builder = android.app.AlertDialog.Builder(requireContext())
         builder.setTitle("Options for ${person.name}")
@@ -142,7 +142,7 @@ class PeopleFragment : Fragment() {
             
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf(Manifest.permission.READ_CONTACTS),
+                arrayOf<String>(Manifest.permission.READ_CONTACTS),
                 CONTACTS_PERMISSION_REQUEST_CODE
             )
         } else {

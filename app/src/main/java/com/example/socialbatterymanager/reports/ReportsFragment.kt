@@ -64,7 +64,7 @@ class ReportsFragment : Fragment() {
         trendsRecyclerView = view.findViewById(R.id.trendsRecyclerView)
 
         // Setup RecyclerView
-        trendsAdapter = TrendsAdapter(emptyList())
+        trendsAdapter = TrendsAdapter(emptyList<TrendData>())
         trendsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         trendsRecyclerView.adapter = trendsAdapter
 

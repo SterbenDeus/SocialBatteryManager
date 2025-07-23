@@ -1,31 +1,33 @@
 package com.example.socialbatterymanager.home
 
+import android.animation.ValueAnimator
 import android.app.AlertDialog
+import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
+import androidx.core.graphics.toColorInt
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkManager
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
 import com.airbnb.lottie.value.LottieValueCallback
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.utils.ErrorHandler
-import com.example.socialbatterymanager.utils.NetworkConnectivityManager
-import kotlinx.coroutines.launch
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import androidx.work.PeriodicWorkRequestBuilder
-import androidx.work.WorkManager
-import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.ActivityEntity
 import com.example.socialbatterymanager.data.AppDatabase
 import com.example.socialbatterymanager.model.EnergyLog
 import com.example.socialbatterymanager.notification.EnergyReminderWorker
+import com.example.socialbatterymanager.utils.ErrorHandler
+import com.example.socialbatterymanager.utils.NetworkConnectivityManager
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -43,13 +45,19 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerViewActivities: RecyclerView
     private lateinit var fabAddActivity: FloatingActionButton
     private lateinit var btnTestBattery: Button
+    private lateinit var btnLogout: Button
     private lateinit var networkManager: NetworkConnectivityManager
+    private lateinit var lottieBattery: LottieAnimationView
+    private lateinit var tvBatteryPercent: TextView
 
     private lateinit var activityAdapter: ActivityAdapter
     private lateinit var database: AppDatabase
 
     // Current energy level
     private var currentEnergyLevel = 65
+    private var batteryLevel = 65
+    private var testIndex = 0
+    private val testLevels = listOf(95, 75, 55, 35, 15)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -69,6 +77,9 @@ class HomeFragment : Fragment() {
         recyclerViewActivities = view.findViewById(R.id.recyclerViewActivities)
         fabAddActivity = view.findViewById(R.id.fabAddActivity)
         btnTestBattery = view.findViewById(R.id.btnTestBattery)
+        btnLogout = view.findViewById(R.id.btnLogout)
+        lottieBattery = view.findViewById(R.id.lottieBattery)
+        tvBatteryPercent = view.findViewById(R.id.tvBatteryPercent)
 
         // Initialize network manager
         networkManager = NetworkConnectivityManager(requireContext())
@@ -93,7 +104,7 @@ class HomeFragment : Fragment() {
         }
 
         btnLogout.setOnClickListener {
-            userViewModel.signOut()
+            // TODO: Implement logout functionality
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
 
@@ -331,5 +342,31 @@ class HomeFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         networkManager.unregister()
+    }
+    
+    private fun animateBatteryLevelChange(targetLevel: Int) {
+        val startLevel = batteryLevel
+        val animator = ValueAnimator.ofInt(startLevel, targetLevel)
+        animator.duration = 600
+        animator.addUpdateListener { valueAnimator ->
+            val level = valueAnimator.animatedValue as Int
+            batteryLevel = level
+            updateUI()
+        }
+        animator.start()
+    }
+    
+    private fun setLottieBatteryColor(level: Int) {
+        val color = when {
+            level >= 80 -> "#4CAF50".toColorInt()    // Green
+            level >= 60 -> "#FFEB3B".toColorInt()    // Yellow
+            level >= 40 -> "#FF9800".toColorInt()    // Orange
+            else -> "#F44336".toColorInt()           // Red
+        }
+        lottieBattery.addValueCallback(
+            KeyPath("BatteryFill"),
+            LottieProperty.COLOR_FILTER,
+            LottieValueCallback(PorterDuffColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP))
+        )
     }
 }

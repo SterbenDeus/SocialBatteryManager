@@ -31,14 +31,14 @@ class ImportExportManager private constructor(
 
             CSVWriter(FileWriter(file)).use { writer ->
                 writer.writeNext(
-                    arrayOf(
+                    arrayOf<String>(
                         "ID", "Name", "Type", "Energy", "People",
                         "Mood", "Notes", "Date", "Created At", "Updated At"
                     )
                 )
                 activities.forEach { activity ->
                     writer.writeNext(
-                        arrayOf(
+                        arrayOf<String>(
                             activity.id.toString(),
                             activity.name,
                             activity.type,
@@ -95,7 +95,7 @@ class ImportExportManager private constructor(
             yPosition -= 24f
 
             // Table Header
-            val headers = listOf("ID", "Name", "Type", "Energy", "People", "Mood", "Date")
+            val headers = listOf<String>("ID", "Name", "Type", "Energy", "People", "Mood", "Date")
             contentStream.beginText()
             contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10f)
             contentStream.newLineAtOffset(margin, yPosition)
@@ -110,7 +110,7 @@ class ImportExportManager private constructor(
                 contentStream.beginText()
                 contentStream.newLineAtOffset(margin, yPosition)
                 contentStream.showText(
-                    listOf(
+                    listOf<String>(
                         activity.id.toString(),
                         activity.name,
                         activity.type,
@@ -177,7 +177,7 @@ class ImportExportManager private constructor(
     }
 
     suspend fun getExportFormats(): List<String> {
-        return listOf("CSV", "PDF")
+        return listOf<String>("CSV", "PDF")
     }
 
     data class ImportResult(

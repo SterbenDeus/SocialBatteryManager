@@ -50,7 +50,7 @@ class SyncWorker(
         
         for (activity in pendingActivities) {
             try {
-                val activityMap = mapOf(
+                val activityMap = mapOf<String, Any>(
                     "name" to activity.name,
                     "type" to activity.type,
                     "energy" to activity.energy,

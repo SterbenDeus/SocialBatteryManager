@@ -83,20 +83,20 @@ class AddActivityDialog(
         moodSpinner: Spinner
     ) {
         // Activity types
-        val types = arrayOf("Work", "Social", "Exercise", "Hobby", "Rest", "Other")
+        val types = arrayOf<String>("Work", "Social", "Exercise", "Hobby", "Rest", "Other")
         val typeAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, types)
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         typeSpinner.adapter = typeAdapter
 
         // Energy impact values
-        val energyValues = arrayOf("-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5")
+        val energyValues = arrayOf<String>("-5", "-4", "-3", "-2", "-1", "0", "1", "2", "3", "4", "5")
         val energyAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, energyValues)
         energyAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         energySpinner.adapter = energyAdapter
         energySpinner.setSelection(5) // Default to 0
 
         // Mood options
-        val moods = arrayOf("😊 Happy", "😐 Neutral", "😔 Sad", "😴 Tired", "😤 Stressed", "😎 Energetic")
+        val moods = arrayOf<String>("😊 Happy", "😐 Neutral", "😔 Sad", "😴 Tired", "😤 Stressed", "😎 Energetic")
         val moodAdapter = ArrayAdapter(context, android.R.layout.simple_spinner_item, moods)
         moodAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         moodSpinner.adapter = moodAdapter
