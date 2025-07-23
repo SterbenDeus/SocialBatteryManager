@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.ActivityEntity
+import com.example.socialbatterymanager.data.model.ActivityEntity
 import java.text.SimpleDateFormat
 import java.util.*
 

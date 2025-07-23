@@ -6,7 +6,7 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.widget.*
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.ActivityEntity
+import com.example.socialbatterymanager.data.model.ActivityEntity
 
 class AddActivityDialog(
     private val context: Context,

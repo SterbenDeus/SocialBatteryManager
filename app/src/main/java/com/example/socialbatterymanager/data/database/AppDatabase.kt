@@ -9,20 +9,24 @@ import net.sqlcipher.database.SupportFactory
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
+import com.example.socialbatterymanager.model.EnergyLog
+import com.example.socialbatterymanager.data.EnergyLogDao
 
 @Database(
     entities = [
         com.example.socialbatterymanager.data.model.ActivityEntity::class,
         com.example.socialbatterymanager.data.model.AuditLogEntity::class,
-        com.example.socialbatterymanager.data.model.BackupMetadataEntity::class
+        com.example.socialbatterymanager.data.model.BackupMetadataEntity::class,
+        com.example.socialbatterymanager.model.EnergyLog::class
     ],
-    version = 3, // Bump version to force recreation
+    version = 4, // Bump version to force recreation
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun backupMetadataDao(): BackupMetadataDao
+    abstract fun energyLogDao(): EnergyLogDao
 
     companion object {
         @Volatile
