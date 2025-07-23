@@ -68,5 +68,7 @@ interface ActivityDao {
 
     @Query("UPDATE activities SET rating = :rating WHERE id = :id")
     suspend fun updateRating(id: Int, rating: Float)
-
+    
+    @Query("SELECT * FROM activities WHERE date >= :startDate AND date <= :endDate ORDER BY date ASC")
+    suspend fun getActivitiesByDateRangeSync(startDate: Long, endDate: Long): List<ActivityEntity>
 }
