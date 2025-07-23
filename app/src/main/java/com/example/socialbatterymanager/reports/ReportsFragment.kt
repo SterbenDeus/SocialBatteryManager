@@ -16,9 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.ActivityDao
-import com.example.socialbatterymanager.data.ActivityEntity
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.database.ActivityDao
+import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.PieChart
 import com.github.mikephil.charting.data.*
@@ -108,7 +108,7 @@ class ReportsFragment : Fragment() {
         }
 
         groupedByDate.entries.forEachIndexed { index, (date, activitiesForDate) ->
-            val avgEnergy = activitiesForDate.map { it.energy }.average().toFloat()
+            val avgEnergy: Float = activitiesForDate.map { it.energy }.average().toFloat()
             entries.add(Entry(index.toFloat(), avgEnergy))
             labels.add(date)
         }
@@ -151,8 +151,8 @@ class ReportsFragment : Fragment() {
             val date = Date(activity.date)
             dateFormat.format(date)
         }.map { (date, activitiesForDate) ->
-            val avgEnergy = activitiesForDate.map { it.energy }.average()
-            val mostCommonMood = activitiesForDate.groupBy { it.mood }
+            val avgEnergy: Double = activitiesForDate.map { it.energy }.average()
+            val mostCommonMood: String = activitiesForDate.groupBy { it.mood }
                 .maxByOrNull { it.value.size }?.key ?: "Unknown"
 
             TrendData(
@@ -221,8 +221,8 @@ class ReportsFragment : Fragment() {
                     val date = Date(activity.date)
                     dateFormat.format(date)
                 }.map { (date, activitiesForDate) ->
-                    val avgEnergy = activitiesForDate.map { it.energy }.average()
-                    val mostCommonMood = activitiesForDate.groupBy { it.mood }
+                    val avgEnergy: Double = activitiesForDate.map { it.energy }.average()
+                    val mostCommonMood: String = activitiesForDate.groupBy { it.mood }
                         .maxByOrNull { it.value.size }?.key ?: "Unknown"
 
                     TrendData(

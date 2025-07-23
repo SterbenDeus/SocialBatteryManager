@@ -2,12 +2,13 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.model.SyncStatus
 import com.opencsv.CSVWriter
-import com.tom_roush.pdfbox.pdmodel.PDDocument
-import com.tom_roush.pdfbox.pdmodel.PDPage
-import com.tom_roush.pdfbox.pdmodel.common.PDRectangle
-import com.tom_roush.pdfbox.pdmodel.PDPageContentStream
-import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
+import org.apache.pdfbox.pdmodel.PDDocument
+import org.apache.pdfbox.pdmodel.PDPage
+import org.apache.pdfbox.pdmodel.common.PDRectangle
+import org.apache.pdfbox.pdmodel.PDPageContentStream
+import org.apache.pdfbox.pdmodel.font.PDType1Font
 import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileOutputStream
@@ -33,7 +34,7 @@ class ImportExportManager private constructor(
                 writer.writeNext(
                     arrayOf(
                         "ID", "Name", "Type", "Energy", "People",
-                        "Mood", "Notes", "Date", "Created At", "Updated At"
+                        "Mood", "Notes", "Date", "Last Modified", "Updated At"
                     )
                 )
                 activities.forEach { activity ->
@@ -47,7 +48,7 @@ class ImportExportManager private constructor(
                             activity.mood,
                             activity.notes,
                             dateFormat.format(Date(activity.date)),
-                            dateFormat.format(Date(activity.createdAt)),
+                            dateFormat.format(Date(activity.lastModified)),
                             dateFormat.format(Date(activity.updatedAt))
                         )
                     )
@@ -157,7 +158,7 @@ class ImportExportManager private constructor(
                                 mood = parts[5].trim('"'),
                                 notes = parts[6].trim('"'),
                                 date = System.currentTimeMillis(),
-                                createdAt = System.currentTimeMillis(),
+                                lastModified = System.currentTimeMillis(),
                                 updatedAt = System.currentTimeMillis()
                             )
                             dataRepository.insertActivity(activity, "import")

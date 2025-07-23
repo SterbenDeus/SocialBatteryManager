@@ -1,6 +1,6 @@
 package com.example.socialbatterymanager.model
 
-import com.example.socialbatterymanager.data.ActivityEntity
+import com.example.socialbatterymanager.data.model.ActivityEntity
 
 enum class ActivityType {
     WORK,

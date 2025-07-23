@@ -8,7 +8,7 @@ import androidx.core.app.NotificationCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.database.AppDatabase
 import kotlinx.coroutines.runBlocking
 
 class EnergyReminderWorker(

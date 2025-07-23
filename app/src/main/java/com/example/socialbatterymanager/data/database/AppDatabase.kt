@@ -9,20 +9,36 @@ import net.sqlcipher.database.SupportFactory
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
+import com.example.socialbatterymanager.model.EnergyLog
+import com.example.socialbatterymanager.model.User
+import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.CalendarEvent
+import com.example.socialbatterymanager.data.EnergyLogDao
+import com.example.socialbatterymanager.data.UserDao
+import com.example.socialbatterymanager.data.PersonDao
+import com.example.socialbatterymanager.data.CalendarEventDao
 
 @Database(
     entities = [
         com.example.socialbatterymanager.data.model.ActivityEntity::class,
         com.example.socialbatterymanager.data.model.AuditLogEntity::class,
-        com.example.socialbatterymanager.data.model.BackupMetadataEntity::class
+        com.example.socialbatterymanager.data.model.BackupMetadataEntity::class,
+        com.example.socialbatterymanager.model.EnergyLog::class,
+        com.example.socialbatterymanager.model.User::class,
+        com.example.socialbatterymanager.model.Person::class,
+        com.example.socialbatterymanager.data.CalendarEvent::class
     ],
-    version = 3, // Bump version to force recreation
+    version = 6, // Bump version to force recreation
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun activityDao(): ActivityDao
     abstract fun auditLogDao(): AuditLogDao
     abstract fun backupMetadataDao(): BackupMetadataDao
+    abstract fun energyLogDao(): EnergyLogDao
+    abstract fun userDao(): UserDao
+    abstract fun personDao(): PersonDao
+    abstract fun calendarEventDao(): CalendarEventDao
 
     companion object {
         @Volatile

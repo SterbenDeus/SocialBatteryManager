@@ -1,7 +1,7 @@
 package com.example.socialbatterymanager.people
 
 import android.content.Context
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.model.Person
 import kotlinx.coroutines.flow.first
 
@@ -26,7 +26,7 @@ class PersonStatsCalculator(private val context: Context) {
         }
         
         val totalActivities = personActivities.size
-        val averageEnergyImpact = if (personActivities.isNotEmpty()) {
+        val averageEnergyImpact: Double = if (personActivities.isNotEmpty()) {
             personActivities.map { it.energy }.average()
         } else {
             0.0

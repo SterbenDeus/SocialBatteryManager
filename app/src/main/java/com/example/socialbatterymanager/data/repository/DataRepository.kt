@@ -19,7 +19,7 @@ class DataRepository private constructor(
     // Activity operations with audit trail
     suspend fun insertActivity(activity: ActivityEntity, userId: String? = null) {
         val insertedActivity = activity.copy(
-            createdAt = System.currentTimeMillis(),
+            lastModified = System.currentTimeMillis(),
             updatedAt = System.currentTimeMillis()
         )
         database.activityDao().insertActivity(insertedActivity)
