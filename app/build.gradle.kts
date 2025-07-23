@@ -43,6 +43,9 @@ android {
 }
 
 dependencies {
+    // Requirements processor module
+    implementation(project(":requirements-processor"))
+    
     // Lottie
     implementation("com.airbnb.android:lottie:6.4.0")
 
@@ -92,7 +95,8 @@ dependencies {
 
     // CSV/PDF export
     implementation("com.opencsv:opencsv:5.8")
-    implementation("org.apache.pdfbox:pdfbox:2.0.30")
+    // Use Tom-Roush PDFBox Android instead of regular PDFBox
+    implementation("com.tom-roush:pdfbox-android:2.0.30.0")
 
     // Gson
     implementation("com.google.code.gson:gson:2.10.1")

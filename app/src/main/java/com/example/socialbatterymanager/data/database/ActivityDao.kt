@@ -32,4 +32,13 @@ interface ActivityDao {
     
     @Query("DELETE FROM activities WHERE isDeleted = 1 AND updatedAt < :cutoff")
     suspend fun hardDeleteOldActivities(cutoff: Long)
+    
+    @Query("SELECT * FROM activities WHERE date >= :startDate AND date <= :endDate AND isDeleted = 0 ORDER BY date ASC")
+    suspend fun getActivitiesByDateRangeSync(startDate: Long, endDate: Long): List<ActivityEntity>
+    
+    @Query("UPDATE activities SET usageCount = usageCount + 1 WHERE id = :id")
+    suspend fun incrementUsageCount(id: Int)
+
+    @Query("UPDATE activities SET rating = :rating WHERE id = :id")
+    suspend fun updateRating(id: Int, rating: Float)
 }

@@ -16,4 +16,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Social Battery Manager"
 include(":app")
+include(":requirements-processor")
  

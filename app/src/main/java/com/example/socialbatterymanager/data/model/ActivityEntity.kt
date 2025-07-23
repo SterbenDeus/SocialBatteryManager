@@ -22,7 +22,10 @@ data class ActivityEntity(
     val lastModified: Long = System.currentTimeMillis(),
     val firebaseId: String? = null, // For Firebase sync
     val isDeleted: Int = 0, // Soft delete flag (0 = active, 1 = deleted)
-    val updatedAt: Long = System.currentTimeMillis() // Last update timestamp
+    val createdAt: Long = System.currentTimeMillis(), // Creation timestamp
+    val updatedAt: Long = System.currentTimeMillis(), // Last update timestamp
+    val usageCount: Int = 0, // Number of times this activity was used
+    val rating: Float = 0.0f // User rating for this activity
 )
 
 enum class SyncStatus {

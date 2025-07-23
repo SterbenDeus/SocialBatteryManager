@@ -5,11 +5,15 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.socialbatterymanager.model.Person
 import com.example.socialbatterymanager.model.User
 import com.example.socialbatterymanager.model.EnergyLog
 import com.example.socialbatterymanager.data.model.SyncStatus
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.CalendarEvent
+import com.example.socialbatterymanager.data.Converters
 
 
 @Database(
@@ -23,6 +27,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun personDao(): PersonDao
     abstract fun userDao(): UserDao
     abstract fun calendarEventDao(): CalendarEventDao
+    abstract fun energyLogDao(): EnergyLogDao
 
 
     companion object {
@@ -41,6 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
                 database.execSQL("ALTER TABLE activities ADD COLUMN lastModified INTEGER NOT NULL DEFAULT 0")
                 database.execSQL("ALTER TABLE activities ADD COLUMN firebaseId TEXT")
                 database.execSQL("ALTER TABLE activities ADD COLUMN isDeleted INTEGER NOT NULL DEFAULT 0")
+                database.execSQL("ALTER TABLE activities ADD COLUMN createdAt INTEGER NOT NULL DEFAULT 0")
                 database.execSQL("ALTER TABLE activities ADD COLUMN updatedAt INTEGER NOT NULL DEFAULT 0")
                 database.execSQL("ALTER TABLE activities ADD COLUMN rating REAL NOT NULL DEFAULT 0.0")
                 database.execSQL("ALTER TABLE activities ADD COLUMN usageCount INTEGER NOT NULL DEFAULT 0")
