@@ -144,7 +144,7 @@ implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
 
 // Export functionality
 implementation("com.opencsv:opencsv:5.8")
-implementation("com.itextpdf:itextg:5.5.13.3")
+implementation("org.apache.pdfbox:pdfbox:2.0.30")
 
 // Security
 implementation("androidx.security:security-crypto:1.1.0-alpha06")
@@ -170,6 +170,7 @@ val passphrase = if (securityManager.isEncryptionEnabled()) {
 
 val dataRepository = DataRepository.getInstance(context, passphrase)
 val preferencesManager = PreferencesManager.getInstance(context)
+// Enable auto-backup
 ```
 
 ### Data Operations

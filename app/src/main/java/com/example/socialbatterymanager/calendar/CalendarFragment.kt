@@ -1,3 +1,5 @@
+@file:Suppress("OverrideDeprecatedMigration")
+
 package com.example.socialbatterymanager.calendar
 
 import android.Manifest
@@ -19,6 +21,7 @@ import com.example.socialbatterymanager.data.CalendarEvent
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
+@Suppress("OverrideDeprecatedMigration")
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     
     private lateinit var calendarView: CalendarView
@@ -151,6 +154,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
     
+    @Suppress("OverrideDeprecatedMigration")
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,

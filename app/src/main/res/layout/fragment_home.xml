@@ -65,7 +65,6 @@
                 android:layout_marginStart="12dp"/>
         </LinearLayout>
 
-<<<<<<< HEAD
         <!-- Logout Button -->
         <Button
             android:id="@+id/btnLogout"
@@ -79,10 +78,12 @@
         <!-- CalendarView under buttons -->
         <CalendarView
             android:id="@+id/calendarView"
-=======
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"/>
+
         <!-- Weekly Stats -->
         <LinearLayout
->>>>>>> copilot/fix-5
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"

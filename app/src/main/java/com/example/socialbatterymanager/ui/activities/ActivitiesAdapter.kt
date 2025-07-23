@@ -9,45 +9,25 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.ActivityEntity
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
-
-class ActivitiesAdapter : ListAdapter<ActivityEntity, ActivitiesAdapter.ActivityViewHolder>(ActivityDiffCallback()) {
-
-    private val dateFormat = SimpleDateFormat("MMM dd, yyyy", Locale.getDefault())
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_activity, parent, false)
-
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toActivity
 
 class ActivitiesAdapter(
     private val onItemClick: (Activity) -> Unit = {}
-) : ListAdapter<com.example.socialbatterymanager.data.ActivityEntity, ActivitiesAdapter.ActivityViewHolder>(ActivityDiffCallback()) {
+) : ListAdapter<ActivityEntity, ActivitiesAdapter.ActivityViewHolder>(ActivityDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_activity, parent, false)
-
         return ActivityViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: ActivityViewHolder, position: Int) {
-
-        val activity = getItem(position)
-        holder.bind(activity)
-    }
-
-    inner class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
         val entity = getItem(position)
         holder.bind(entity.toActivity(), onItemClick)
     }
 
-    class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-
+    inner class ActivityViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         private val tvName: TextView = itemView.findViewById(R.id.tvName)
         private val tvType: TextView = itemView.findViewById(R.id.tvType)
         private val tvEnergy: TextView = itemView.findViewById(R.id.tvEnergy)
@@ -55,22 +35,14 @@ class ActivitiesAdapter(
         private val tvMood: TextView = itemView.findViewById(R.id.tvMood)
         private val tvNotes: TextView = itemView.findViewById(R.id.tvNotes)
 
-
-        fun bind(activity: ActivityEntity) {
-            tvName.text = activity.name
-            tvType.text = activity.type
-
         fun bind(activity: Activity, onItemClick: (Activity) -> Unit) {
             tvName.text = activity.name
             tvType.text = activity.type.name
-
             tvEnergy.text = activity.energy.toString()
             tvPeople.text = activity.people
             tvMood.text = activity.mood
             tvNotes.text = activity.notes
-            
-
-            // You can add click listeners here for edit/delete functionality
+            itemView.setOnClickListener { onItemClick(activity) }
         }
     }
 
@@ -78,21 +50,7 @@ class ActivitiesAdapter(
         override fun areItemsTheSame(oldItem: ActivityEntity, newItem: ActivityEntity): Boolean {
             return oldItem.id == newItem.id
         }
-
         override fun areContentsTheSame(oldItem: ActivityEntity, newItem: ActivityEntity): Boolean {
-
-            itemView.setOnClickListener {
-                onItemClick(activity)
-            }
-        }
-    }
-
-    class ActivityDiffCallback : DiffUtil.ItemCallback<com.example.socialbatterymanager.data.ActivityEntity>() {
-        override fun areItemsTheSame(oldItem: com.example.socialbatterymanager.data.ActivityEntity, newItem: com.example.socialbatterymanager.data.ActivityEntity): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: com.example.socialbatterymanager.data.ActivityEntity, newItem: com.example.socialbatterymanager.data.ActivityEntity): Boolean {
 
             return oldItem == newItem
         }

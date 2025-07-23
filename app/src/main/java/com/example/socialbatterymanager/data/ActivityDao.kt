@@ -5,10 +5,8 @@ import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
-
-import androidx.room.Delete
-
-
+import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.model.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -22,40 +20,27 @@ interface ActivityDao {
     @Delete
     suspend fun deleteActivity(activity: ActivityEntity)
 
-    @Update
-    suspend fun updateActivity(activity: ActivityEntity)
-
-    @Delete
-    suspend fun deleteActivity(activity: ActivityEntity)
-
-    @Update
-    suspend fun updateActivity(activity: ActivityEntity)
-
-    @Delete
-    suspend fun deleteActivity(activity: ActivityEntity)
-
     @Query("SELECT * FROM activities ORDER BY date DESC")
     fun getAllActivities(): Flow<List<ActivityEntity>>
 
-    
     @Query("SELECT * FROM activities WHERE id = :id")
     suspend fun getActivityById(id: Int): ActivityEntity?
-    
+
     @Query("SELECT * FROM activities WHERE syncStatus = :status")
-    suspend fun getActivitiesBySyncStatus(status: SyncStatus): List<ActivityEntity>
-    
+    suspend fun getActivitiesBySyncStatus(status: String): List<ActivityEntity>
+
     @Query("SELECT * FROM activities WHERE date BETWEEN :startDate AND :endDate ORDER BY date DESC")
     fun getActivitiesByDateRange(startDate: Long, endDate: Long): Flow<List<ActivityEntity>>
-    
+
     @Query("SELECT * FROM activities WHERE type = :type ORDER BY date DESC")
     fun getActivitiesByType(type: String): Flow<List<ActivityEntity>>
-    
+
     @Query("SELECT * FROM activities WHERE socialInteractionLevel >= :minLevel ORDER BY date DESC")
     fun getActivitiesBySocialLevel(minLevel: Int): Flow<List<ActivityEntity>>
     
     @Query("UPDATE activities SET syncStatus = :status WHERE id = :id")
-    suspend fun updateSyncStatus(id: Int, status: SyncStatus)
-    
+    suspend fun updateSyncStatus(id: Int, status: String)
+
     @Query("UPDATE activities SET firebaseId = :firebaseId WHERE id = :id")
     suspend fun updateFirebaseId(id: Int, firebaseId: String)
     
@@ -70,10 +55,6 @@ interface ActivityDao {
     
     @Query("SELECT AVG(socialInteractionLevel) FROM activities WHERE date >= :startDate")
     suspend fun getAverageSocialLevel(startDate: Long): Double?
-
-
-    @Query("SELECT * FROM activities WHERE id = :id")
-    suspend fun getActivityById(id: Int): ActivityEntity?
 
 
     @Query("SELECT * FROM activities WHERE id = :id")

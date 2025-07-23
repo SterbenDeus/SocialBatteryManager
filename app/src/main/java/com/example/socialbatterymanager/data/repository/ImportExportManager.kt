@@ -2,15 +2,12 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
-import com.itextpdf.text.Document
-import com.itextpdf.text.DocumentException
-import com.itextpdf.text.Element
-import com.itextpdf.text.Font
-import com.itextpdf.text.PageSize
-import com.itextpdf.text.Paragraph
-import com.itextpdf.text.pdf.PdfPTable
-import com.itextpdf.text.pdf.PdfWriter
 import com.opencsv.CSVWriter
+import com.tom_roush.pdfbox.pdmodel.PDDocument
+import com.tom_roush.pdfbox.pdmodel.PDPage
+import com.tom_roush.pdfbox.pdmodel.common.PDRectangle
+import com.tom_roush.pdfbox.pdmodel.PDPageContentStream
+import com.tom_roush.pdfbox.pdmodel.font.PDType1Font
 import kotlinx.coroutines.flow.first
 import java.io.File
 import java.io.FileOutputStream
@@ -24,134 +21,130 @@ class ImportExportManager private constructor(
     private val context: Context,
     private val dataRepository: DataRepository
 ) {
-    
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-    
+
     suspend fun exportToCsv(): File? {
         return try {
             val activities = dataRepository.getAllActivities().first()
             val fileName = "social_battery_export_${System.currentTimeMillis()}.csv"
             val file = File(context.getExternalFilesDir(null), fileName)
-            
+
             CSVWriter(FileWriter(file)).use { writer ->
-                // Write header
-                writer.writeNext(arrayOf(
-                    "ID",
-                    "Name",
-                    "Type",
-                    "Energy",
-                    "People",
-                    "Mood",
-                    "Notes",
-                    "Date",
-                    "Created At",
-                    "Updated At"
-                ))
-                
-                // Write data
+                writer.writeNext(
+                    arrayOf(
+                        "ID", "Name", "Type", "Energy", "People",
+                        "Mood", "Notes", "Date", "Created At", "Updated At"
+                    )
+                )
                 activities.forEach { activity ->
-                    writer.writeNext(arrayOf(
+                    writer.writeNext(
+                        arrayOf(
+                            activity.id.toString(),
+                            activity.name,
+                            activity.type,
+                            activity.energy.toString(),
+                            activity.people,
+                            activity.mood,
+                            activity.notes,
+                            dateFormat.format(Date(activity.date)),
+                            dateFormat.format(Date(activity.createdAt)),
+                            dateFormat.format(Date(activity.updatedAt))
+                        )
+                    )
+                }
+            }
+            file
+        } catch (e: IOException) {
+            null
+        }
+    }
+
+    suspend fun exportToPdf(): File? {
+        val activities = try {
+            dataRepository.getAllActivities().first()
+        } catch (e: Exception) {
+            return null
+        }
+        val fileName = "social_battery_export_${System.currentTimeMillis()}.pdf"
+        val file = File(context.getExternalFilesDir(null), fileName)
+
+        val document = PDDocument()
+        val page = PDPage(PDRectangle.A4)
+        document.addPage(page)
+
+        try {
+            val margin = 40f
+            val yStart = page.mediaBox.height - margin
+            var yPosition = yStart
+            val contentStream = PDPageContentStream(document, page)
+
+            // Title
+            contentStream.beginText()
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 16f)
+            contentStream.newLineAtOffset(margin, yPosition)
+            contentStream.showText("Social Battery Manager - Activity Export")
+            contentStream.endText()
+            yPosition -= 30f
+
+            // Export Date
+            contentStream.beginText()
+            contentStream.setFont(PDType1Font.HELVETICA, 10f)
+            contentStream.newLineAtOffset(margin, yPosition)
+            contentStream.showText("Exported on: ${dateFormat.format(Date())}")
+            contentStream.endText()
+            yPosition -= 24f
+
+            // Table Header
+            val headers = listOf("ID", "Name", "Type", "Energy", "People", "Mood", "Date")
+            contentStream.beginText()
+            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10f)
+            contentStream.newLineAtOffset(margin, yPosition)
+            contentStream.showText(headers.joinToString("    "))
+            contentStream.endText()
+            yPosition -= 16f
+
+            // Table Rows
+            contentStream.setFont(PDType1Font.HELVETICA, 9f)
+            for (activity in activities) {
+                if (yPosition < margin + 20) break // Simple single-page support
+                contentStream.beginText()
+                contentStream.newLineAtOffset(margin, yPosition)
+                contentStream.showText(
+                    listOf(
                         activity.id.toString(),
                         activity.name,
                         activity.type,
                         activity.energy.toString(),
                         activity.people,
                         activity.mood,
-                        activity.notes,
-                        dateFormat.format(Date(activity.date)),
-                        dateFormat.format(Date(activity.createdAt)),
-                        dateFormat.format(Date(activity.updatedAt))
-                    ))
-                }
+                        dateFormat.format(Date(activity.date))
+                    ).joinToString("    ")
+                )
+                contentStream.endText()
+                yPosition -= 14f
             }
-            
-            file
-        } catch (e: IOException) {
-            null
-        }
-    }
-    
-    suspend fun exportToPdf(): File? {
-        return try {
-            val activities = dataRepository.getAllActivities().first()
-            val fileName = "social_battery_export_${System.currentTimeMillis()}.pdf"
-            val file = File(context.getExternalFilesDir(null), fileName)
-            
-            val document = Document(PageSize.A4)
-            PdfWriter.getInstance(document, FileOutputStream(file))
-            
-            document.open()
-            
-            // Title
-            val titleFont = Font(Font.FontFamily.HELVETICA, 18f, Font.BOLD)
-            val title = Paragraph("Social Battery Manager - Activity Export", titleFont)
-            title.alignment = Element.ALIGN_CENTER
-            document.add(title)
-            
-            // Export date
-            val dateFont = Font(Font.FontFamily.HELVETICA, 10f)
-            val exportDate = Paragraph("Exported on: ${dateFormat.format(Date())}", dateFont)
-            exportDate.alignment = Element.ALIGN_CENTER
-            document.add(exportDate)
-            document.add(Paragraph(" ")) // Empty line
-            
-            // Table
-            val table = PdfPTable(7)
-            table.widthPercentage = 100f
-            table.setWidths(floatArrayOf(1f, 3f, 2f, 1f, 2f, 2f, 3f))
-            
-            // Table headers
-            val headerFont = Font(Font.FontFamily.HELVETICA, 10f, Font.BOLD)
-            table.addCell(createCell("ID", headerFont))
-            table.addCell(createCell("Name", headerFont))
-            table.addCell(createCell("Type", headerFont))
-            table.addCell(createCell("Energy", headerFont))
-            table.addCell(createCell("People", headerFont))
-            table.addCell(createCell("Mood", headerFont))
-            table.addCell(createCell("Date", headerFont))
-            
-            // Table data
-            val dataFont = Font(Font.FontFamily.HELVETICA, 9f)
-            activities.forEach { activity ->
-                table.addCell(createCell(activity.id.toString(), dataFont))
-                table.addCell(createCell(activity.name, dataFont))
-                table.addCell(createCell(activity.type, dataFont))
-                table.addCell(createCell(activity.energy.toString(), dataFont))
-                table.addCell(createCell(activity.people, dataFont))
-                table.addCell(createCell(activity.mood, dataFont))
-                table.addCell(createCell(dateFormat.format(Date(activity.date)), dataFont))
-            }
-            
-            document.add(table)
+
+            contentStream.close()
+            document.save(FileOutputStream(file))
             document.close()
-            
-            file
-        } catch (e: DocumentException) {
-            null
+            return file
         } catch (e: IOException) {
-            null
+            document.close()
+            return null
         }
     }
-    
-    private fun createCell(content: String, font: Font): com.itextpdf.text.pdf.PdfPCell {
-        val cell = com.itextpdf.text.pdf.PdfPCell(Paragraph(content, font))
-        cell.setPadding(4f)
-        return cell
-    }
-    
+
     suspend fun importFromCsv(file: File): ImportResult {
         return try {
             val activities = mutableListOf<ActivityEntity>()
             var successCount = 0
             var errorCount = 0
-            
+
             file.bufferedReader().use { reader ->
                 val lines = reader.readLines()
                 if (lines.isEmpty()) {
                     return ImportResult(0, 0, "File is empty")
                 }
-                
-                // Skip header
                 for (i in 1 until lines.size) {
                     try {
                         val parts = lines[i].split(",")
@@ -163,11 +156,10 @@ class ImportExportManager private constructor(
                                 people = parts[4].trim('"'),
                                 mood = parts[5].trim('"'),
                                 notes = parts[6].trim('"'),
-                                date = System.currentTimeMillis(), // Use current time for imported data
+                                date = System.currentTimeMillis(),
                                 createdAt = System.currentTimeMillis(),
                                 updatedAt = System.currentTimeMillis()
                             )
-                            
                             dataRepository.insertActivity(activity, "import")
                             successCount++
                         } else {
@@ -178,27 +170,26 @@ class ImportExportManager private constructor(
                     }
                 }
             }
-            
             ImportResult(successCount, errorCount, "Import completed")
         } catch (e: IOException) {
             ImportResult(0, 0, "Error reading file: ${e.message}")
         }
     }
-    
+
     suspend fun getExportFormats(): List<String> {
         return listOf("CSV", "PDF")
     }
-    
+
     data class ImportResult(
         val successCount: Int,
         val errorCount: Int,
         val message: String
     )
-    
+
     companion object {
         @Volatile
         private var INSTANCE: ImportExportManager? = null
-        
+
         fun getInstance(context: Context, dataRepository: DataRepository): ImportExportManager {
             return INSTANCE ?: synchronized(this) {
                 val instance = ImportExportManager(context, dataRepository)

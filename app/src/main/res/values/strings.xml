@@ -83,5 +83,9 @@
     <string name="battery_percent_description">Current battery level: %1$d percent</string>
     <string name="test_battery_description">Test battery level change</string>
     <string name="battery_level_changed">Battery level changed to %1$d percent</string>
+    <string name="date">Date</string>
+    <string name="energy_0_0">Energy: 0.0</string>
+    <string name="mood_unknown">Mood: Unknown</string>
+    <string name="activities_0">Activities: 0</string>
 
 </resources>

@@ -25,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         // Apply theme before setting content
         applyTheme()
         
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_main) // Fixed typo
 
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment

@@ -30,25 +30,17 @@
         android:strokeWidth="3"
         android:pathData="M62,120L87,100L112,130L137,85"
         android:strokeLineCap="round" />
-    <!-- Data points -->
-    <circle
+    <!-- Data points as paths (VectorDrawable does not support <circle>) -->
+    <path
         android:fillColor="?attr/colorTertiary"
-        android:cx="62"
-        android:cy="120"
-        android:r="4" />
-    <circle
+        android:pathData="M62,120m-4,0a4,4,0,1,0,8,0a4,4,0,1,0,-8,0" />
+    <path
         android:fillColor="?attr/colorTertiary"
-        android:cx="87"
-        android:cy="100"
-        android:r="4" />
-    <circle
+        android:pathData="M87,100m-4,0a4,4,0,1,0,8,0a4,4,0,1,0,-8,0" />
+    <path
         android:fillColor="?attr/colorTertiary"
-        android:cx="112"
-        android:cy="130"
-        android:r="4" />
-    <circle
+        android:pathData="M112,130m-4,0a4,4,0,1,0,8,0a4,4,0,1,0,-8,0" />
+    <path
         android:fillColor="?attr/colorTertiary"
-        android:cx="137"
-        android:cy="85"
-        android:r="4" />
+        android:pathData="M137,85m-4,0a4,4,0,1,0,8,0a4,4,0,1,0,-8,0" />
 </vector>

@@ -21,8 +21,8 @@
         <item name="colorOnError">@color/on_error_dark</item>
         <item name="colorErrorContainer">@color/error_container_dark</item>
         <item name="colorOnErrorContainer">@color/on_error_container_dark</item>
-        
-        <item name="colorBackground">@color/background_dark</item>
+
+
         <item name="colorOnBackground">@color/on_background_dark</item>
         <item name="colorSurface">@color/surface_dark</item>
         <item name="colorOnSurface">@color/on_surface_dark</item>
@@ -39,6 +39,7 @@
         <!-- Ensure proper contrast ratios -->
         <item name="android:textSize">16sp</item>
         <item name="android:textColorHint">@color/on_surface_variant_dark</item>
+        <item name="android:windowBackground">@color/colorBackground</item>
     </style>
     
     <style name="Theme.SocialBatteryManager" parent="Base.Theme.SocialBatteryManager" />

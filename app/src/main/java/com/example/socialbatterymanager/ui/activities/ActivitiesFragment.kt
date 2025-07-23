@@ -12,14 +12,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-
 import com.example.socialbatterymanager.data.repository.DataRepository
 import com.example.socialbatterymanager.data.repository.SecurityManager
-
 import com.example.socialbatterymanager.data.AppDatabase
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
-
 import kotlinx.coroutines.launch
 
 class ActivitiesFragment : Fragment() {
@@ -32,13 +29,17 @@ class ActivitiesFragment : Fragment() {
     private lateinit var database: AppDatabase
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         val view = inflater.inflate(R.layout.fragment_activities, container, false)
 
         database = AppDatabase.getDatabase(requireContext())
-        
+
         rvActivities = view.findViewById(R.id.rvActivities)
-        adapter = ActivitiesAdapter { activity ->
+        adapter = ActivitiesAdapter { activity: Activity ->
             onActivityClick(activity)
         }
         rvActivities.layoutManager = LinearLayoutManager(requireContext())
@@ -61,15 +62,7 @@ class ActivitiesFragment : Fragment() {
 
         // Load activities from DB (collect with lifecycleScope)
         lifecycleScope.launch {
-            dataRepository.getAllActivities().collect { activities ->
-
-            showAddActivityDialog()
-        }
-
-        // Load activities from DB
-        lifecycleScope.launch {
             database.activityDao().getAllActivities().collect { activities ->
-
                 adapter.submitList(activities)
             }
         }
@@ -92,7 +85,6 @@ class ActivitiesFragment : Fragment() {
 
     private fun onActivityClick(activity: Activity) {
         val options = arrayOf("Edit", "Delete", "Mark as Used")
-        
         AlertDialog.Builder(requireContext())
             .setTitle(activity.name)
             .setItems(options) { _, which ->

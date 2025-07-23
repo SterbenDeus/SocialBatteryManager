@@ -20,7 +20,9 @@ data class ActivityEntity(
     val isManualEntry: Boolean = true,
     val syncStatus: SyncStatus = SyncStatus.PENDING_SYNC,
     val lastModified: Long = System.currentTimeMillis(),
-    val firebaseId: String? = null // For Firebase sync
+    val firebaseId: String? = null, // For Firebase sync
+    val isDeleted: Int = 0, // Soft delete flag (0 = active, 1 = deleted)
+    val updatedAt: Long = System.currentTimeMillis() // Last update timestamp
 )
 
 enum class SyncStatus {

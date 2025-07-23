@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="mood_array">
+        <item>🙂 Happy</item>
+        <item>😐 Neutral</item>
+        <item>😟 Tired</item>
+        <item>😣 Anxious</item>
+        <item>😢 Sad</item>
+        <!-- Add any other moods you like -->
+    </string-array>
+</resources>

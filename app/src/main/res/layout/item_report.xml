@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="8dp"
@@ -17,7 +17,7 @@
             android:id="@+id/dateText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date"
+            android:text="@string/date"
             android:textSize="16sp"
             android:textStyle="bold"
             android:textColor="@android:color/black" />
@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Energy: 0.0"
+            android:text="@string/energy_0_0"
             android:textSize="14sp"
             android:textColor="@android:color/black" />
 
@@ -36,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Mood: Unknown"
+            android:text="@string/mood_unknown"
             android:textSize="14sp"
             android:textColor="@android:color/black" />
 
@@ -45,7 +45,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
-            android:text="Activities: 0"
+            android:text="@string/activities_0"
             android:textSize="14sp"
             android:textColor="@android:color/black" />
 

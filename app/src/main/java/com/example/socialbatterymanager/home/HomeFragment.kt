@@ -9,7 +9,6 @@ import android.widget.Button
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-<<<<<<< HEAD
 import com.airbnb.lottie.LottieAnimationView
 import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
@@ -18,7 +17,6 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.utils.ErrorHandler
 import com.example.socialbatterymanager.utils.NetworkConnectivityManager
 import kotlinx.coroutines.launch
-=======
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.PeriodicWorkRequestBuilder
@@ -34,7 +32,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
->>>>>>> copilot/fix-5
 
 class HomeFragment : Fragment() {
 
@@ -72,11 +69,10 @@ class HomeFragment : Fragment() {
         recyclerViewActivities = view.findViewById(R.id.recyclerViewActivities)
         fabAddActivity = view.findViewById(R.id.fabAddActivity)
         btnTestBattery = view.findViewById(R.id.btnTestBattery)
-        
+
         // Initialize network manager
         networkManager = NetworkConnectivityManager(requireContext())
 
-<<<<<<< HEAD
         setupAccessibility()
         updateUI()
         observeNetworkState()
@@ -95,39 +91,38 @@ class HomeFragment : Fragment() {
                 }
             }
         }
-        
+
         btnLogout.setOnClickListener {
             userViewModel.signOut()
             findNavController().navigate(R.id.action_homeFragment_to_loginFragment)
         }
-=======
+
         setupRecyclerView()
         setupMoodChips()
         setupClickListeners()
         setupNotifications()
         loadData()
->>>>>>> copilot/fix-5
 
         return view
     }
-    
+
     private fun setupAccessibility() {
         // Set content descriptions for accessibility
         lottieBattery.contentDescription = getString(R.string.battery_level_description, batteryLevel)
         tvBatteryPercent.contentDescription = getString(R.string.battery_percent_description, batteryLevel)
         btnTestBattery.contentDescription = getString(R.string.test_battery_description)
-        
+
         // Enable focus for accessibility
         lottieBattery.isFocusable = true
         tvBatteryPercent.isFocusable = true
         btnTestBattery.isFocusable = true
-        
+
         // Set minimum touch target size for accessibility
         val minTouchSize = resources.getDimensionPixelSize(R.dimen.min_touch_target_size)
         btnTestBattery.minimumHeight = minTouchSize
         btnTestBattery.minimumWidth = minTouchSize
     }
-    
+
     private fun observeNetworkState() {
         lifecycleScope.launch {
             networkManager.isConnected.collect { isConnected ->
@@ -138,7 +133,6 @@ class HomeFragment : Fragment() {
         }
     }
 
-<<<<<<< HEAD
     private fun animateBatteryLevelChange(targetLevel: Int) {
         val startLevel = batteryLevel
         val animator = ValueAnimator.ofInt(startLevel, targetLevel)
@@ -155,11 +149,11 @@ class HomeFragment : Fragment() {
         lottieBattery.progress = batteryLevel / 100f
         setLottieBatteryColor(batteryLevel)
         tvBatteryPercent.text = "$batteryLevel%"
-        
+
         // Update accessibility descriptions
         lottieBattery.contentDescription = getString(R.string.battery_level_description, batteryLevel)
         tvBatteryPercent.contentDescription = getString(R.string.battery_percent_description, batteryLevel)
-        
+
         // Announce battery level changes for accessibility
         tvBatteryPercent.announceForAccessibility(getString(R.string.battery_level_changed, batteryLevel))
     }
@@ -175,7 +169,9 @@ class HomeFragment : Fragment() {
             KeyPath("BatteryFill"),
             LottieProperty.COLOR_FILTER,
             LottieValueCallback(PorterDuffColorFilter(color, android.graphics.PorterDuff.Mode.SRC_ATOP))
-=======
+        )
+    }
+
     private fun setupRecyclerView() {
         activityAdapter = ActivityAdapter(
             onItemClick = { activity ->
@@ -203,7 +199,6 @@ class HomeFragment : Fragment() {
                     .setNegativeButton("Cancel", null)
                     .show()
             }
->>>>>>> copilot/fix-5
         )
 
         recyclerViewActivities.adapter = activityAdapter
@@ -212,7 +207,7 @@ class HomeFragment : Fragment() {
 
     private fun setupMoodChips() {
         val moods = arrayOf("😊 Happy", "😐 Neutral", "😔 Sad", "😴 Tired", "😤 Stressed", "😎 Energetic")
-        
+
         moods.forEach { mood ->
             val chip = Chip(requireContext())
             chip.text = mood
@@ -278,7 +273,7 @@ class HomeFragment : Fragment() {
         lifecycleScope.launch {
             // Load weekly stats
             val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-            
+
             combine(
                 database.energyLogDao().getEnergyLogsAfter(weekStart),
                 database.activityDao().getAllActivities()
@@ -286,7 +281,7 @@ class HomeFragment : Fragment() {
                 val weeklyActivities = activities.filter { it.date >= weekStart }
                 val totalEnergyGain = weeklyActivities.filter { it.energy > 0 }.sumOf { it.energy }
                 val totalEnergyLoss = weeklyActivities.filter { it.energy < 0 }.sumOf { it.energy }
-                
+
                 "This week: +$totalEnergyGain / $totalEnergyLoss energy, ${weeklyActivities.size} activities"
             }.collect { stats ->
                 tvWeeklyStats.text = stats
@@ -332,7 +327,7 @@ class HomeFragment : Fragment() {
             database.energyLogDao().insertEnergyLog(energyLog)
         }
     }
-    
+
     override fun onDestroyView() {
         super.onDestroyView()
         networkManager.unregister()
