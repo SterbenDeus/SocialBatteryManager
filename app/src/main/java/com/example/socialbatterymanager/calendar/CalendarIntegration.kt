@@ -19,7 +19,7 @@ class CalendarIntegration(
         
         try {
             // Query device calendar for events
-            val projection = arrayOf(
+            val projection = arrayOf<String>(
                 CalendarContract.Events._ID,
                 CalendarContract.Events.TITLE,
                 CalendarContract.Events.DESCRIPTION,

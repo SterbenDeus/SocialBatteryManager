@@ -126,7 +126,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             
             ActivityCompat.requestPermissions(
                 requireActivity(),
-                arrayOf(Manifest.permission.READ_CALENDAR),
+                arrayOf<String>(Manifest.permission.READ_CALENDAR),
                 CALENDAR_PERMISSION_REQUEST
             )
         } else {

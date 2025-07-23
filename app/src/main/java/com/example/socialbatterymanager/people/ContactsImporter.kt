@@ -11,7 +11,7 @@ class ContactsImporter(private val context: Context) {
         
         val cursor = context.contentResolver.query(
             ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            arrayOf(
+            arrayOf<String>(
                 ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
                 ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
                 ContactsContract.CommonDataKinds.Phone.NUMBER
@@ -56,9 +56,9 @@ class ContactsImporter(private val context: Context) {
     private fun getContactEmail(contactId: String): String? {
         val emailCursor = context.contentResolver.query(
             ContactsContract.CommonDataKinds.Email.CONTENT_URI,
-            arrayOf(ContactsContract.CommonDataKinds.Email.ADDRESS),
+            arrayOf<String>(ContactsContract.CommonDataKinds.Email.ADDRESS),
             "${ContactsContract.CommonDataKinds.Email.CONTACT_ID} = ?",
-            arrayOf(contactId),
+            arrayOf<String>(contactId),
             null
         )
         

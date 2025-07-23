@@ -153,7 +153,7 @@ class EditProfileDialog : DialogFragment() {
     }
 
     private fun getMoodFromSpinner(): String {
-        val moods = arrayOf("energetic", "happy", "neutral", "tired", "stressed", "overwhelmed")
+        val moods = arrayOf<String>("energetic", "happy", "neutral", "tired", "stressed", "overwhelmed")
         return moods.getOrNull(moodSpinner.selectedItemPosition) ?: "neutral"
     }
 

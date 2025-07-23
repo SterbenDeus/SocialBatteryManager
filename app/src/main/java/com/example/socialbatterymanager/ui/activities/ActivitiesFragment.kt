@@ -84,7 +84,7 @@ class ActivitiesFragment : Fragment() {
     }
 
     private fun onActivityClick(activity: Activity) {
-        val options = arrayOf("Edit", "Delete", "Mark as Used")
+        val options = arrayOf<String>("Edit", "Delete", "Mark as Used")
         AlertDialog.Builder(requireContext())
             .setTitle(activity.name)
             .setItems(options) { _, which ->

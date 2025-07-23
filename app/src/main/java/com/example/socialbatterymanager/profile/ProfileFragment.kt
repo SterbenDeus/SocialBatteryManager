@@ -192,7 +192,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showImageSourceDialog() {
-        val options = arrayOf("Choose from Gallery", "Take Photo", "Cancel")
+        val options = arrayOf<String>("Choose from Gallery", "Take Photo", "Cancel")
         AlertDialog.Builder(requireContext())
             .setTitle("Select Image")
             .setItems(options) { _, which ->

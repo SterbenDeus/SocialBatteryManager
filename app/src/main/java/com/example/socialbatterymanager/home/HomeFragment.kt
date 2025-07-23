@@ -57,7 +57,7 @@ class HomeFragment : Fragment() {
     private var currentEnergyLevel = 65
     private var batteryLevel = 65
     private var testIndex = 0
-    private val testLevels = listOf(95, 75, 55, 35, 15)
+    private val testLevels = listOf<Int>(95, 75, 55, 35, 15)
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -217,7 +217,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupMoodChips() {
-        val moods = arrayOf("😊 Happy", "😐 Neutral", "😔 Sad", "😴 Tired", "😤 Stressed", "😎 Energetic")
+        val moods = arrayOf<String>("😊 Happy", "😐 Neutral", "😔 Sad", "😴 Tired", "😤 Stressed", "😎 Energetic")
 
         moods.forEach { mood ->
             val chip = Chip(requireContext())
@@ -260,7 +260,7 @@ class HomeFragment : Fragment() {
         }
 
         btnTestBattery.setOnClickListener {
-            val testLevels = listOf(95, 75, 55, 35, 15)
+            val testLevels = listOf<Int>(95, 75, 55, 35, 15)
             val randomLevel = testLevels.random()
             updateEnergyLevel(randomLevel - currentEnergyLevel)
         }
