@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.repository.DataRepository
 import com.example.socialbatterymanager.data.repository.SecurityManager
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
 import kotlinx.coroutines.launch

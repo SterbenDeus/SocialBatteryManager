@@ -21,16 +21,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.ActivityEntity
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.model.EnergyLog
 import com.example.socialbatterymanager.notification.EnergyReminderWorker
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 class HomeFragment : Fragment() {
