@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.people
+package com.example.socialbatterymanager.features.people.ui
 
 import android.app.Activity
 import android.app.AlertDialog

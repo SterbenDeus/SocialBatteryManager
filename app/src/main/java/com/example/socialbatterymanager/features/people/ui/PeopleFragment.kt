@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.people
+package com.example.socialbatterymanager.features.people.ui
 
 import android.Manifest
 import android.content.pm.PackageManager

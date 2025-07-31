@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.home
+package com.example.socialbatterymanager.features.home.ui
 
 import android.app.AlertDialog
 import android.os.Bundle

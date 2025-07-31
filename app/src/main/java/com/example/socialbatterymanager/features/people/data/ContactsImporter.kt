@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.people
+package com.example.socialbatterymanager.features.people.data
 
 import android.content.Context
 import android.provider.ContactsContract

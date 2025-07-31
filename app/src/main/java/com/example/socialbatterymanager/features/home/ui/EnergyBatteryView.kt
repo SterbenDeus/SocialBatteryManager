@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.home
+package com.example.socialbatterymanager.features.home.ui
 
 import android.animation.ValueAnimator
 import android.content.Context
