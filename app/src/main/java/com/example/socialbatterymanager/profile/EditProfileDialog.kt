@@ -13,7 +13,7 @@ import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.DialogFragment
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.model.User
+import com.example.socialbatterymanager.data.model.User
 
 class EditProfileDialog : DialogFragment() {
 

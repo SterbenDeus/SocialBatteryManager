@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.model
+package com.example.socialbatterymanager.data.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

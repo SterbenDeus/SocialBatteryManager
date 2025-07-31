@@ -16,7 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 

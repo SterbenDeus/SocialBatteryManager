@@ -17,7 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 import com.google.android.material.textfield.TextInputEditText
 import kotlinx.coroutines.launch
 import java.io.File

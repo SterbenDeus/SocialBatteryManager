@@ -23,7 +23,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.model.EnergyLog
+import com.example.socialbatterymanager.data.model.EnergyLog
 import com.example.socialbatterymanager.notification.EnergyReminderWorker
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup

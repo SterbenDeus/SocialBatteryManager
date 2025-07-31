@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date

@@ -1,11 +1,11 @@
-package com.example.socialbatterymanager.data
+package com.example.socialbatterymanager.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Delete
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 import kotlinx.coroutines.flow.Flow
 
 @Dao

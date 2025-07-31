@@ -1,9 +1,9 @@
-package com.example.socialbatterymanager.data
+package com.example.socialbatterymanager.data.database
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.example.socialbatterymanager.model.EnergyLog
+import com.example.socialbatterymanager.data.model.EnergyLog
 import kotlinx.coroutines.flow.Flow
 
 @Dao

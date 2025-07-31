@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.data.CalendarEvent
+import com.example.socialbatterymanager.data.model.CalendarEvent
 import kotlinx.coroutines.launch
 import java.util.Calendar
 

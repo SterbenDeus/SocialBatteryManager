@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 
 class PersonAdapter(
     private val onItemClick: (Person) -> Unit,

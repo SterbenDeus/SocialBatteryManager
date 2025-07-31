@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.model.User
+import com.example.socialbatterymanager.data.model.User
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 

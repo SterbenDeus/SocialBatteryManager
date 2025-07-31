@@ -2,7 +2,7 @@ package com.example.socialbatterymanager.people
 
 import android.content.Context
 import com.example.socialbatterymanager.data.database.AppDatabase
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 import kotlinx.coroutines.flow.first
 
 data class PersonStats(

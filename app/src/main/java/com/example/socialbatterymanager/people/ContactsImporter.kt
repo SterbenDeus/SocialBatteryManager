@@ -2,7 +2,7 @@ package com.example.socialbatterymanager.people
 
 import android.content.Context
 import android.provider.ContactsContract
-import com.example.socialbatterymanager.model.Person
+import com.example.socialbatterymanager.data.model.Person
 
 class ContactsImporter(private val context: Context) {
     
