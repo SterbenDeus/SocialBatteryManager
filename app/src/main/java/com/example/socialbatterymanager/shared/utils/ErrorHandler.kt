@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.utils
+package com.example.socialbatterymanager.shared.utils
 
 import android.content.Context
 import android.view.View

@@ -14,8 +14,8 @@ import com.airbnb.lottie.LottieProperty
 import com.airbnb.lottie.model.KeyPath
 import com.airbnb.lottie.value.LottieValueCallback
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.utils.ErrorHandler
-import com.example.socialbatterymanager.utils.NetworkConnectivityManager
+import com.example.socialbatterymanager.shared.utils.ErrorHandler
+import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
 import kotlinx.coroutines.launch
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView

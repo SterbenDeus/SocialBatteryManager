@@ -12,8 +12,8 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.databinding.FragmentOnboardingBinding
 import com.example.socialbatterymanager.preferences.PreferencesManager
-import com.example.socialbatterymanager.utils.BiometricAuthHelper
-import com.example.socialbatterymanager.utils.ErrorHandler
+import com.example.socialbatterymanager.shared.utils.BiometricAuthHelper
+import com.example.socialbatterymanager.shared.utils.ErrorHandler
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.coroutines.launch
 

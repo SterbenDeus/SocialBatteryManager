@@ -6,7 +6,7 @@ import androidx.work.WorkerParameters
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.SyncStatus
-import com.example.socialbatterymanager.utils.NetworkConnectivityManager
+import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import kotlinx.coroutines.flow.first
