@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.auth
+package com.example.socialbatterymanager.features.auth.data
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser

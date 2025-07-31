@@ -1,9 +1,10 @@
-package com.example.socialbatterymanager.auth
+package com.example.socialbatterymanager.features.auth.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.socialbatterymanager.features.auth.data.AuthRepository
 import com.google.firebase.auth.FirebaseUser
 import kotlinx.coroutines.launch
 

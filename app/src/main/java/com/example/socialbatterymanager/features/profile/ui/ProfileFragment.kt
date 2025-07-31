@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.profile
+package com.example.socialbatterymanager.features.profile.ui
 
 import android.Manifest
 import android.app.Activity

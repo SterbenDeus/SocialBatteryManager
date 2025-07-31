@@ -6,7 +6,7 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
-import com.example.socialbatterymanager.preferences.PreferencesManager
+import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 

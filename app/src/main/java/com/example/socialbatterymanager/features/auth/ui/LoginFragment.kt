@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.auth
+package com.example.socialbatterymanager.features.auth.ui
 
 import android.content.Intent
 import android.os.Bundle

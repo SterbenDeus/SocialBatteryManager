@@ -1,4 +1,4 @@
-package com.example.socialbatterymanager.preferences
+package com.example.socialbatterymanager.shared.preferences
 
 import android.content.Context
 import androidx.datastore.core.DataStore
