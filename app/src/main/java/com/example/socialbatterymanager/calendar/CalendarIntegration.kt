@@ -3,8 +3,8 @@ package com.example.socialbatterymanager.calendar
 import android.content.Context
 import android.provider.CalendarContract
 import android.util.Log
-import com.example.socialbatterymanager.data.CalendarEvent
-import com.example.socialbatterymanager.data.CalendarEventDao
+import com.example.socialbatterymanager.data.model.CalendarEvent
+import com.example.socialbatterymanager.data.model.CalendarEventDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import java.util.Calendar

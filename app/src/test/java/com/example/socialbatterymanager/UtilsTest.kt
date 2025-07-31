@@ -1,6 +1,6 @@
 package com.example.socialbatterymanager
 
-import hasDuplicates
+import com.example.socialbatterymanager.shared.utils.hasDuplicates
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test

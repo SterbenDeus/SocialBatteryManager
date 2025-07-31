@@ -6,7 +6,7 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.socialbatterymanager.data.ActivityEntity
 import com.example.socialbatterymanager.data.AppDatabase
-import com.example.socialbatterymanager.model.EnergyLog
+import com.example.socialbatterymanager.data.model.EnergyLog
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
 import org.junit.After

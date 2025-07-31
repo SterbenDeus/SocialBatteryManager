@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
-import com.example.socialbatterymanager.preferences.PreferencesManager
+import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch

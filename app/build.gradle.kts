@@ -2,6 +2,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
+    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.4"
 }
 
 android {
@@ -111,4 +113,28 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+}
+
+// Ktlint configuration
+ktlint {
+    version.set("1.0.1")
+    debug.set(true)
+    verbose.set(true)
+    android.set(true)
+    outputToConsole.set(true)
+    outputColorName.set("RED")
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(true)
+    filter {
+        exclude("**/generated/**")
+        include("**/kotlin/**")
+    }
+}
+
+// Detekt configuration
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom("$projectDir/config/detekt/detekt.yml")
+    baseline = file("$projectDir/config/detekt/baseline.xml")
 }

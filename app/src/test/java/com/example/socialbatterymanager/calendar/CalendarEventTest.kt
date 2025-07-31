@@ -1,6 +1,6 @@
 package com.example.socialbatterymanager.calendar
 
-import com.example.socialbatterymanager.data.CalendarEvent
+import com.example.socialbatterymanager.data.model.CalendarEvent
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.util.Calendar
