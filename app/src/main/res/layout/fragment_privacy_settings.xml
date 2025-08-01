@@ -465,9 +465,9 @@
             android:id="@+id/blockedUsersRecyclerView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="32dp" />
+            android:layout_marginBottom="16dp" />
 
-        <!-- Sample blocked user for demonstration -->
+        <!-- Sample blocked user for demonstration (hidden by default) -->
         <LinearLayout
             android:id="@+id/sampleBlockedUserLayout"
             android:layout_width="match_parent"
@@ -475,7 +475,8 @@
             android:orientation="horizontal"
             android:padding="12dp"
             android:background="@drawable/battery_outline"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            android:visibility="visible">
 
             <ImageView
                 android:layout_width="40dp"
@@ -527,7 +528,8 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:background="@color/blue_50"
-            android:padding="16dp">
+            android:padding="16dp"
+            android:layout_marginTop="16dp">
 
             <ImageView
                 android:layout_width="24dp"
