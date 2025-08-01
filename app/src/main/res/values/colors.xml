@@ -42,6 +42,9 @@
     <color name="jscc_gold_end">#f3e085</color>
     <color name="jscc_white">#ffffff</color>
     <color name="jscc_light_gray">#e5e7eb</color>
+    <color name="jscc_sage_green">#4CAF50</color>
+    <color name="jscc_light_blue">#E3F2FD</color>
+    <color name="jscc_coral">#FF7043</color>
 
     <!-- Material3 color aliases for theme compatibility -->
     <color name="colorPrimaryContainer">@color/primary_container_light</color>
