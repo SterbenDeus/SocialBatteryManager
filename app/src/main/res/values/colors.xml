@@ -43,6 +43,12 @@
     <color name="jscc_white">#ffffff</color>
     <color name="jscc_light_gray">#e5e7eb</color>
 
+    <!-- Energy Level Colors -->
+    <color name="energy_high">#4CAF50</color>     <!-- Green -->
+    <color name="energy_medium">#FFEB3B</color>   <!-- Yellow -->
+    <color name="energy_low">#FF9800</color>      <!-- Orange -->
+    <color name="energy_recharge">#F44336</color> <!-- Red -->
+
     <!-- Material3 color aliases for theme compatibility -->
     <color name="colorPrimaryContainer">@color/primary_container_light</color>
     <color name="colorOnPrimaryContainer">@color/on_primary_container_light</color>

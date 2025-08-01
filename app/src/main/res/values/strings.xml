@@ -25,14 +25,34 @@
     <string name="events_for_day">Events for Selected Day</string>
     
 
+    <!-- Energy Level Labels -->
+    <string name="energy_level_high">High Energy</string>
+    <string name="energy_level_medium">Medium Energy</string>
+    <string name="energy_level_low">Low Energy</string>
+    <string name="energy_level_recharge">Recharge</string>
+    
+    <!-- Energy Insights -->
+    <string name="energy_insights_title">Energy Insights</string>
+    <string name="remaining_time">Remaining</string>
+    <string name="burn_rate">Burn Rate</string>
+    <string name="hours_left">%1$.1fh\nSocial energy left</string>
+    <string name="burn_rate_value">%1$.1fh\nPer social activity</string>
+    
+    <!-- Weekly Forecast -->
+    <string name="weekly_forecast_title">Weekly Forecast</string>
+    <string name="average_energy">Average Energy</string>
+    <string name="peak_day">Peak Day</string>
+    <string name="recovery_needed">Recovery Needed</string>
+    
     <!-- Mood Options -->
     <string-array name="mood_options">
-        <item>Energetic</item>
-        <item>Happy</item>
-        <item>Neutral</item>
-        <item>Tired</item>
-        <item>Stressed</item>
-        <item>Overwhelmed</item>
+        <item>😴 Drained</item>
+        <item>😐 Low</item>
+        <item>🙂 Okay</item>
+        <item>😊 Good</item>
+        <item>⚡ Energized</item>
+        <item>🤗 Sociable</item>
+        <item>😑 Unsociable</item>
     </string-array>
 
     <!-- Firebase Auth -->
