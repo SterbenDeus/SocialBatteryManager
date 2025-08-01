@@ -74,8 +74,9 @@ class PeopleViewModel(private val peopleRepository: PeopleRepository) : ViewMode
     fun searchPeople(query: String) {
         viewModelScope.launch {
             try {
-                val results = peopleRepository.searchPeople(query)
-                _people.value = results
+                peopleRepository.searchPeople(query).collect { results ->
+                    _people.value = results
+                }
             } catch (e: Exception) {
                 _error.value = e.message
             }

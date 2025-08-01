@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.model.SyncStatus
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -32,4 +33,19 @@ interface ActivityDao {
     
     @Query("DELETE FROM activities WHERE isDeleted = 1 AND updatedAt < :cutoff")
     suspend fun hardDeleteOldActivities(cutoff: Long)
+
+    @Query("SELECT * FROM activities WHERE syncStatus = :status AND isDeleted = 0")
+    suspend fun getActivitiesBySyncStatus(status: SyncStatus): List<ActivityEntity>
+
+    @Query("UPDATE activities SET syncStatus = :status WHERE id = :id")
+    suspend fun updateSyncStatus(id: Int, status: SyncStatus)
+
+    @Query("UPDATE activities SET firebaseId = :firebaseId WHERE id = :id")
+    suspend fun updateFirebaseId(id: Int, firebaseId: String)
+
+    @Query("UPDATE activities SET usageCount = usageCount + 1 WHERE id = :id")
+    suspend fun incrementUsageCount(id: Int)
+
+    @Query("SELECT * FROM activities WHERE date BETWEEN :start AND :end AND isDeleted = 0 ORDER BY date DESC")
+    suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity>
 }
