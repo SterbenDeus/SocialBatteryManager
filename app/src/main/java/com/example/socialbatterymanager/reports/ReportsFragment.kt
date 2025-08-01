@@ -189,12 +189,37 @@ class ReportsFragment : Fragment() {
             val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
             val energyLogs = energyLogDao.getEnergyLogsByDateRangeSync(dateRange.first, dateRange.second)
 
+            // Use sample data if no real data is available
+            val activitiesData = if (activities.isEmpty()) {
+                SampleDataGenerator.generateSampleActivities(
+                    when (currentPeriod) {
+                        ReportPeriod.WEEK -> 7
+                        ReportPeriod.MONTH -> 30
+                        ReportPeriod.YEAR -> 365
+                    }
+                )
+            } else {
+                activities
+            }
+
+            val energyLogsData = if (energyLogs.isEmpty()) {
+                SampleDataGenerator.generateSampleEnergyLogs(
+                    when (currentPeriod) {
+                        ReportPeriod.WEEK -> 7
+                        ReportPeriod.MONTH -> 30
+                        ReportPeriod.YEAR -> 365
+                    }
+                )
+            } else {
+                energyLogs
+            }
+
             // Update charts and data
-            updateEnergyChart(activities)
-            updateEfficiencyChart(activities)
-            updatePeakUsageTimes(activities)
-            updateCapacityGrowth(activities, energyLogs)
-            updateAIInsights(activities)
+            updateEnergyChart(activitiesData)
+            updateEfficiencyChart(activitiesData)
+            updatePeakUsageTimes(activitiesData)
+            updateCapacityGrowth(activitiesData, energyLogsData)
+            updateAIInsights(activitiesData)
         }
     }
 
@@ -236,21 +261,50 @@ class ReportsFragment : Fragment() {
     }
 
     private fun updateEfficiencyChart(activities: List<ActivityEntity>) {
-        // Create sample efficiency data (could be based on real calculations)
-        val weeks = listOf("Week 1", "Week 2", "Week 3", "Week 4")
-        val efficiencyValues = listOf(75f, 82f, 88f, 85f)
+        // Create efficiency data based on energy levels across time periods
+        val efficiencyData = when (currentPeriod) {
+            ReportPeriod.WEEK -> {
+                val days = listOf("Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun")
+                val values = if (activities.isNotEmpty()) {
+                    // Calculate actual efficiency based on energy levels
+                    calculateEfficiencyByDay(activities)
+                } else {
+                    listOf(75f, 82f, 88f, 85f, 90f, 78f, 80f)
+                }
+                Pair(days, values)
+            }
+            ReportPeriod.MONTH -> {
+                val weeks = listOf("Week 1", "Week 2", "Week 3", "Week 4")
+                val values = if (activities.isNotEmpty()) {
+                    calculateEfficiencyByWeek(activities)
+                } else {
+                    listOf(75f, 82f, 88f, 85f)
+                }
+                Pair(weeks, values)
+            }
+            ReportPeriod.YEAR -> {
+                val months = listOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+                val values = if (activities.isNotEmpty()) {
+                    calculateEfficiencyByMonth(activities)
+                } else {
+                    listOf(70f, 75f, 80f, 85f, 88f, 90f, 85f, 82f, 78f, 75f, 72f, 74f)
+                }
+                Pair(months, values)
+            }
+        }
 
-        val entries = efficiencyValues.mapIndexed { index, value ->
+        val entries = efficiencyData.second.mapIndexed { index, value ->
             BarEntry(index.toFloat(), value)
         }
 
         val dataSet = BarDataSet(entries, "Energy Efficiency")
         dataSet.color = Color.parseColor("#4CAF50")
         dataSet.valueTextColor = Color.BLACK
+        dataSet.valueTextSize = 10f
 
         val barData = BarData(dataSet)
         efficiencyChart.data = barData
-        efficiencyChart.xAxis.valueFormatter = IndexAxisValueFormatter(weeks)
+        efficiencyChart.xAxis.valueFormatter = IndexAxisValueFormatter(efficiencyData.first)
         efficiencyChart.xAxis.granularity = 1f
         efficiencyChart.description.text = ""
         efficiencyChart.setDrawGridBackground(false)
@@ -259,15 +313,82 @@ class ReportsFragment : Fragment() {
         efficiencyChart.invalidate()
     }
 
+    private fun calculateEfficiencyByDay(activities: List<ActivityEntity>): List<Float> {
+        // Group activities by day of week and calculate average energy efficiency
+        val calendar = Calendar.getInstance()
+        val dayGroups = activities.groupBy { activity ->
+            calendar.timeInMillis = activity.date
+            calendar.get(Calendar.DAY_OF_WEEK)
+        }
+
+        return (Calendar.MONDAY..Calendar.SUNDAY).map { dayOfWeek ->
+            val dayActivities = dayGroups[dayOfWeek] ?: emptyList()
+            if (dayActivities.isNotEmpty()) {
+                (dayActivities.map { it.energy }.average() * 10).toFloat().coerceIn(0f, 100f)
+            } else {
+                75f // Default efficiency
+            }
+        }
+    }
+
+    private fun calculateEfficiencyByWeek(activities: List<ActivityEntity>): List<Float> {
+        val calendar = Calendar.getInstance()
+        val weekGroups = activities.groupBy { activity ->
+            calendar.timeInMillis = activity.date
+            calendar.get(Calendar.WEEK_OF_MONTH)
+        }
+
+        return (1..4).map { week ->
+            val weekActivities = weekGroups[week] ?: emptyList()
+            if (weekActivities.isNotEmpty()) {
+                (weekActivities.map { it.energy }.average() * 10).toFloat().coerceIn(0f, 100f)
+            } else {
+                80f // Default efficiency
+            }
+        }
+    }
+
+    private fun calculateEfficiencyByMonth(activities: List<ActivityEntity>): List<Float> {
+        val calendar = Calendar.getInstance()
+        val monthGroups = activities.groupBy { activity ->
+            calendar.timeInMillis = activity.date
+            calendar.get(Calendar.MONTH)
+        }
+
+        return (0..11).map { month ->
+            val monthActivities = monthGroups[month] ?: emptyList()
+            if (monthActivities.isNotEmpty()) {
+                (monthActivities.map { it.energy }.average() * 10).toFloat().coerceIn(0f, 100f)
+            } else {
+                75f // Default efficiency
+            }
+        }
+    }
+
     private fun updatePeakUsageTimes(activities: List<ActivityEntity>) {
         val peakTimes = ReportDataAnalyzer.analyzePeakUsageTimes(activities)
-        peakUsageAdapter.updatePeakUsages(peakTimes)
+        
+        // Use sample data if analysis doesn't produce enough results
+        val finalPeakTimes = if (peakTimes.size < 4) {
+            SampleDataGenerator.generateSamplePeakUsageTimes()
+        } else {
+            peakTimes
+        }
+        
+        peakUsageAdapter.updatePeakUsages(finalPeakTimes)
     }
 
     private fun updateCapacityGrowth(activities: List<ActivityEntity>, energyLogs: List<EnergyLog>) {
         val growthData = ReportDataAnalyzer.calculateCapacityGrowth(activities, energyLogs)
         
-        growthData.forEach { growth ->
+        // Use sample data if no meaningful growth data is available
+        val finalGrowthData = if (growthData.isEmpty()) {
+            SampleDataGenerator.generateSampleCapacityGrowth()
+        } else {
+            growthData
+        }
+        
+        finalGrowthData.forEach { growth ->
             when (growth.period) {
                 "Weekly Growth" -> {
                     val sign = if (growth.isPositive) "+" else "-"
@@ -289,7 +410,121 @@ class ReportsFragment : Fragment() {
 
     private fun updateAIInsights(activities: List<ActivityEntity>) {
         val insights = ReportDataAnalyzer.generateAIInsights(activities)
-        insightsAdapter.updateInsights(insights)
+        
+        // Use sample insights if no meaningful insights are generated
+        val finalInsights = if (insights.isEmpty()) {
+            SampleDataGenerator.generateSampleAIInsights()
+        } else {
+            insights
+        }
+        
+        insightsAdapter.updateInsights(finalInsights)
+    }
+
+    // Keep export functionality from original implementation
+    private fun exportToCSV() {
+        lifecycleScope.launch {
+            try {
+                val dateRange = getDateRangeForPeriod(currentPeriod)
+                val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
+
+                val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.csv")
+                val writer = FileWriter(file)
+
+                // Write CSV header
+                writer.append("Date,Activity,Type,Energy,Mood,People,Notes\n")
+
+                // Write data
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+                activities.forEach { activity ->
+                    val date = dateFormat.format(Date(activity.date))
+                    writer.append("$date,${activity.name},${activity.type},${activity.energy},${activity.mood},${activity.people},${activity.notes}\n")
+                }
+
+                writer.close()
+
+                // Share file
+                val uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    file
+                )
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/csv"
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+                startActivity(Intent.createChooser(intent, "Export CSV"))
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error exporting CSV: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    private fun exportToPDF() {
+        lifecycleScope.launch {
+            try {
+                val dateRange = getDateRangeForPeriod(currentPeriod)
+                val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
+
+                // Group activities by date for trends
+                val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+                val trends = activities.groupBy { activity ->
+                    val date = Date(activity.date)
+                    dateFormat.format(date)
+                }.map { (date, activitiesForDate) ->
+                    val avgEnergy: Double = activitiesForDate.map { it.energy }.average()
+                    val mostCommonMood: String = activitiesForDate.groupBy { it.mood }
+                        .maxByOrNull { it.value.size }?.key ?: "Unknown"
+
+                    TrendData(
+                        date = date,
+                        avgEnergy = avgEnergy,
+                        avgMood = mostCommonMood,
+                        activityCount = activitiesForDate.size
+                    )
+                }.sortedByDescending { it.date }
+
+                // Create simple text report (PDF generation would require more complex implementation)
+                val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.txt")
+                val writer = FileWriter(file)
+
+                writer.append("Social Battery Manager Report\n")
+                writer.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}\n\n")
+
+                writer.append("DAILY TRENDS:\n")
+                trends.forEach { trend ->
+                    writer.append("${trend.date}: Energy: ${String.format("%.1f", trend.avgEnergy)}, Mood: ${trend.avgMood}, Activities: ${trend.activityCount}\n")
+                }
+
+                writer.append("\nDETAILED ACTIVITIES:\n")
+                activities.forEach { activity ->
+                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(activity.date))
+                    writer.append("$date - ${activity.name} (${activity.type}): Energy: ${activity.energy}, Mood: ${activity.mood}\n")
+                }
+
+                writer.close()
+
+                // Share file
+                val uri = FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    file
+                )
+
+                val intent = Intent(Intent.ACTION_SEND)
+                intent.type = "text/plain"
+                intent.putExtra(Intent.EXTRA_STREAM, uri)
+                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+                startActivity(Intent.createChooser(intent, "Export Report"))
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error exporting report: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
     }
 }
 
