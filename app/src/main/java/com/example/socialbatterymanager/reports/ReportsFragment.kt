@@ -8,6 +8,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -17,10 +18,12 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.room.Room
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.ActivityDao
+import com.example.socialbatterymanager.data.database.EnergyLogDao
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.model.EnergyLog
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.github.mikephil.charting.charts.LineChart
-import com.github.mikephil.charting.charts.PieChart
+import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
@@ -34,10 +37,33 @@ class ReportsFragment : Fragment() {
 
     private lateinit var database: AppDatabase
     private lateinit var activityDao: ActivityDao
-    private lateinit var trendsAdapter: TrendsAdapter
+    private lateinit var energyLogDao: EnergyLogDao
+    
+    // Adapters
+    private lateinit var peakUsageAdapter: PeakUsageAdapter
+    private lateinit var insightsAdapter: InsightsAdapter
+    
+    // Charts
     private lateinit var energyChart: LineChart
-    private lateinit var moodChart: PieChart
-    private lateinit var trendsRecyclerView: RecyclerView
+    private lateinit var efficiencyChart: BarChart
+    
+    // RecyclerViews
+    private lateinit var peakUsageRecyclerView: RecyclerView
+    private lateinit var insightsRecyclerView: RecyclerView
+    
+    // Period buttons
+    private lateinit var weekButton: Button
+    private lateinit var monthButton: Button
+    private lateinit var yearButton: Button
+    
+    // Text views
+    private lateinit var energyPeriodLabel: TextView
+    private lateinit var energySubLabel: TextView
+    private lateinit var weeklyGrowthPercentage: TextView
+    private lateinit var monthlyGrowthPercentage: TextView
+    
+    // Current selected period
+    private var currentPeriod: ReportPeriod = ReportPeriod.WEEK
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -57,28 +83,215 @@ class ReportsFragment : Fragment() {
             "social_battery_db"
         ).build()
         activityDao = database.activityDao()
+        energyLogDao = database.energyLogDao()
 
         // Initialize views
-        energyChart = view.findViewById(R.id.energyChart)
-        moodChart = view.findViewById(R.id.moodChart)
-        trendsRecyclerView = view.findViewById(R.id.trendsRecyclerView)
-
-        // Setup RecyclerView
-        trendsAdapter = TrendsAdapter(emptyList())
-        trendsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        trendsRecyclerView.adapter = trendsAdapter
-
-        // Setup export buttons
-        view.findViewById<Button>(R.id.exportCsvButton).setOnClickListener {
-            exportToCSV()
-        }
-        view.findViewById<Button>(R.id.exportPdfButton).setOnClickListener {
-            exportToPDF()
-        }
+        initializeViews(view)
+        
+        // Setup adapters and RecyclerViews
+        setupRecyclerViews()
+        
+        // Setup period buttons
+        setupPeriodButtons()
 
         // Load and display data
         loadReportData()
     }
+
+    private fun initializeViews(view: View) {
+        energyChart = view.findViewById(R.id.energyChart)
+        efficiencyChart = view.findViewById(R.id.efficiencyChart)
+        peakUsageRecyclerView = view.findViewById(R.id.peakUsageRecyclerView)
+        insightsRecyclerView = view.findViewById(R.id.insightsRecyclerView)
+        
+        weekButton = view.findViewById(R.id.weekButton)
+        monthButton = view.findViewById(R.id.monthButton)
+        yearButton = view.findViewById(R.id.yearButton)
+        
+        energyPeriodLabel = view.findViewById(R.id.energyPeriodLabel)
+        energySubLabel = view.findViewById(R.id.energySubLabel)
+        weeklyGrowthPercentage = view.findViewById(R.id.weeklyGrowthPercentage)
+        monthlyGrowthPercentage = view.findViewById(R.id.monthlyGrowthPercentage)
+    }
+
+    private fun setupRecyclerViews() {
+        // Peak Usage RecyclerView
+        peakUsageAdapter = PeakUsageAdapter(emptyList())
+        peakUsageRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        peakUsageRecyclerView.adapter = peakUsageAdapter
+
+        // AI Insights RecyclerView
+        insightsAdapter = InsightsAdapter(emptyList())
+        insightsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        insightsRecyclerView.adapter = insightsAdapter
+    }
+
+    private fun setupPeriodButtons() {
+        weekButton.setOnClickListener { 
+            selectPeriod(ReportPeriod.WEEK)
+        }
+        monthButton.setOnClickListener { 
+            selectPeriod(ReportPeriod.MONTH)
+        }
+        yearButton.setOnClickListener { 
+            selectPeriod(ReportPeriod.YEAR)
+        }
+        
+        // Set initial selection
+        selectPeriod(ReportPeriod.WEEK)
+    }
+
+    private fun selectPeriod(period: ReportPeriod) {
+        currentPeriod = period
+        
+        // Update button styles
+        resetButtonStyles()
+        when (period) {
+            ReportPeriod.WEEK -> {
+                weekButton.setBackgroundColor(Color.parseColor("#2196F3"))
+                weekButton.setTextColor(Color.WHITE)
+                energyPeriodLabel.text = "Daily Energy Usage"
+                energySubLabel.text = "Last 7 days"
+            }
+            ReportPeriod.MONTH -> {
+                monthButton.setBackgroundColor(Color.parseColor("#2196F3"))
+                monthButton.setTextColor(Color.WHITE)
+                energyPeriodLabel.text = "Weekly Energy Usage"
+                energySubLabel.text = "Last 4 weeks"
+            }
+            ReportPeriod.YEAR -> {
+                yearButton.setBackgroundColor(Color.parseColor("#2196F3"))
+                yearButton.setTextColor(Color.WHITE)
+                energyPeriodLabel.text = "Monthly Energy Usage"
+                energySubLabel.text = "Last 12 months"
+            }
+        }
+        
+        // Reload data for the new period
+        loadReportData()
+    }
+
+    private fun resetButtonStyles() {
+        val defaultColor = Color.parseColor("#E0E0E0")
+        val defaultTextColor = Color.parseColor("#757575")
+        
+        weekButton.setBackgroundColor(defaultColor)
+        weekButton.setTextColor(defaultTextColor)
+        monthButton.setBackgroundColor(defaultColor)
+        monthButton.setTextColor(defaultTextColor)
+        yearButton.setBackgroundColor(defaultColor)
+        yearButton.setTextColor(defaultTextColor)
+    }
+
+    private fun loadReportData() {
+        lifecycleScope.launch {
+            val dateRange = getDateRangeForPeriod(currentPeriod)
+            val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
+            val energyLogs = energyLogDao.getEnergyLogsByDateRangeSync(dateRange.first, dateRange.second)
+
+            // Update charts and data
+            updateEnergyChart(activities)
+            updateEfficiencyChart(activities)
+            updatePeakUsageTimes(activities)
+            updateCapacityGrowth(activities, energyLogs)
+            updateAIInsights(activities)
+        }
+    }
+
+    private fun getDateRangeForPeriod(period: ReportPeriod): Pair<Long, Long> {
+        val endDate = System.currentTimeMillis()
+        val startDate = when (period) {
+            ReportPeriod.WEEK -> endDate - (7 * 24 * 60 * 60 * 1000)
+            ReportPeriod.MONTH -> endDate - (30 * 24 * 60 * 60 * 1000)
+            ReportPeriod.YEAR -> endDate - (365 * 24 * 60 * 60 * 1000)
+        }
+        return Pair(startDate, endDate)
+    }
+
+    private fun updateEnergyChart(activities: List<ActivityEntity>) {
+        val trendData = ReportDataAnalyzer.aggregateEnergyData(activities, currentPeriod)
+        
+        val entries = trendData.mapIndexed { index, data ->
+            Entry(index.toFloat(), data.value)
+        }
+
+        val dataSet = LineDataSet(entries, "Energy Level")
+        dataSet.color = Color.parseColor("#2196F3")
+        dataSet.valueTextColor = Color.BLACK
+        dataSet.lineWidth = 3f
+        dataSet.circleRadius = 5f
+        dataSet.setCircleColor(Color.parseColor("#2196F3"))
+        dataSet.setDrawFilled(true)
+        dataSet.fillColor = Color.parseColor("#E3F2FD")
+
+        val lineData = LineData(dataSet)
+        energyChart.data = lineData
+        energyChart.xAxis.valueFormatter = IndexAxisValueFormatter(trendData.map { it.label })
+        energyChart.xAxis.granularity = 1f
+        energyChart.description.text = ""
+        energyChart.setDrawGridBackground(false)
+        energyChart.axisRight.isEnabled = false
+        energyChart.legend.isEnabled = false
+        energyChart.invalidate()
+    }
+
+    private fun updateEfficiencyChart(activities: List<ActivityEntity>) {
+        // Create sample efficiency data (could be based on real calculations)
+        val weeks = listOf("Week 1", "Week 2", "Week 3", "Week 4")
+        val efficiencyValues = listOf(75f, 82f, 88f, 85f)
+
+        val entries = efficiencyValues.mapIndexed { index, value ->
+            BarEntry(index.toFloat(), value)
+        }
+
+        val dataSet = BarDataSet(entries, "Energy Efficiency")
+        dataSet.color = Color.parseColor("#4CAF50")
+        dataSet.valueTextColor = Color.BLACK
+
+        val barData = BarData(dataSet)
+        efficiencyChart.data = barData
+        efficiencyChart.xAxis.valueFormatter = IndexAxisValueFormatter(weeks)
+        efficiencyChart.xAxis.granularity = 1f
+        efficiencyChart.description.text = ""
+        efficiencyChart.setDrawGridBackground(false)
+        efficiencyChart.axisRight.isEnabled = false
+        efficiencyChart.legend.isEnabled = false
+        efficiencyChart.invalidate()
+    }
+
+    private fun updatePeakUsageTimes(activities: List<ActivityEntity>) {
+        val peakTimes = ReportDataAnalyzer.analyzePeakUsageTimes(activities)
+        peakUsageAdapter.updatePeakUsages(peakTimes)
+    }
+
+    private fun updateCapacityGrowth(activities: List<ActivityEntity>, energyLogs: List<EnergyLog>) {
+        val growthData = ReportDataAnalyzer.calculateCapacityGrowth(activities, energyLogs)
+        
+        growthData.forEach { growth ->
+            when (growth.period) {
+                "Weekly Growth" -> {
+                    val sign = if (growth.isPositive) "+" else "-"
+                    weeklyGrowthPercentage.text = "$sign${String.format("%.0f", kotlin.math.abs(growth.growthPercentage))}%"
+                    weeklyGrowthPercentage.setTextColor(
+                        if (growth.isPositive) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+                    )
+                }
+                "Monthly Growth" -> {
+                    val sign = if (growth.isPositive) "+" else "-"
+                    monthlyGrowthPercentage.text = "$sign${String.format("%.0f", kotlin.math.abs(growth.growthPercentage))}%"
+                    monthlyGrowthPercentage.setTextColor(
+                        if (growth.isPositive) Color.parseColor("#4CAF50") else Color.parseColor("#F44336")
+                    )
+                }
+            }
+        }
+    }
+
+    private fun updateAIInsights(activities: List<ActivityEntity>) {
+        val insights = ReportDataAnalyzer.generateAIInsights(activities)
+        insightsAdapter.updateInsights(insights)
+    }
+}
 
     private fun loadReportData() {
         lifecycleScope.launch {
