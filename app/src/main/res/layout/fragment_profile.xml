@@ -224,6 +224,15 @@
             android:layout_marginBottom="24dp"
             style="@style/Widget.Material3.Button.OutlinedButton" />
 
+        <!-- Privacy Settings Button -->
+        <Button
+            android:id="@+id/privacySettingsButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Privacy Settings"
+            android:layout_marginBottom="12dp"
+            style="@style/Widget.Material3.Button.OutlinedButton" />
+
         <!-- Action Buttons -->
         <Button
             android:id="@+id/editProfileButton"
