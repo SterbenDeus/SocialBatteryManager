@@ -18,6 +18,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.CalendarEvent
+import com.example.socialbatterymanager.ui.activities.CreateNewActivityDialog
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -66,8 +67,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         
         // Setup buttons
         view.findViewById<Button>(R.id.btnAddCalendarEvent).setOnClickListener {
-            // TODO: Open dialog to add manual event
-            createSampleEvent()
+            showCreateNewActivityDialog()
         }
         
         view.findViewById<Button>(R.id.btnImportEvents).setOnClickListener {
@@ -96,6 +96,49 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
     }
     
+    private fun showCreateNewActivityDialog() {
+        val dialog = CreateNewActivityDialog.newInstance()
+        dialog.setOnActivityCreatedListener { activity ->
+            // Save the activity and create a calendar event
+            lifecycleScope.launch {
+                try {
+                    // Save activity to database
+                    val activityId = database.activityDao().insertActivity(activity.toEntity())
+                    
+                    // Create calendar event
+                    val calendarEvent = CalendarEvent(
+                        title = activity.name,
+                        description = activity.description,
+                        startTime = activity.date,
+                        endTime = activity.date + (60 * 60 * 1000), // Default 1 hour duration
+                        location = "",
+                        source = "manual",
+                        isImported = false
+                    )
+                    
+                    database.calendarEventDao().insert(calendarEvent)
+                    
+                    // Refresh the calendar view
+                    loadEventsForSelectedDate()
+                    
+                    Toast.makeText(
+                        requireContext(),
+                        "Activity '${activity.name}' scheduled successfully!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                    
+                } catch (e: Exception) {
+                    Toast.makeText(
+                        requireContext(),
+                        "Error creating activity: ${e.message}",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        }
+        dialog.show(parentFragmentManager, "CreateNewActivityDialog")
+    }
+
     private fun createSampleEvent() {
         lifecycleScope.launch {
             val calendar = Calendar.getInstance()

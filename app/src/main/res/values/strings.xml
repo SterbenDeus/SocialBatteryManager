@@ -20,7 +20,7 @@
     <string name="activity_notes">Notes</string>
     <string name="activity_rating">Rating</string>
     <string name="calendar_title">Calendar</string>
-    <string name="add_to_calendar">Add Event</string>
+    <string name="add_to_calendar">+ Create New Activity</string>
     <string name="import_events">Import Events</string>
     <string name="events_for_day">Events for Selected Day</string>
     

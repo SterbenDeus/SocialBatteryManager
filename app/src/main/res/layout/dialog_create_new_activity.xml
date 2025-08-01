@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:background="@android:color/white">
+
+        <!-- Header -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Create New Activity"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Plan your activity and track energy consumption"
+            android:textSize="14sp"
+            android:textColor="@color/jscc_charcoal"
+            android:alpha="0.7"
+            android:layout_marginBottom="24dp" />
+
+        <!-- Activity Name -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etActivityName"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Hot Yoga"
+            android:inputType="text"
+            android:background="@drawable/edittext_background"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Activity Description -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity Description"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/etActivityDescription"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:hint="Yoga Session"
+            android:inputType="text"
+            android:background="@drawable/edittext_background"
+            android:paddingHorizontal="16dp"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Activity Type -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Activity Type"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinnerActivityType"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:background="@drawable/spinner_background"
+            android:layout_marginBottom="20dp" />
+
+        <!-- People Involved -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="People Involved"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <!-- People Chips Container -->
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupPeople"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:chipSpacing="8dp" />
+
+        <!-- Add Person Button -->
+        <Button
+            android:id="@+id/btnAddPerson"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+ Add Person"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="20dp" />
+
+        <!-- Date and Time Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginBottom="20dp">
+
+            <!-- Date -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_marginEnd="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Date"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/jscc_charcoal"
+                    android:layout_marginBottom="8dp" />
+
+                <EditText
+                    android:id="@+id/etDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:hint="10/30/2025"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:background="@drawable/edittext_background"
+                    android:paddingHorizontal="16dp"
+                    android:drawableEnd="@android:drawable/ic_menu_today" />
+
+            </LinearLayout>
+
+            <!-- Time -->
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Time"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:textColor="@color/jscc_charcoal"
+                    android:layout_marginBottom="8dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/etStartTime"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:hint="07:00 PM"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:background="@drawable/edittext_background"
+                        android:paddingHorizontal="12dp"
+                        android:textSize="14sp"
+                        android:layout_marginEnd="4dp" />
+
+                    <EditText
+                        android:id="@+id/etEndTime"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:hint="08:00 PM"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:background="@drawable/edittext_background"
+                        android:paddingHorizontal="12dp"
+                        android:textSize="14sp"
+                        android:layout_marginStart="4dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Estimated Energy Use -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Estimated Energy Use"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginBottom="8dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@drawable/energy_background"
+            android:padding="16dp"
+            android:layout_marginBottom="20dp">
+
+            <TextView
+                android:id="@+id/tvEnergyPoints"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="50"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:textColor="@color/jscc_charcoal" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="energy points"
+                android:textSize="14sp"
+                android:textColor="@color/jscc_charcoal"
+                android:alpha="0.7"
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp" />
+
+            <ImageView
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@android:drawable/ic_menu_view"
+                android:layout_gravity="center_vertical" />
+
+        </LinearLayout>
+
+        <!-- Warnings Section -->
+        <LinearLayout
+            android:id="@+id/layoutWarnings"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginBottom="20dp">
+
+            <!-- High Energy Warning -->
+            <LinearLayout
+                android:id="@+id/layoutHighEnergyWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/warning_background_red"
+                android:padding="16dp"
+                android:layout_marginBottom="8dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_dialog_alert"
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center_vertical" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="High Energy Activity"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_red_dark"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="This activity uses a lot of energy (over 40). Consider taking breaks during the session."
+                        android:textSize="12sp"
+                        android:textColor="@android:color/holo_red_dark" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- Weekly Capacity Warning -->
+            <LinearLayout
+                android:id="@+id/layoutWeeklyCapacityWarning"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:background="@drawable/warning_background_orange"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:src="@android:drawable/ic_dialog_info"
+                    android:layout_marginEnd="12dp"
+                    android:layout_gravity="center_vertical" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Weekly Capacity Alert"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/holo_orange_dark"
+                        android:layout_marginBottom="4dp" />
+
+                    <TextView
+                        android:id="@+id/tvWeeklyCapacityMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="This activity will bring your weekly capacity down below target (30%). You may want to reschedule or reduce intensity."
+                        android:textSize="12sp"
+                        android:textColor="@android:color/holo_orange_dark" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <!-- Buttons -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="24dp">
+
+            <Button
+                android:id="@+id/btnCancel"
+                style="@style/Widget.Material3.Button.TextButton"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="Cancel"
+                android:textColor="@color/jscc_charcoal"
+                android:layout_marginEnd="8dp" />
+
+            <Button
+                android:id="@+id/btnScheduleActivity"
+                android:layout_width="0dp"
+                android:layout_height="56dp"
+                android:layout_weight="1"
+                android:text="Schedule Activity"
+                android:backgroundTint="@android:color/holo_blue_bright"
+                android:textColor="@android:color/white"
+                android:layout_marginStart="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

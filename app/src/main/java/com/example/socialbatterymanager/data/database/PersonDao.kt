@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface PersonDao {
     @Insert
-    suspend fun insertPerson(person: Person)
+    suspend fun insertPerson(person: Person): Long
 
     @Update
     suspend fun updatePerson(person: Person)
@@ -24,6 +24,9 @@ interface PersonDao {
 
     @Query("SELECT * FROM people WHERE id = :id")
     suspend fun getPersonById(id: Int): Person?
+
+    @Query("SELECT * FROM people WHERE name = :name")
+    suspend fun getPersonByName(name: String): Person?
 
     @Query("SELECT * FROM people WHERE name LIKE '%' || :name || '%'")
     fun searchPeople(name: String): Flow<List<Person>>
