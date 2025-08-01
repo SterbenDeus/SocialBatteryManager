@@ -8,6 +8,8 @@ import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.CalendarView
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -18,6 +20,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.CalendarEvent
+import com.example.socialbatterymanager.features.energy.EnergyManager
+import com.example.socialbatterymanager.features.energy.EnergyState
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -29,8 +33,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private lateinit var calendarAdapter: CalendarAdapter
     private lateinit var calendarIntegration: CalendarIntegration
     private lateinit var database: AppDatabase
+    private lateinit var energyManager: EnergyManager
+    
+    // Energy dashboard views
+    private lateinit var energyProgressBar: ProgressBar
+    private lateinit var tvEnergyPercentage: TextView
+    private lateinit var tvRemainingHours: TextView
+    private lateinit var tvActivitiesCount: TextView
+    private lateinit var tvPlannedHours: TextView
     
     private var selectedDate: Long = System.currentTimeMillis()
+    private var allEvents: List<CalendarEvent> = emptyList()
     
     companion object {
         private const val CALENDAR_PERMISSION_REQUEST = 1001
@@ -39,22 +52,13 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
-        // Initialize database and calendar integration
+        // Initialize database and services
         database = AppDatabase.getDatabase(requireContext())
         calendarIntegration = CalendarIntegration(requireContext(), database.calendarEventDao())
+        energyManager = EnergyManager()
         
         // Initialize views
-        calendarView = view.findViewById(R.id.calendarView)
-        eventsRecyclerView = view.findViewById(R.id.rvEvents)
-        
-        // Setup RecyclerView
-        calendarAdapter = CalendarAdapter { event ->
-            // Handle event click
-            Toast.makeText(requireContext(), "Event: ${event.title}", Toast.LENGTH_SHORT).show()
-        }
-        
-        eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
-        eventsRecyclerView.adapter = calendarAdapter
+        initializeViews(view)
         
         // Setup calendar view
         calendarView.setOnDateChangeListener { _, year, month, dayOfMonth ->
@@ -66,16 +70,77 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         
         // Setup buttons
         view.findViewById<Button>(R.id.btnAddCalendarEvent).setOnClickListener {
-            // TODO: Open dialog to add manual event
+            // For now, create a sample event, future: open dialog
             createSampleEvent()
+        }
+        
+        view.findViewById<Button>(R.id.btnAddActivity).setOnClickListener {
+            // Create a sample activity for demonstration
+            createSampleActivity()
         }
         
         view.findViewById<Button>(R.id.btnImportEvents).setOnClickListener {
             requestCalendarPermissionAndImport()
         }
         
-        // Load events for current date
-        loadEventsForSelectedDate()
+        // Load initial data
+        loadInitialData()
+    }
+    
+    private fun initializeViews(view: View) {
+        calendarView = view.findViewById(R.id.calendarView)
+        eventsRecyclerView = view.findViewById(R.id.rvEvents)
+        
+        // Energy dashboard views
+        energyProgressBar = view.findViewById(R.id.energyProgressBar)
+        tvEnergyPercentage = view.findViewById(R.id.tvEnergyPercentage)
+        tvRemainingHours = view.findViewById(R.id.tvRemainingHours)
+        tvActivitiesCount = view.findViewById(R.id.tvActivitiesCount)
+        tvPlannedHours = view.findViewById(R.id.tvPlannedHours)
+        
+        // Setup RecyclerView
+        calendarAdapter = CalendarAdapter { event ->
+            // Handle event click
+            Toast.makeText(requireContext(), "Event: ${event.title}", Toast.LENGTH_SHORT).show()
+        }
+        
+        eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
+        eventsRecyclerView.adapter = calendarAdapter
+    }
+    
+    private fun loadInitialData() {
+        lifecycleScope.launch {
+            // Load existing events from database
+            val todayStart = getTodayStart()
+            val nextWeek = todayStart + (7 * 24 * 60 * 60 * 1000)
+            
+            val existingEvents = database.calendarEventDao().getEventsForDay(todayStart, nextWeek)
+            
+            // If no events exist, create sample data to demonstrate the feature
+            if (existingEvents.isEmpty()) {
+                val sampleEvents = energyManager.createSampleTodayData()
+                sampleEvents.forEach { event ->
+                    database.calendarEventDao().insertEvent(event)
+                }
+                allEvents = sampleEvents
+            } else {
+                allEvents = existingEvents
+            }
+            
+            updateEnergyDashboard()
+            loadEventsForSelectedDate()
+        }
+    }
+    
+    private fun updateEnergyDashboard() {
+        val energyState = energyManager.calculateCurrentEnergyLevel(allEvents)
+        
+        // Update energy dashboard
+        energyProgressBar.progress = energyState.currentEnergyLevel
+        tvEnergyPercentage.text = "${energyState.currentEnergyLevel}%"
+        tvRemainingHours.text = String.format("%.1fh", energyState.remainingHours)
+        tvActivitiesCount.text = energyState.activitiesCount.toString()
+        tvPlannedHours.text = String.format("%.1fh", energyState.plannedHours)
     }
     
     private fun loadEventsForSelectedDate() {
@@ -93,6 +158,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             
             val events = database.calendarEventDao().getEventsForDay(startOfDay, endOfDay)
             calendarAdapter.submitList(events)
+            
+            // Update all events list and refresh energy dashboard
+            allEvents = database.calendarEventDao().getEventsForDay(getTodayStart(), getTodayStart() + (7 * 24 * 60 * 60 * 1000))
+            updateEnergyDashboard()
         }
     }
     
@@ -100,7 +169,7 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         lifecycleScope.launch {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = selectedDate
-            calendar.set(Calendar.HOUR_OF_DAY, 10)
+            calendar.set(Calendar.HOUR_OF_DAY, 14) // 2:00 PM
             calendar.set(Calendar.MINUTE, 0)
             val startTime = calendar.timeInMillis
             
@@ -108,15 +177,39 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             val endTime = calendar.timeInMillis
             
             calendarIntegration.createManualEvent(
-                title = "Sample Event",
-                description = "This is a sample calendar event",
+                title = "New Meeting",
+                description = "Newly created meeting",
                 startTime = startTime,
                 endTime = endTime,
-                location = "Office"
+                location = "Conference Room"
             )
             
             loadEventsForSelectedDate()
-            Toast.makeText(requireContext(), "Sample event created!", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Event created!", Toast.LENGTH_SHORT).show()
+        }
+    }
+    
+    private fun createSampleActivity() {
+        lifecycleScope.launch {
+            val calendar = Calendar.getInstance()
+            calendar.timeInMillis = selectedDate
+            calendar.set(Calendar.HOUR_OF_DAY, 16) // 4:00 PM
+            calendar.set(Calendar.MINUTE, 0)
+            val startTime = calendar.timeInMillis
+            
+            calendar.add(Calendar.MINUTE, 30)
+            val endTime = calendar.timeInMillis
+            
+            calendarIntegration.createManualEvent(
+                title = "Coffee Break",
+                description = "Quick coffee with colleague",
+                startTime = startTime,
+                endTime = endTime,
+                location = "Cafe"
+            )
+            
+            loadEventsForSelectedDate()
+            Toast.makeText(requireContext(), "Activity added!", Toast.LENGTH_SHORT).show()
         }
     }
     
@@ -152,6 +245,15 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 ).show()
             }
         }
+    }
+    
+    private fun getTodayStart(): Long {
+        val calendar = Calendar.getInstance()
+        calendar.set(Calendar.HOUR_OF_DAY, 0)
+        calendar.set(Calendar.MINUTE, 0)
+        calendar.set(Calendar.SECOND, 0)
+        calendar.set(Calendar.MILLISECOND, 0)
+        return calendar.timeInMillis
     }
     
     @Suppress("OverrideDeprecatedMigration")

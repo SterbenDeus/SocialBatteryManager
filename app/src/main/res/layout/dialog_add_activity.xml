@@ -3,7 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp">
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add Activity"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_marginBottom="16dp" />
 
     <EditText
         android:id="@+id/etActivityName"
@@ -12,6 +21,36 @@
         android:hint="@string/activity_name"
         android:inputType="text"
         android:layout_marginBottom="12dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginBottom="12dp">
+
+        <EditText
+            android:id="@+id/etStartTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="Start Time"
+            android:inputType="time"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginEnd="8dp" />
+
+        <EditText
+            android:id="@+id/etEndTime"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:hint="End Time"
+            android:inputType="time"
+            android:focusable="false"
+            android:clickable="true"
+            android:layout_marginStart="8dp" />
+
+    </LinearLayout>
 
     <TextView
         android:layout_width="wrap_content"
@@ -71,6 +110,31 @@
         android:inputType="textMultiLine"
         android:minLines="2"
         android:maxLines="4"
-        android:layout_marginBottom="12dp" />
+        android:layout_marginBottom="20dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end">
+
+        <Button
+            android:id="@+id/btnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:textColor="@color/jscc_charcoal"
+            style="@style/Widget.MaterialComponents.Button.TextButton"
+            android:layout_marginEnd="8dp" />
+
+        <Button
+            android:id="@+id/btnSave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Activity"
+            android:backgroundTint="@color/primary_light"
+            android:textColor="@color/jscc_white" />
+
+    </LinearLayout>
 
 </LinearLayout>
