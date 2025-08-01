@@ -10,17 +10,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
-// import com.example.requirements.RequirementsWebInterface
-// import com.example.requirements.ComplexityLevel
+import com.example.requirements.RequirementsWebInterface
+import com.example.requirements.ComplexityLevel
 import kotlinx.coroutines.launch
 import java.io.File
 
-// Temporary stubs to avoid compilation errors
-enum class ComplexityLevel { LOW, MEDIUM, HIGH }
-class RequirementsWebInterface {
-    fun processWebRequirements(input: String, complexity: ComplexityLevel): String = "Stub implementation"
-    fun assessComplexity(requirements: String): ComplexityLevel = ComplexityLevel.MEDIUM
-}
 
 /**
  * Fragment for requirements upload and code generation

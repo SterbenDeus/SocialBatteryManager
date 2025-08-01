@@ -26,7 +26,7 @@ class PeopleRepository(private val database: AppDatabase) {
         return database.personDao().getPersonById(id)
     }
     
-    suspend fun searchPeople(query: String): List<Person> {
+    fun searchPeople(query: String): Flow<List<Person>> {
         return database.personDao().searchPeople(query)
     }
 }
