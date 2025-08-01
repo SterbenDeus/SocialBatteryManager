@@ -84,20 +84,37 @@ class PersonAdapter(
                 ivTrend.visibility = View.GONE
             }
             
-            // Social energy level
-            progressSocialEnergy.progress = person.socialEnergyLevel
-            tvSocialEnergyLevel.text = "${person.socialEnergyLevel}%"
+            // Privacy settings check - for demo purposes, assume user has default privacy settings
+            val userPrivacySettings = com.example.socialbatterymanager.data.model.PrivacySettings()
+            val canViewSocialEnergy = com.example.socialbatterymanager.data.model.PrivacyManager.canViewSocialEnergy(person.label, userPrivacySettings)
+            val canViewMood = com.example.socialbatterymanager.data.model.PrivacyManager.canViewMood(person.label, userPrivacySettings)
             
-            // Update progress bar color based on energy level
-            val energyColor = when {
-                person.socialEnergyLevel >= 70 -> Color.parseColor("#4CAF50") // Green
-                person.socialEnergyLevel >= 40 -> Color.parseColor("#FF9800") // Orange
-                else -> Color.parseColor("#F44336") // Red
+            // Social energy level - show only if privacy allows
+            if (canViewSocialEnergy) {
+                progressSocialEnergy.progress = person.socialEnergyLevel
+                tvSocialEnergyLevel.text = "${person.socialEnergyLevel}%"
+                progressSocialEnergy.visibility = View.VISIBLE
+                tvSocialEnergyLevel.visibility = View.VISIBLE
+                
+                // Update progress bar color based on energy level
+                val energyColor = when {
+                    person.socialEnergyLevel >= 70 -> Color.parseColor("#4CAF50") // Green
+                    person.socialEnergyLevel >= 40 -> Color.parseColor("#FF9800") // Orange
+                    else -> Color.parseColor("#F44336") // Red
+                }
+                progressSocialEnergy.progressDrawable.setTint(energyColor)
+            } else {
+                progressSocialEnergy.visibility = View.INVISIBLE
+                tvSocialEnergyLevel.text = "Hidden"
+                tvSocialEnergyLevel.visibility = View.VISIBLE
             }
-            progressSocialEnergy.progressDrawable.setTint(energyColor)
             
-            // Mood emoji
-            tvMood.text = person.mood.emoji
+            // Mood emoji - show only if privacy allows
+            if (canViewMood) {
+                tvMood.text = person.mood.emoji
+            } else {
+                tvMood.text = "🔒" // Lock emoji for hidden mood
+            }
 
             // Load avatar image if available
             if (!person.avatarPath.isNullOrEmpty()) {
