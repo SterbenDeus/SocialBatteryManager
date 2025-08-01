@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
+import androidx.room.Delete
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.SyncStatus
 import kotlinx.coroutines.flow.Flow
@@ -48,4 +49,7 @@ interface ActivityDao {
 
     @Query("SELECT * FROM activities WHERE date BETWEEN :start AND :end AND isDeleted = 0 ORDER BY date DESC")
     suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity>
+
+    @Delete
+    suspend fun deleteActivity(activity: ActivityEntity)
 }

@@ -43,6 +43,11 @@
     <color name="jscc_white">#ffffff</color>
     <color name="jscc_light_gray">#e5e7eb</color>
 
+    <!-- Notification colors -->
+    <color name="notification_energy_low">#F44336</color>
+    <color name="notification_busy_week">#FF9800</color>
+    <color name="notification_rate_activity">#2196F3</color>
+
     <!-- Material3 color aliases for theme compatibility -->
     <color name="colorPrimaryContainer">@color/primary_container_light</color>
     <color name="colorOnPrimaryContainer">@color/on_primary_container_light</color>
