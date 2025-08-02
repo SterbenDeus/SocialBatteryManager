@@ -8,4 +8,36 @@
         <item>😢 Sad</item>
         <!-- Add any other moods you like -->
     </string-array>
+
+    <string-array name="activity_type_options">
+        <item>Work</item>
+        <item>Social</item>
+        <item>Exercise</item>
+        <item>Hobby</item>
+        <item>Rest</item>
+        <item>Other</item>
+    </string-array>
+
+    <string-array name="energy_impact_values">
+        <item>-5</item>
+        <item>-4</item>
+        <item>-3</item>
+        <item>-2</item>
+        <item>-1</item>
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+    </string-array>
+
+    <string-array name="mood_dialog_options">
+        <item>😊 Happy</item>
+        <item>😐 Neutral</item>
+        <item>😔 Sad</item>
+        <item>😴 Tired</item>
+        <item>😤 Stressed</item>
+        <item>😎 Energetic</item>
+    </string-array>
 </resources>
