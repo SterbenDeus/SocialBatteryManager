@@ -4,157 +4,532 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/jscc_charcoal">
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp"
-        android:gravity="center_horizontal">
+        android:padding="16dp">
 
-        <!-- Optional: Gold Accent Bar at the top -->
-        <View
-            android:layout_width="64dp"
-            android:layout_height="5dp"
-            android:background="@color/jscc_gold_start"
-            android:layout_gravity="center"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Header with Notifications -->
+        <!-- Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:gravity="center_vertical"
+            android:background="#4CAF50"
+            android:padding="16dp"
             android:layout_marginBottom="16dp">
 
             <TextView
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="Social Energy"
-                android:textSize="24sp"
+                android:text="🔋 Social Energy"
+                android:textSize="20sp"
                 android:textStyle="bold"
-                android:textColor="@color/jscc_white" />
+                android:textColor="@android:color/white" />
 
-            <ImageButton
-                android:id="@+id/btnNotifications"
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:src="@drawable/ic_notifications"
-                android:background="?android:attr/selectableItemBackgroundBorderless"
-                android:contentDescription="View notifications"
-                app:tint="@color/jscc_white" />
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@android:color/darker_gray" />
 
         </LinearLayout>
 
-        <!-- Energy Battery Section (Simplified) -->
-        <LinearLayout
+        <!-- Social Energy Level Card -->
+        <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/jscc_white"
-            android:padding="24dp"
             android:layout_marginBottom="16dp"
-            android:elevation="2dp"
-            android:gravity="center">
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Social Energy Level"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/jscc_charcoal"
-                android:layout_marginBottom="16dp" />
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <TextView
-                android:id="@+id/tvEnergyLevel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="65%"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:textColor="@color/jscc_gold_start"
-                android:layout_marginBottom="16dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Social Energy Level"
+                    android:textSize="20sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="4dp" />
 
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Current energy status"
+                    android:textSize="14sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="16dp" />
 
-        <!-- Add/Remove Energy Buttons -->
-        <LinearLayout
-            android:layout_width="wrap_content"
+                <!-- Energy Battery View -->
+                <com.example.socialbatterymanager.features.home.ui.EnergyBatteryView
+                    android:id="@+id/energyBatteryView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp" />
+
+                <!-- Energy Level Info -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical">
+
+                    <TextView
+                        android:id="@+id/tvEnergyPercentage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="75%"
+                        android:textSize="32sp"
+                        android:textStyle="bold"
+                        android:textColor="#4CAF50" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_marginStart="16dp">
+
+                        <TextView
+                            android:id="@+id/tvEnergyLabel"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="High Energy"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="↗ +5% from yesterday"
+                            android:textSize="12sp"
+                            android:textColor="#4CAF50" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- How are you feeling Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:gravity="center"
-            android:layout_marginBottom="16dp">
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
 
-            <Button
-                android:id="@+id/btnRemoveEnergy"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/remove_energy"
-                android:textColor="@color/jscc_charcoal"
-                android:backgroundTint="@color/jscc_light_gray"/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <Button
-                android:id="@+id/btnAddEnergy"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="How are you feeling?"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:id="@+id/llMoodOptions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center">
+                    <!-- Mood buttons will be added programmatically -->
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Energy Insights Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/add_energy"
-                android:textColor="@color/jscc_white"
-                android:backgroundTint="@color/jscc_gold_start"
-                android:layout_marginStart="12dp"/>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-            <!-- Test Battery Button: Remove for production -->
-            <Button
-                android:id="@+id/btnTestBattery"
-                android:layout_width="wrap_content"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/energy_insights_title"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Remaining Card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="80dp"
+                        android:layout_marginEnd="8dp"
+                        app:cardBackgroundColor="#2196F3"
+                        app:cardCornerRadius="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="🔋 Remaining"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/tvRemainingHours"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="6.2h"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Social energy left"
+                                android:textSize="10sp"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                    <!-- Burn Rate Card -->
+                    <androidx.cardview.widget.CardView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="80dp"
+                        android:layout_marginStart="8dp"
+                        app:cardBackgroundColor="#FF5722"
+                        app:cardCornerRadius="8dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:orientation="vertical"
+                            android:gravity="center"
+                            android:padding="8dp">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="⏱ Burn Rate"
+                                android:textSize="12sp"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:id="@+id/tvBurnRate"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="2.1h"
+                                android:textSize="16sp"
+                                android:textStyle="bold"
+                                android:textColor="@android:color/white" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Per social activity"
+                                android:textSize="10sp"
+                                android:textColor="@android:color/white" />
+
+                        </LinearLayout>
+
+                    </androidx.cardview.widget.CardView>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Weekly Forecast Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/test_battery"
-                android:textColor="@color/jscc_white"
-                android:backgroundTint="@color/jscc_gold_start"
-                android:layout_marginStart="12dp"/>
-        </LinearLayout>
+                android:orientation="vertical"
+                android:padding="16dp">
 
-        <!-- Logout Button -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_marginBottom="12dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="@string/weekly_forecast_title"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="📊"
+                        android:textSize="16sp" />
+
+                </LinearLayout>
+
+                <!-- Forecast Items -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/average_energy"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:id="@+id/tvAverageEnergy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="78%"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#4CAF50" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/peak_day"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:id="@+id/tvPeakDay"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Saturday"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#2196F3" />
+
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center_vertical">
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:text="@string/recovery_needed"
+                            android:textSize="14sp"
+                            android:textColor="@android:color/black" />
+
+                        <TextView
+                            android:id="@+id/tvRecoveryNeeded"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="2 days"
+                            android:textSize="16sp"
+                            android:textStyle="bold"
+                            android:textColor="#FF5722" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Quick Actions Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Quick Actions"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/btnLogActivity"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="➕ Log Activity"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#4CAF50"
+                        android:layout_marginEnd="8dp" />
+
+                    <Button
+                        android:id="@+id/btnPlanDay"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="📅 Plan Day"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#2196F3"
+                        android:layout_marginStart="8dp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp">
+
+                    <Button
+                        android:id="@+id/btnViewBattery"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="🔍 View Battery"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#9C27B0"
+                        android:layout_marginEnd="8dp" />
+
+                    <Button
+                        android:id="@+id/btnGetTips"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"
+                        android:text="💡 Get Tips"
+                        android:textColor="@android:color/white"
+                        android:backgroundTint="#FF9800"
+                        android:layout_marginStart="8dp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- Hidden views for backwards compatibility -->
         <Button
-            android:id="@+id/btnLogout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:textColor="@color/jscc_charcoal"
-            android:backgroundTint="@color/jscc_light_gray"
-            android:layout_marginBottom="16dp"/>
+            android:id="@+id/btnAddEnergy"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
-        <!-- Weekly Stats -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@color/jscc_white"
-            android:padding="16dp"
-            android:layout_marginBottom="16dp"
-            android:elevation="2dp">
+        <Button
+            android:id="@+id/btnRemoveEnergy"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Weekly Stats"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:textColor="@color/jscc_charcoal"
-                android:layout_marginBottom="8dp" />
+        <Button
+            android:id="@+id/btnTestBattery"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
-            <TextView
-                android:id="@+id/tvWeeklyStats"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Loading..."
-                android:textSize="14sp"
-                android:textColor="@color/jscc_charcoal" />
+        <TextView
+            android:id="@+id/tvWeeklyStats"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
-        </LinearLayout>
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupMood"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewActivities"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fabAddActivity"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:visibility="gone" />
 
     </LinearLayout>
 </ScrollView>

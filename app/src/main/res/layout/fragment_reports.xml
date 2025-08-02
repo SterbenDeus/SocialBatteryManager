@@ -3,21 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="16dp">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reports"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Social Battery Reports and Analytics"
-        android:textSize="16sp"/>
+    android:background="#F5F5F5">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -25,49 +11,38 @@
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Title -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Reports &amp; Analytics"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black"
-            android:layout_marginBottom="16dp" />
-
-        <!-- Export Buttons -->
+        <!-- Header with gradient background -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
+            android:background="@drawable/gradient_background"
+            android:padding="16dp"
             android:layout_marginBottom="16dp">
 
-            <Button
-                android:id="@+id/exportCsvButton"
+            <TextView
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginEnd="8dp"
-                android:text="Export CSV"
-                android:textSize="14sp" />
+                android:text="← Reports"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/white" />
 
-            <Button
-                android:id="@+id/exportPdfButton"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:layout_marginStart="8dp"
-                android:text="Export PDF"
-                android:textSize="14sp" />
+            <View
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/circular_background"
+                android:layout_gravity="center_vertical" />
 
         </LinearLayout>
 
-        <!-- Energy Chart -->
+        <!-- Report Period Selector -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
             <LinearLayout
@@ -77,29 +52,118 @@
                 android:padding="16dp">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Energy Trends"
-                    android:textSize="18sp"
+                    android:text="Report Period"
+                    android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/weekButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginEnd="4dp"
+                        android:text="Week"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/monthButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginHorizontal="4dp"
+                        android:text="Month"
+                        android:textSize="14sp" />
+
+                    <Button
+                        android:id="@+id/yearButton"
+                        style="@style/Widget.Material3.Button.TonalButton"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="4dp"
+                        android:text="Year"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Energy Trends -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="8dp">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Energy Trends"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:textColor="@android:color/black" />
+
+                    <TextView
+                        android:id="@+id/energyPeriodLabel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Daily Energy Usage"
+                        android:textSize="12sp"
+                        android:textColor="@android:color/darker_gray" />
+
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/energySubLabel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Last 7 days"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:layout_marginBottom="16dp" />
 
                 <com.github.mikephil.charting.charts.LineChart
                     android:id="@+id/energyChart"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="250dp" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Mood Chart -->
+        <!-- Peak Usage Times -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="8dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
             <LinearLayout
@@ -111,26 +175,27 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Mood Distribution"
+                    android:text="Peak Usage Times"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="16dp" />
 
-                <com.github.mikephil.charting.charts.PieChart
-                    android:id="@+id/moodChart"
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/peakUsageRecyclerView"
                     android:layout_width="match_parent"
-                    android:layout_height="300dp" />
+                    android:layout_height="wrap_content" />
 
             </LinearLayout>
 
         </com.google.android.material.card.MaterialCardView>
 
-        <!-- Trends List -->
+        <!-- Capacity Growth -->
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardCornerRadius="8dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
             app:cardElevation="4dp">
 
             <LinearLayout
@@ -142,14 +207,134 @@
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Daily Summary"
+                    android:text="Capacity Growth"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="16dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <!-- Weekly Growth -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/weeklyGrowthPercentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+15%"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_blue_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Weekly Growth"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray" />
+
+                    </LinearLayout>
+
+                    <!-- Monthly Growth -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:padding="16dp">
+
+                        <TextView
+                            android:id="@+id/monthlyGrowthPercentage"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="+8%"
+                            android:textSize="24sp"
+                            android:textStyle="bold"
+                            android:textColor="@android:color/holo_blue_dark" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Monthly Growth"
+                            android:textSize="12sp"
+                            android:textColor="@android:color/darker_gray" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- Energy Efficiency (Optional Chart) -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Energy Efficiency"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp" />
+
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/efficiencyChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="200dp" />
+
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <!-- AI Insights -->
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="12dp"
+            app:cardElevation="4dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="AI Insights"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/black"
+                    android:layout_marginBottom="16dp" />
 
                 <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/trendsRecyclerView"
+                    android:id="@+id/insightsRecyclerView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content" />
 

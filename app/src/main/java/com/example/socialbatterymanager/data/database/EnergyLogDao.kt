@@ -19,4 +19,7 @@ interface EnergyLogDao {
 
     @Query("SELECT * FROM energy_logs WHERE timestamp >= :startTime ORDER BY timestamp DESC")
     fun getEnergyLogsAfter(startTime: Long): Flow<List<EnergyLog>>
+
+    @Query("SELECT * FROM energy_logs WHERE timestamp BETWEEN :startTime AND :endTime ORDER BY timestamp DESC")
+    suspend fun getEnergyLogsByDateRangeSync(startTime: Long, endTime: Long): List<EnergyLog>
 }

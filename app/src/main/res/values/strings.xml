@@ -20,19 +20,39 @@
     <string name="activity_notes">Notes</string>
     <string name="activity_rating">Rating</string>
     <string name="calendar_title">Calendar</string>
-    <string name="add_to_calendar">Add Event</string>
+    <string name="add_to_calendar">+ Create New Activity</string>
     <string name="import_events">Import Events</string>
     <string name="events_for_day">Events for Selected Day</string>
     
 
+    <!-- Energy Level Labels -->
+    <string name="energy_level_high">High Energy</string>
+    <string name="energy_level_medium">Medium Energy</string>
+    <string name="energy_level_low">Low Energy</string>
+    <string name="energy_level_recharge">Recharge</string>
+    
+    <!-- Energy Insights -->
+    <string name="energy_insights_title">Energy Insights</string>
+    <string name="remaining_time">Remaining</string>
+    <string name="burn_rate">Burn Rate</string>
+    <string name="hours_left">%1$.1fh\nSocial energy left</string>
+    <string name="burn_rate_value">%1$.1fh\nPer social activity</string>
+    
+    <!-- Weekly Forecast -->
+    <string name="weekly_forecast_title">Weekly Forecast</string>
+    <string name="average_energy">Average Energy</string>
+    <string name="peak_day">Peak Day</string>
+    <string name="recovery_needed">Recovery Needed</string>
+    
     <!-- Mood Options -->
     <string-array name="mood_options">
-        <item>Energetic</item>
-        <item>Happy</item>
-        <item>Neutral</item>
-        <item>Tired</item>
-        <item>Stressed</item>
-        <item>Overwhelmed</item>
+        <item>😴 Drained</item>
+        <item>😐 Low</item>
+        <item>🙂 Okay</item>
+        <item>😊 Good</item>
+        <item>⚡ Energized</item>
+        <item>🤗 Sociable</item>
+        <item>😑 Unsociable</item>
     </string-array>
 
     <!-- Firebase Auth -->
@@ -83,6 +103,12 @@
     <string name="battery_percent_description">Current battery level: %1$d percent</string>
     <string name="test_battery_description">Test battery level change</string>
     <string name="battery_level_changed">Battery level changed to %1$d percent</string>
+    <string name="date">Date</string>
+    <string name="energy_0_0">Energy: 0.0</string>
+    <string name="mood_unknown">Mood: Unknown</string>
+    <string name="activities_0">Activities: 0</string>
+
+    <!-- Reports strings -->
     <string name="date">Date</string>
     <string name="energy_0_0">Energy: 0.0</string>
     <string name="mood_unknown">Mood: Unknown</string>
