@@ -117,18 +117,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             val nextWeek = todayStart + (7 * 24 * 60 * 60 * 1000)
             
             val existingEvents = database.calendarEventDao().getEventsForDay(todayStart, nextWeek)
-            
+
             // If no events exist, optionally create sample data in debug builds
-            if (existingEvents.isEmpty()) {
-                if (BuildConfig.DEBUG) {
-                    val sampleEvents = energyManager.createSampleTodayData()
-                    sampleEvents.forEach { event ->
-                        database.calendarEventDao().insertEvent(event)
-                    }
-                    allEvents = sampleEvents
-                } else {
-                    allEvents = existingEvents
+            if (existingEvents.isEmpty() && BuildConfig.DEBUG) {
+                val sampleEvents = energyManager.createSampleTodayData()
+                sampleEvents.forEach { event ->
+                    database.calendarEventDao().insertEvent(event)
                 }
+                allEvents = sampleEvents
             } else {
                 allEvents = existingEvents
             }

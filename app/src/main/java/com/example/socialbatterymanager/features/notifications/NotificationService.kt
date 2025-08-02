@@ -17,38 +17,39 @@ class NotificationService(private val context: Context) {
     private val scope = CoroutineScope(Dispatchers.IO)
     
     fun generateSampleNotifications() {
-        if (!BuildConfig.DEBUG) return
-        scope.launch {
-            // Retrieve current notifications to avoid duplicate inserts
-            val existingNotifications =
-                database.notificationDao().getAllNotifications().first()
+        if (BuildConfig.DEBUG) {
+            scope.launch {
+                // Retrieve current notifications to avoid duplicate inserts
+                val existingNotifications =
+                    database.notificationDao().getAllNotifications().first()
 
-            if (existingNotifications.isEmpty()) {
-                // Generate sample notifications only when none exist
-                val notifications = listOf(
-                    NotificationEntity(
-                        type = NotificationType.ENERGY_LOW.name,
-                        title = context.getString(R.string.notification_energy_low_title),
-                        message = context.getString(R.string.notification_energy_low_sample_message),
-                        timestamp = System.currentTimeMillis() - (2 * 60 * 1000) // 2 minutes ago
-                    ),
-                    NotificationEntity(
-                        type = NotificationType.BUSY_WEEK.name,
-                        title = context.getString(R.string.notification_busy_week_title),
-                        message = context.getString(R.string.notification_busy_week_sample_message),
-                        timestamp = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
-                    ),
-                    NotificationEntity(
-                        type = NotificationType.RATE_ACTIVITY.name,
-                        title = context.getString(R.string.notification_rate_activity_title),
-                        message = context.getString(R.string.notification_rate_activity_sample_message),
-                        timestamp = System.currentTimeMillis() - (3 * 60 * 60 * 1000), // 3 hours ago
-                        activityId = 1 // Assuming there's an activity with ID 1
+                if (existingNotifications.isEmpty()) {
+                    // Generate sample notifications only when none exist
+                    val notifications = listOf(
+                        NotificationEntity(
+                            type = NotificationType.ENERGY_LOW.name,
+                            title = context.getString(R.string.notification_energy_low_title),
+                            message = context.getString(R.string.notification_energy_low_sample_message),
+                            timestamp = System.currentTimeMillis() - (2 * 60 * 1000) // 2 minutes ago
+                        ),
+                        NotificationEntity(
+                            type = NotificationType.BUSY_WEEK.name,
+                            title = context.getString(R.string.notification_busy_week_title),
+                            message = context.getString(R.string.notification_busy_week_sample_message),
+                            timestamp = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
+                        ),
+                        NotificationEntity(
+                            type = NotificationType.RATE_ACTIVITY.name,
+                            title = context.getString(R.string.notification_rate_activity_title),
+                            message = context.getString(R.string.notification_rate_activity_sample_message),
+                            timestamp = System.currentTimeMillis() - (3 * 60 * 60 * 1000), // 3 hours ago
+                            activityId = 1 // Assuming there's an activity with ID 1
+                        )
                     )
-                )
 
-                notifications.forEach { notification ->
-                    database.notificationDao().insertNotification(notification)
+                    notifications.forEach { notification ->
+                        database.notificationDao().insertNotification(notification)
+                    }
                 }
             }
         }
