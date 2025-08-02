@@ -9,6 +9,7 @@ import com.google.gson.Gson
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import java.security.MessageDigest
+import java.nio.charset.StandardCharsets
 import java.util.UUID
 
 class DataRepository private constructor(
@@ -143,9 +144,16 @@ class DataRepository private constructor(
     }
     
     private fun generateChecksum(activities: List<ActivityEntity>, auditLogs: List<AuditLogEntity>): String {
-        val data = gson.toJson(activities) + gson.toJson(auditLogs)
         val digest = MessageDigest.getInstance("SHA-256")
-        return digest.digest(data.toByteArray()).joinToString("") { "%02x".format(it) }
+        val activitiesBytes = gson
+            .toJson(activities)
+            .toByteArray(StandardCharsets.UTF_8)
+        val auditLogsBytes = gson
+            .toJson(auditLogs)
+            .toByteArray(StandardCharsets.UTF_8)
+        digest.update(activitiesBytes)
+        digest.update(auditLogsBytes)
+        return digest.digest().joinToString("") { "%02x".format(it) }
     }
     
     // Cleanup operations
