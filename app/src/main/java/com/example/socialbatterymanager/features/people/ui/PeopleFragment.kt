@@ -128,7 +128,7 @@ class PeopleFragment : Fragment() {
                     viewModel.weeklyStats.collect { stats ->
                         stats?.let {
                             tvTotalPeople.text = it.totalPeople.toString()
-                            tvAvgDrain.text = String.format("%.1fh", it.avgDrain)
+                            tvAvgDrain.text = getString(R.string.hours_format, it.avgDrain)
                             tvThisWeek.text = it.thisWeekInteractions.toString()
                         }
                     }
@@ -179,7 +179,7 @@ class PeopleFragment : Fragment() {
     }
 
     private fun updateContactsCount(count: Int) {
-        tvContactsCount.text = "$count contacts"
+        tvContactsCount.text = resources.getQuantityString(R.plurals.contacts_count, count, count)
     }
 
     private fun showAddPersonDialog() {
@@ -187,7 +187,7 @@ class PeopleFragment : Fragment() {
             fragment = this,
             person = null,
             onPersonSaved = { person ->
-                Toast.makeText(requireContext(), "Person added successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.person_added_success), Toast.LENGTH_SHORT).show()
             }
         ).show()
     }
@@ -198,17 +198,21 @@ class PeopleFragment : Fragment() {
             fragment = this,
             person = personWithStats.person,
             onPersonSaved = { updatedPerson ->
-                Toast.makeText(requireContext(), "Person updated successfully", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.person_updated_success), Toast.LENGTH_SHORT).show()
             }
         ).show()
     }
 
     private fun showPersonOptions(personWithStats: PersonWithStats) {
         // Show options menu (edit, delete, etc.)
-        val options = arrayOf("Edit", "Delete", "View Stats")
-        
+        val options = arrayOf(
+            getString(R.string.edit),
+            getString(R.string.delete),
+            getString(R.string.view_stats)
+        )
+
         val builder = android.app.AlertDialog.Builder(requireContext())
-        builder.setTitle("Options for ${personWithStats.person.name}")
+        builder.setTitle(getString(R.string.options_for, personWithStats.person.name))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> showPersonDetails(personWithStats)
@@ -221,13 +225,13 @@ class PeopleFragment : Fragment() {
 
     private fun deletePerson(person: Person) {
         android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Delete Person")
-            .setMessage("Are you sure you want to delete ${person.name}?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(R.string.delete_person_title)
+            .setMessage(getString(R.string.delete_person_message, person.name))
+            .setPositiveButton(R.string.delete) { _, _ ->
                 viewModel.deletePerson(person)
-                Toast.makeText(requireContext(), "Person deleted", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.person_deleted), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -273,7 +277,11 @@ class PeopleFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(
                         requireContext(),
-                        "Imported ${newContacts.size} contacts (${contacts.size - newContacts.size} duplicates skipped)",
+                        getString(
+                            R.string.imported_contacts,
+                            newContacts.size,
+                            contacts.size - newContacts.size
+                        ),
                         Toast.LENGTH_LONG
                     ).show()
                     viewModel.refreshData()
@@ -282,7 +290,7 @@ class PeopleFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(
                         requireContext(),
-                        "Contacts permission not granted",
+                        getString(R.string.contacts_permission_not_granted),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -290,7 +298,7 @@ class PeopleFragment : Fragment() {
                 requireActivity().runOnUiThread {
                     Toast.makeText(
                         requireContext(),
-                        "Error importing contacts: ${e.message}",
+                        getString(R.string.error_importing_contacts, e.message),
                         Toast.LENGTH_LONG
                     ).show()
                 }
@@ -310,7 +318,7 @@ class PeopleFragment : Fragment() {
             if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 performContactsImport()
             } else {
-                Toast.makeText(requireContext(), "Contacts permission denied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.contacts_permission_denied), Toast.LENGTH_SHORT).show()
             }
         }
     }
