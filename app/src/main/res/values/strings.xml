@@ -232,6 +232,18 @@
     <string name="account_deleted_success">Account deleted successfully</string>
     <string name="battery_recalibrated_success">Battery recalibrated successfully</string>
 
+    <!-- Privacy settings strings -->
+    <string name="privacy_settings_updated">Privacy settings updated</string>
+    <string name="block_user_title">Block User</string>
+    <string name="block_user_message">Enter the user details to block them from seeing your mood and energy</string>
+    <string name="block">Block</string>
+    <string name="please_enter_name">Please enter a name</string>
+    <string name="remove_blocked_user_title">Remove Blocked User</string>
+    <string name="remove_blocked_user_message">Are you sure you want to remove %1$s from blocked users? They will be able to see your mood and energy again.</string>
+    <string name="remove">Remove</string>
+    <string name="blocked_user_added">%1$s has been blocked</string>
+    <string name="blocked_user_removed">%1$s has been unblocked</string>
+
     <!-- Notification strings -->
     <string name="notification_energy_low_title">Energy Running Low</string>
     <string name="notification_energy_low_message">Your social energy is at %1$d%%. Consider taking a break!</string>
