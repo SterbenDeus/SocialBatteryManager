@@ -33,6 +33,20 @@
     <string name="activity_delete_error">Error deleting activity: %1$s</string>
     <string name="activity_marked_as_used">Activity marked as used!</string>
     <string name="activity_usage_error">Error updating usage: %1$s</string>
+    <string name="error_activity_name_required">Please enter an activity name</string>
+    <string name="weekly_capacity_warning">This activity will bring your weekly capacity down to %1$d%%. You may want to reschedule or reduce intensity.</string>
+    <string name="enter_person_name_hint">Enter person's name</string>
+    <string name="add">Add</string>
+    <string name="hours_format">%.1fh</string>
+
+    <string-array name="activity_types">
+        <item>@string/activity_type_work</item>
+        <item>@string/activity_type_leisure</item>
+        <item>@string/activity_type_other</item>
+    </string-array>
+    <string name="activity_type_work">Work</string>
+    <string name="activity_type_leisure">Leisure</string>
+    <string name="activity_type_other">Other</string>
     <string name="calendar_title">Calendar</string>
     <string name="add_to_calendar">+ Create New Activity</string>
     <string name="import_events">Import Events</string>
@@ -41,6 +55,7 @@
 
     <!-- People -->
     <string name="add_person">Add Person</string>
+    <string name="add_person_button">+ Add Person</string>
     <string name="edit_person">Edit Person</string>
     <string name="error_name_required">Name is required</string>
     <string name="imported_from_contacts">Imported from contacts</string>
@@ -125,6 +140,7 @@
     <string name="error_network">Network error. Please check your connection.</string>
     <string name="error_offline">You are offline. Some features may not be available.</string>
     <string name="retry">Retry</string>
+    <string name="invalid_input">Invalid input</string>
     
     <!-- Biometric strings -->
     <string name="biometric_title">Authenticate</string>

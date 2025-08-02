@@ -82,7 +82,7 @@ class CreateNewActivityDialog : DialogFragment() {
 
     private fun setupViews() {
         // Setup activity type spinner
-        val activityTypes = arrayOf("Work", "Leisure", "Other")
+        val activityTypes = resources.getStringArray(R.array.activity_types)
         val adapter = ArrayAdapter(requireContext(), android.R.layout.simple_spinner_item, activityTypes)
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
         spinnerActivityType.adapter = adapter
@@ -173,19 +173,20 @@ class CreateNewActivityDialog : DialogFragment() {
     }
 
     private fun showAddPersonDialog() {
-        val editText = EditText(requireContext())
-        editText.hint = "Enter person's name"
-        
+        val editText = EditText(requireContext()).apply {
+            hint = getString(R.string.enter_person_name_hint)
+        }
+
         android.app.AlertDialog.Builder(requireContext())
-            .setTitle("Add Person")
+            .setTitle(getString(R.string.add_person))
             .setView(editText)
-            .setPositiveButton("Add") { _, _ ->
+            .setPositiveButton(getString(R.string.add)) { _, _ ->
                 val personName = editText.text.toString().trim()
                 if (personName.isNotEmpty()) {
                     addPersonToActivity(personName)
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -263,7 +264,7 @@ class CreateNewActivityDialog : DialogFragment() {
         
         if (projectedUsage > weeklyTarget * 0.9) { // 90% of target
             val remainingCapacity = ((weeklyTarget - projectedUsage).toFloat() / weeklyTarget * 100).toInt()
-            tvWeeklyCapacityMessage.text = "This activity will bring your weekly capacity down to $remainingCapacity%. You may want to reschedule or reduce intensity."
+            tvWeeklyCapacityMessage.text = getString(R.string.weekly_capacity_warning, remainingCapacity)
             layoutWeeklyCapacityWarning.visibility = View.VISIBLE
         } else {
             layoutWeeklyCapacityWarning.visibility = View.GONE
@@ -284,7 +285,7 @@ class CreateNewActivityDialog : DialogFragment() {
         val description = etActivityDescription.text.toString().trim()
         
         if (name.isEmpty()) {
-            Toast.makeText(requireContext(), "Please enter an activity name", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.error_activity_name_required), Toast.LENGTH_SHORT).show()
             return
         }
         
