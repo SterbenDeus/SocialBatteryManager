@@ -81,20 +81,30 @@ class CalendarIntegration(
         events
     }
     
+    /**
+     * Placeholder for Google Calendar integration.
+     *
+     * Returns an empty list until a real API integration is provided.
+     */
     suspend fun importGoogleCalendarEvents(): List<CalendarEvent> = withContext(Dispatchers.IO) {
-        // TODO: Implement Google Calendar API integration
-        // This would require Google Play Services and OAuth setup
-        // For now, we'll return events from device calendar that are Google-sourced
-        val allEvents = calendarEventDao.getEventsBySource("google")
-        allEvents
+        Log.i(
+            "CalendarIntegration",
+            "Google Calendar integration not available; returning empty list."
+        )
+        emptyList()
     }
-    
+
+    /**
+     * Placeholder for Microsoft Teams calendar integration.
+     *
+     * Returns an empty list until a real API integration is provided.
+     */
     suspend fun importTeamsCalendarEvents(): List<CalendarEvent> = withContext(Dispatchers.IO) {
-        // TODO: Implement Microsoft Teams Calendar API integration
-        // This would require Microsoft Graph API setup
-        // For now, we'll return events from device calendar that are Teams-sourced
-        val allEvents = calendarEventDao.getEventsBySource("teams")
-        allEvents
+        Log.i(
+            "CalendarIntegration",
+            "Microsoft Teams calendar integration not available; returning empty list."
+        )
+        emptyList()
     }
     
     suspend fun createManualEvent(
