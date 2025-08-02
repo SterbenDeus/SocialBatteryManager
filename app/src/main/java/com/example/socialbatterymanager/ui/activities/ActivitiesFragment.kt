@@ -8,7 +8,9 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
@@ -60,10 +62,12 @@ class ActivitiesFragment : Fragment() {
             // TODO: Show Add Activity dialog and insert to DB using dataRepository
         }
 
-        // Load activities from DB (collect with lifecycleScope)
-        lifecycleScope.launch {
-            database.activityDao().getAllActivities().collect { activities ->
-                adapter.submitList(activities)
+        // Load activities from DB
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                database.activityDao().getAllActivities().collect { activities ->
+                    adapter.submitList(activities)
+                }
             }
         }
 

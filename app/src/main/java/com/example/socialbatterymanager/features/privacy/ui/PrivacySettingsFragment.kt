@@ -17,7 +17,9 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
@@ -130,20 +132,22 @@ class PrivacySettingsFragment : Fragment() {
     }
 
     private fun loadPrivacySettings() {
-        lifecycleScope.launch {
-            requireContext().privacyDataStore.data.map { preferences ->
-                PrivacySettings(
-                    userId = "current_user", // In real app, get from auth
-                    moodVisibilityLevel = VisibilityLevel.valueOf(
-                        preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
-                    ),
-                    moodStatusEnabled = preferences[MOOD_STATUS_ENABLED_KEY] ?: true,
-                    energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
-                    activityPatternsEnabled = preferences[ACTIVITY_PATTERNS_ENABLED_KEY] ?: false
-                )
-            }.collect { settings ->
-                currentPrivacySettings = settings
-                updateUI()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                requireContext().privacyDataStore.data.map { preferences ->
+                    PrivacySettings(
+                        userId = "current_user", // In real app, get from auth
+                        moodVisibilityLevel = VisibilityLevel.valueOf(
+                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
+                        ),
+                        moodStatusEnabled = preferences[MOOD_STATUS_ENABLED_KEY] ?: true,
+                        energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
+                        activityPatternsEnabled = preferences[ACTIVITY_PATTERNS_ENABLED_KEY] ?: false
+                    )
+                }.collect { settings ->
+                    currentPrivacySettings = settings
+                    updateUI()
+                }
             }
         }
     }
