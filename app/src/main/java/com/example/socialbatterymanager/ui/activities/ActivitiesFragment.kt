@@ -73,7 +73,8 @@ class ActivitiesFragment : Fragment() {
     }
 
     private fun showAddActivityDialog() {
-        EditActivityDialog(requireContext()) { activity ->
+        val dialog = CreateNewActivityDialog()
+        dialog.setOnActivityCreatedListener { activity ->
             lifecycleScope.launch {
                 try {
                     dataRepository.insertActivity(activity.toEntity())
@@ -90,7 +91,8 @@ class ActivitiesFragment : Fragment() {
                     ).show()
                 }
             }
-        }.show()
+        }
+        dialog.show(parentFragmentManager, "CreateNewActivityDialog")
     }
 
     private fun onActivityClick(activity: Activity) {
