@@ -172,7 +172,11 @@ class PrivacySettingsFragment : Fragment() {
                 preferences[ACTIVITY_PATTERNS_ENABLED_KEY] = activityPatternsSwitch.isChecked
             }
 
-            Toast.makeText(requireContext(), "Privacy settings updated", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.privacy_settings_updated),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
@@ -182,31 +186,40 @@ class PrivacySettingsFragment : Fragment() {
         val emailEditText = dialogView.findViewById<EditText>(R.id.emailEditText)
 
         AlertDialog.Builder(requireContext())
-            .setTitle("Block User")
-            .setMessage("Enter the user details to block them from seeing your mood and energy")
+            .setTitle(getString(R.string.block_user_title))
+            .setMessage(getString(R.string.block_user_message))
             .setView(dialogView)
-            .setPositiveButton("Block") { _, _ ->
+            .setPositiveButton(getString(R.string.block)) { _, _ ->
                 val name = nameEditText.text.toString().trim()
                 val email = emailEditText.text.toString().trim()
-                
+
                 if (name.isNotEmpty()) {
                     addBlockedUser(name, email)
                 } else {
-                    Toast.makeText(requireContext(), "Please enter a name", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.please_enter_name),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun showRemoveUserDialog(blockedUser: BlockedUser) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Remove Blocked User")
-            .setMessage("Are you sure you want to remove ${blockedUser.blockedUserName} from blocked users? They will be able to see your mood and energy again.")
-            .setPositiveButton("Remove") { _, _ ->
+            .setTitle(getString(R.string.remove_blocked_user_title))
+            .setMessage(
+                getString(
+                    R.string.remove_blocked_user_message,
+                    blockedUser.blockedUserName
+                )
+            )
+            .setPositiveButton(getString(R.string.remove)) { _, _ ->
                 removeBlockedUser(blockedUser)
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
@@ -222,7 +235,11 @@ class PrivacySettingsFragment : Fragment() {
         blockedUsersAdapter.notifyItemInserted(blockedUsers.size - 1)
         
         // In real app, save to database
-        Toast.makeText(requireContext(), "$name has been blocked", Toast.LENGTH_SHORT).show()
+        Toast.makeText(
+            requireContext(),
+            getString(R.string.blocked_user_added, name),
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
     private fun removeBlockedUser(blockedUser: BlockedUser) {
@@ -232,7 +249,14 @@ class PrivacySettingsFragment : Fragment() {
             blockedUsersAdapter.notifyItemRemoved(position)
             
             // In real app, remove from database
-            Toast.makeText(requireContext(), "${blockedUser.blockedUserName} has been unblocked", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(
+                    R.string.blocked_user_removed,
+                    blockedUser.blockedUserName
+                ),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 
