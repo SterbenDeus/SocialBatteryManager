@@ -10,6 +10,7 @@ import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.features.notifications.NotificationService
@@ -48,7 +49,9 @@ class SimpleHomeFragment : Fragment() {
         tvEnergyLevel = view.findViewById(R.id.tvEnergyLevel)
 
         setupClickListeners()
-        generateSampleNotifications()
+        if (BuildConfig.DEBUG) {
+            generateSampleNotifications()
+        }
         updateWeeklyStats()
 
         return view
@@ -86,8 +89,10 @@ class SimpleHomeFragment : Fragment() {
     }
 
     private fun generateSampleNotifications() {
-        lifecycleScope.launch {
-            notificationService.generateSampleNotifications()
+        if (BuildConfig.DEBUG) {
+            lifecycleScope.launch {
+                notificationService.generateSampleNotifications()
+            }
         }
     }
 
