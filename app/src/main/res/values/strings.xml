@@ -301,6 +301,70 @@ Energy Ranges:
     <string name="export_csv_title">Export CSV</string>
     <string name="export_report_title">Export Report</string>
     <string name="chart_energy_trends_over_time">Energy Trends Over Time</string>
-    <string name="chart_mood_distribution">Mood Distribution</string>
+<string name="chart_mood_distribution">Mood Distribution</string>
+
+    <!-- dialog_edit_person -->
+    <string name="change_photo">Change Photo</string>
+    <string name="name_required">Name*</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="notes">Notes</string>
+    <string name="cancel">Cancel</string>
+
+    <!-- dialog_rate_activity -->
+    <string name="rate_activity_title">Rate Your Activity</string>
+    <string name="rate_activity_question">How draining was this activity?</string>
+    <string name="rating_label_neutral">3 - Neutral</string>
+    <string name="rating_1_very_draining">1\nVery\nDraining</string>
+    <string name="rating_2_draining">2\nDraining</string>
+    <string name="rating_3_neutral">3\nNeutral</string>
+    <string name="rating_4_energizing">4\nEnergizing</string>
+    <string name="rating_5_very_energizing">5\nVery\nEnergizing</string>
+    <string name="submit_rating">Submit Rating</string>
+
+    <!-- fragment_home -->
+    <string name="social_energy_header">🔋 Social Energy</string>
+    <string name="social_energy_level">Social Energy Level</string>
+    <string name="current_energy_status">Current energy status</string>
+    <string name="how_are_you_feeling">How are you feeling?</string>
+    <string name="remaining_with_icon">🔋 Remaining</string>
+    <string name="social_energy_left">Social energy left</string>
+    <string name="burn_rate_with_icon">⏱ Burn Rate</string>
+    <string name="per_social_activity">Per social activity</string>
+    <string name="quick_actions">Quick Actions</string>
+    <string name="log_activity">➕ Log Activity</string>
+    <string name="plan_day">📅 Plan Day</string>
+    <string name="view_battery">🔍 View Battery</string>
+    <string name="get_tips">💡 Get Tips</string>
+    <string name="chart_icon">📊</string>
+
+    <!-- fragment_privacy_settings -->
+    <string name="mood_energy_privacy_title">Mood &amp; Energy Privacy</string>
+    <string name="mood_energy_privacy_description">Control who can see your mood and energy levels. Your privacy matters.</string>
+    <string name="who_can_see_mood_energy">Who can see your mood &amp; energy</string>
+    <string name="who_can_see_mood_energy_description">Choose who has access to view your emotional state and energy levels</string>
+    <string name="privacy_option_everyone">Everyone</string>
+    <string name="privacy_option_everyone_desc">Anyone can see your mood and energy</string>
+    <string name="privacy_option_friends_only">Friends Only</string>
+    <string name="privacy_option_friends_only_desc">Only your friends can see your status</string>
+    <string name="privacy_option_close_friends">Close Friends</string>
+    <string name="privacy_option_close_friends_desc">Only close friends can see your mood</string>
+    <string name="privacy_option_only_me">Only Me</string>
+    <string name="privacy_option_only_me_desc">Keep your mood and energy private</string>
+    <string name="specific_permissions_title">Specific Permissions</string>
+    <string name="specific_permissions_description">Customize what information is visible to different groups</string>
+    <string name="mood_status">Mood Status</string>
+    <string name="mood_status_description">Allow others to see your current mood</string>
+    <string name="energy_level_label">Energy Level</string>
+    <string name="energy_level_description">Allow others to see your energy levels</string>
+    <string name="activity_patterns">Activity Patterns</string>
+    <string name="activity_patterns_description">Share your mood and energy patterns over time</string>
+    <string name="blocked_users">Blocked Users</string>
+    <string name="add_user">+ Add User</string>
+    <string name="blocked_users_description">Users who cannot see your mood and energy</string>
+    <string name="privacy_tips">Privacy Tips</string>
+    <string name="privacy_tip_change_anytime">• You can change these settings anytime</string>
+    <string name="privacy_tip_blocked_not_notified">• Blocked users won't be notified</string>
+    <string name="privacy_tip_close_friends_manage">• Close friends list can be managed in Friends settings</string>
 
 </resources>

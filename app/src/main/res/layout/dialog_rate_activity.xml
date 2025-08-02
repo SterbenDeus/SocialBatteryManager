@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
@@ -25,7 +26,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Rate Your Activity"
+            android:text="@string/rate_activity_title"
             android:textSize="20sp"
             android:textStyle="bold"
             android:textColor="@color/jscc_charcoal" />
@@ -36,7 +37,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="How draining was this activity?"
+        android:text="@string/rate_activity_question"
         android:textSize="16sp"
         android:textColor="@color/jscc_charcoal"
         android:layout_marginBottom="8dp" />
@@ -45,18 +46,18 @@
         android:id="@+id/tvActivityName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Team Meeting (2:00 PM - 3:00 PM)"
+        android:textColor="@color/jscc_gold_start"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:textColor="@color/jscc_gold_start"
-        android:layout_marginBottom="24dp" />
+        android:layout_marginBottom="24dp"
+        tools:text="Team Meeting (2:00 PM - 3:00 PM)" />
 
     <!-- Rating Scale -->
     <TextView
         android:id="@+id/tvRatingLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="3 - Neutral"
+        android:text="@string/rating_label_neutral"
         android:textSize="16sp"
         android:textStyle="bold"
         android:textColor="@color/jscc_charcoal"
@@ -85,7 +86,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="1\nVery\nDraining"
+            android:text="@string/rating_1_very_draining"
             android:textSize="10sp"
             android:textColor="@color/jscc_light_gray"
             android:textAlignment="center"
@@ -95,7 +96,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="2\nDraining"
+            android:text="@string/rating_2_draining"
             android:textSize="10sp"
             android:textColor="@color/jscc_light_gray"
             android:textAlignment="center"
@@ -105,7 +106,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="3\nNeutral"
+            android:text="@string/rating_3_neutral"
             android:textSize="10sp"
             android:textColor="@color/jscc_light_gray"
             android:textAlignment="center"
@@ -115,7 +116,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="4\nEnergizing"
+            android:text="@string/rating_4_energizing"
             android:textSize="10sp"
             android:textColor="@color/jscc_light_gray"
             android:textAlignment="center"
@@ -125,7 +126,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="5\nVery\nEnergizing"
+            android:text="@string/rating_5_very_energizing"
             android:textSize="10sp"
             android:textColor="@color/jscc_light_gray"
             android:textAlignment="center"
@@ -144,7 +145,7 @@
             android:id="@+id/btnSkip"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Skip"
+            android:text="@string/skip"
             android:textColor="@color/jscc_charcoal"
             android:background="@color/jscc_light_gray"
             android:layout_marginEnd="12dp"
@@ -156,7 +157,7 @@
             android:id="@+id/btnSubmitRating"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Submit Rating"
+            android:text="@string/submit_rating"
             android:textColor="@color/jscc_white"
             android:background="@color/jscc_gold_start"
             android:paddingHorizontal="20dp"
