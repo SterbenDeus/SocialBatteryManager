@@ -150,20 +150,20 @@ class ReportsFragment : Fragment() {
             ReportPeriod.WEEK -> {
                 weekButton.setBackgroundColor(Color.parseColor("#2196F3"))
                 weekButton.setTextColor(Color.WHITE)
-                energyPeriodLabel.text = "Daily Energy Usage"
-                energySubLabel.text = "Last 7 days"
+                energyPeriodLabel.text = getString(R.string.energy_usage_daily)
+                energySubLabel.text = getString(R.string.period_last_7_days)
             }
             ReportPeriod.MONTH -> {
                 monthButton.setBackgroundColor(Color.parseColor("#2196F3"))
                 monthButton.setTextColor(Color.WHITE)
-                energyPeriodLabel.text = "Weekly Energy Usage"
-                energySubLabel.text = "Last 4 weeks"
+                energyPeriodLabel.text = getString(R.string.energy_usage_weekly)
+                energySubLabel.text = getString(R.string.period_last_4_weeks)
             }
             ReportPeriod.YEAR -> {
                 yearButton.setBackgroundColor(Color.parseColor("#2196F3"))
                 yearButton.setTextColor(Color.WHITE)
-                energyPeriodLabel.text = "Monthly Energy Usage"
-                energySubLabel.text = "Last 12 months"
+                energyPeriodLabel.text = getString(R.string.energy_usage_monthly)
+                energySubLabel.text = getString(R.string.period_last_12_months)
             }
         }
         
@@ -219,7 +219,7 @@ class ReportsFragment : Fragment() {
             Entry(index.toFloat(), data.value)
         }
 
-        val dataSet = LineDataSet(entries, "Energy Level")
+        val dataSet = LineDataSet(entries, getString(R.string.chart_energy_level_label))
         dataSet.color = Color.parseColor("#2196F3")
         dataSet.valueTextColor = Color.BLACK
         dataSet.lineWidth = 3f
@@ -276,7 +276,7 @@ class ReportsFragment : Fragment() {
             BarEntry(index.toFloat(), value)
         }
 
-        val dataSet = BarDataSet(entries, "Energy Efficiency")
+        val dataSet = BarDataSet(entries, getString(R.string.chart_energy_efficiency_label))
         dataSet.color = Color.parseColor("#4CAF50")
         dataSet.valueTextColor = Color.BLACK
         dataSet.valueTextSize = 10f
@@ -413,10 +413,10 @@ class ReportsFragment : Fragment() {
                 intent.putExtra(Intent.EXTRA_STREAM, uri)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                startActivity(Intent.createChooser(intent, "Export CSV"))
+                startActivity(Intent.createChooser(intent, getString(R.string.export_csv_title)))
 
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error exporting CSV: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_export_csv, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -477,10 +477,10 @@ class ReportsFragment : Fragment() {
                 intent.putExtra(Intent.EXTRA_STREAM, uri)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                startActivity(Intent.createChooser(intent, "Export Report"))
+                startActivity(Intent.createChooser(intent, getString(R.string.export_report_title)))
 
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error exporting report: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.error_export_report, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -519,7 +519,7 @@ class ReportsFragment : Fragment() {
             labels.add(date)
         }
 
-        val dataSet = LineDataSet(entries, "Energy Level")
+        val dataSet = LineDataSet(entries, requireContext().getString(R.string.chart_energy_level_label))
         dataSet.color = Color.BLUE
         dataSet.valueTextColor = Color.BLACK
         dataSet.lineWidth = 2f
@@ -530,7 +530,7 @@ class ReportsFragment : Fragment() {
         energyChart.data = lineData
         energyChart.xAxis.valueFormatter = IndexAxisValueFormatter(labels)
         energyChart.xAxis.granularity = 1f
-        energyChart.description.text = "Energy Trends Over Time"
+        energyChart.description.text = requireContext().getString(R.string.chart_energy_trends_over_time)
         energyChart.invalidate()
     }
 
@@ -540,14 +540,14 @@ class ReportsFragment : Fragment() {
             PieEntry(count.toFloat(), mood)
         }
 
-        val dataSet = PieDataSet(entries, "Mood Distribution")
+        val dataSet = PieDataSet(entries, requireContext().getString(R.string.chart_mood_distribution))
         dataSet.colors = ColorTemplate.COLORFUL_COLORS.toList()
         dataSet.valueTextColor = Color.BLACK
         dataSet.valueTextSize = 12f
 
         val pieData = PieData(dataSet)
         moodChart.data = pieData
-        moodChart.description.text = "Mood Distribution"
+        moodChart.description.text = requireContext().getString(R.string.chart_mood_distribution)
         moodChart.invalidate()
     }
 
@@ -606,10 +606,10 @@ class ReportsFragment : Fragment() {
                 intent.putExtra(Intent.EXTRA_STREAM, uri)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                startActivity(Intent.createChooser(intent, "Export CSV"))
+                  startActivity(Intent.createChooser(intent, requireContext().getString(R.string.export_csv_title)))
 
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error exporting CSV: ${e.message}", Toast.LENGTH_SHORT).show()
+                  Toast.makeText(requireContext(), requireContext().getString(R.string.error_export_csv, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
@@ -671,10 +671,10 @@ class ReportsFragment : Fragment() {
                 intent.putExtra(Intent.EXTRA_STREAM, uri)
                 intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
 
-                startActivity(Intent.createChooser(intent, "Export Report"))
+                  startActivity(Intent.createChooser(intent, requireContext().getString(R.string.export_report_title)))
 
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error exporting report: ${e.message}", Toast.LENGTH_SHORT).show()
+                  Toast.makeText(requireContext(), requireContext().getString(R.string.error_export_report, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }
