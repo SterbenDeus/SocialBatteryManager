@@ -190,6 +190,17 @@
     <string name="account_deleted_success">Account deleted successfully</string>
     <string name="battery_recalibrated_success">Battery recalibrated successfully</string>
 
+    <!-- Notification strings -->
+    <string name="notification_energy_low_title">Energy Running Low</string>
+    <string name="notification_energy_low_message">Your social energy is at %1$d%%. Consider taking a break!</string>
+    <string name="notification_energy_low_sample_message">Your social energy is at 25%%. Time to recharge!</string>
+    <string name="notification_busy_week_title">Busy Week Ahead</string>
+    <string name="notification_busy_week_message">You have %1$d social activities scheduled. Plan recovery time!</string>
+    <string name="notification_busy_week_sample_message">You have 6 social activities scheduled. Plan recovery time!</string>
+    <string name="notification_rate_activity_title">Rate Your Activity</string>
+    <string name="notification_rate_activity_message">How was %1$s? Help us track your energy better.</string>
+    <string name="notification_rate_activity_sample_message">How was your team meeting? Help us track your energy better.</string>
+
     <!-- Login strings -->
     <string name="enter_email_password">Please enter email and password</string>
     <string name="google_sign_in_failed">Google sign in failed: %1$s</string>

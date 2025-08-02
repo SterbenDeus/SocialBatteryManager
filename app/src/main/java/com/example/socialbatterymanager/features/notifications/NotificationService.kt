@@ -1,6 +1,8 @@
 package com.example.socialbatterymanager.features.notifications
 
 import android.content.Context
+import com.example.socialbatterymanager.BuildConfig
+import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.NotificationEntity
 import com.example.socialbatterymanager.data.model.NotificationType
@@ -15,6 +17,7 @@ class NotificationService(private val context: Context) {
     private val scope = CoroutineScope(Dispatchers.IO)
     
     fun generateSampleNotifications() {
+        if (!BuildConfig.DEBUG) return
         scope.launch {
             // Retrieve current notifications to avoid duplicate inserts
             val existingNotifications =
@@ -25,20 +28,20 @@ class NotificationService(private val context: Context) {
                 val notifications = listOf(
                     NotificationEntity(
                         type = NotificationType.ENERGY_LOW.name,
-                        title = "Energy Running Low",
-                        message = "Your social energy is at 25%. Time to recharge!",
+                        title = context.getString(R.string.notification_energy_low_title),
+                        message = context.getString(R.string.notification_energy_low_sample_message),
                         timestamp = System.currentTimeMillis() - (2 * 60 * 1000) // 2 minutes ago
                     ),
                     NotificationEntity(
                         type = NotificationType.BUSY_WEEK.name,
-                        title = "Busy Week Ahead",
-                        message = "You have 6 social activities scheduled. Plan recovery time!",
+                        title = context.getString(R.string.notification_busy_week_title),
+                        message = context.getString(R.string.notification_busy_week_sample_message),
                         timestamp = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
                     ),
                     NotificationEntity(
                         type = NotificationType.RATE_ACTIVITY.name,
-                        title = "Rate Your Activity",
-                        message = "How was your team meeting? Help us track your energy better.",
+                        title = context.getString(R.string.notification_rate_activity_title),
+                        message = context.getString(R.string.notification_rate_activity_sample_message),
                         timestamp = System.currentTimeMillis() - (3 * 60 * 60 * 1000), // 3 hours ago
                         activityId = 1 // Assuming there's an activity with ID 1
                     )
@@ -56,8 +59,8 @@ class NotificationService(private val context: Context) {
             scope.launch {
                 val notification = NotificationEntity(
                     type = NotificationType.ENERGY_LOW.name,
-                    title = "Energy Running Low",
-                    message = "Your social energy is at $currentEnergyLevel%. Consider taking a break!",
+                    title = context.getString(R.string.notification_energy_low_title),
+                    message = context.getString(R.string.notification_energy_low_message, currentEnergyLevel),
                     timestamp = System.currentTimeMillis()
                 )
                 database.notificationDao().insertNotification(notification)
@@ -69,8 +72,8 @@ class NotificationService(private val context: Context) {
         scope.launch {
             val notification = NotificationEntity(
                 type = NotificationType.RATE_ACTIVITY.name,
-                title = "Rate Your Activity",
-                message = "How was $activityName? Help us track your energy better.",
+                title = context.getString(R.string.notification_rate_activity_title),
+                message = context.getString(R.string.notification_rate_activity_message, activityName),
                 timestamp = System.currentTimeMillis(),
                 activityId = activityId
             )
@@ -82,8 +85,8 @@ class NotificationService(private val context: Context) {
         scope.launch {
             val notification = NotificationEntity(
                 type = NotificationType.BUSY_WEEK.name,
-                title = "Busy Week Ahead",
-                message = "You have $activitiesCount social activities scheduled. Plan recovery time!",
+                title = context.getString(R.string.notification_busy_week_title),
+                message = context.getString(R.string.notification_busy_week_message, activitiesCount),
                 timestamp = System.currentTimeMillis()
             )
             database.notificationDao().insertNotification(notification)
