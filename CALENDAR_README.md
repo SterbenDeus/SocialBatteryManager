@@ -10,14 +10,14 @@ The calendar feature allows users to:
 - Create manual events
 - Store events locally in Room database
 - View events for selected dates
-- Direct integrations with Google Calendar and Microsoft Teams are not yet implemented
+- Only the device's local calendar is supported; direct integrations with services like Google Calendar or Microsoft Teams are not available
 
 ## Files Implemented
 
 ### Core Files
 - `calendar/CalendarFragment.kt` - Main calendar fragment with UI logic
 - `calendar/CalendarAdapter.kt` - RecyclerView adapter for displaying events
-- `calendar/CalendarIntegration.kt` - Integration with external calendars
+- `calendar/CalendarIntegration.kt` - Integration with the device calendar
 - `data/CalendarEvent.kt` - Room entity for calendar events
 - `data/CalendarEventDao.kt` - Room DAO for calendar operations
 
@@ -48,13 +48,13 @@ The calendar feature allows users to:
 ### 3. Event Import
 - Device calendar integration
 - Permission handling for READ_CALENDAR
-- Source detection for Google, Teams, Outlook calendars based on calendar name
-- Direct API integrations for Google Calendar and Microsoft Teams are not yet available
+- Imported events are tagged as coming from the device calendar
+- Direct API integrations for services like Google Calendar or Microsoft Teams are not supported
 
 ### 4. Event Display
 - RecyclerView showing events for selected date
 - Time formatting (HH:mm)
-- Source badges (Google, Teams, Manual, etc.)
+- Source badges (Device, Manual)
 - Event descriptions (when available)
 
 ### 5. Manual Event Creation

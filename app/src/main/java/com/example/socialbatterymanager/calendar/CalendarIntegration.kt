@@ -5,15 +5,16 @@ import android.provider.CalendarContract
 import android.util.Log
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.CalendarEvent
-import com.example.socialbatterymanager.data.model.CalendarEventDao
+import com.example.socialbatterymanager.data.database.CalendarEventDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 /**
  * Handles interactions with the user's calendars.
  *
- * Only events available on the device's calendar can be imported. Direct API
- * integrations for Google Calendar or Microsoft Teams are not implemented.
+ * Only events available on the device's local calendar can be imported. Direct
+ * API integrations for services such as Google Calendar or Microsoft Teams are
+ * not supported.
  */
 class CalendarIntegration(
     private val context: Context,
@@ -31,8 +32,7 @@ class CalendarIntegration(
                 CalendarContract.Events.DESCRIPTION,
                 CalendarContract.Events.DTSTART,
                 CalendarContract.Events.DTEND,
-                CalendarContract.Events.EVENT_LOCATION,
-                CalendarContract.Events.CALENDAR_DISPLAY_NAME
+                CalendarContract.Events.EVENT_LOCATION
             )
             
             val cursor = context.contentResolver.query(
@@ -51,14 +51,6 @@ class CalendarIntegration(
                     val startTime = c.getLong(3)
                     val endTime = c.getLong(4)
                     val location = c.getString(5) ?: ""
-                    val calendarName = c.getString(6) ?: ""
-                    
-                    val source = when {
-                        calendarName.contains("Google", ignoreCase = true) -> "google"
-                        calendarName.contains("Teams", ignoreCase = true) -> "teams"
-                        calendarName.contains("Outlook", ignoreCase = true) -> "outlook"
-                        else -> "device"
-                    }
                     
                     val event = CalendarEvent(
                         title = title,
@@ -66,11 +58,11 @@ class CalendarIntegration(
                         startTime = startTime,
                         endTime = endTime,
                         location = location,
-                        source = source,
+                        source = "device",
                         externalId = externalId,
                         isImported = true
                     )
-                    
+
                     events.add(event)
                 }
             }
@@ -112,7 +104,7 @@ class CalendarIntegration(
         calendarEventDao.delete(event)
     }
     
-    suspend fun clearImportedEvents(source: String) {
-        calendarEventDao.deleteEventsBySource(source)
+    suspend fun clearImportedEvents() {
+        calendarEventDao.deleteImportedEvents()
     }
 }
