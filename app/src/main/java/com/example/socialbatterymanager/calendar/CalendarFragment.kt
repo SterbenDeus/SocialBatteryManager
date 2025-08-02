@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.CalendarEvent
@@ -69,13 +70,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         
         // Setup buttons
         view.findViewById<Button>(R.id.btnAddCalendarEvent).setOnClickListener {
-            // For now, create a sample event, future: open dialog
             showCreateNewActivityDialog()
         }
-        
+
         view.findViewById<Button>(R.id.btnAddActivity).setOnClickListener {
-            // Create a sample activity for demonstration
-            createSampleActivity()
+            showCreateNewActivityDialog()
         }
         
         view.findViewById<Button>(R.id.btnImportEvents).setOnClickListener {
@@ -115,13 +114,17 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             
             val existingEvents = database.calendarEventDao().getEventsForDay(todayStart, nextWeek)
             
-            // If no events exist, create sample data to demonstrate the feature
+            // If no events exist, optionally create sample data in debug builds
             if (existingEvents.isEmpty()) {
-                val sampleEvents = energyManager.createSampleTodayData()
-                sampleEvents.forEach { event ->
-                    database.calendarEventDao().insertEvent(event)
+                if (BuildConfig.DEBUG) {
+                    val sampleEvents = energyManager.createSampleTodayData()
+                    sampleEvents.forEach { event ->
+                        database.calendarEventDao().insertEvent(event)
+                    }
+                    allEvents = sampleEvents
+                } else {
+                    allEvents = existingEvents
                 }
-                allEvents = sampleEvents
             } else {
                 allEvents = existingEvents
             }
@@ -207,53 +210,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         dialog.show(parentFragmentManager, "CreateNewActivityDialog")
     }
 
-    private fun createSampleEvent() {
-        lifecycleScope.launch {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = selectedDate
-            calendar.set(Calendar.HOUR_OF_DAY, 14) // 2:00 PM
-            calendar.set(Calendar.MINUTE, 0)
-            val startTime = calendar.timeInMillis
-            
-            calendar.add(Calendar.HOUR_OF_DAY, 1)
-            val endTime = calendar.timeInMillis
-            
-            calendarIntegration.createManualEvent(
-                title = "New Meeting",
-                description = "Newly created meeting",
-                startTime = startTime,
-                endTime = endTime,
-                location = "Conference Room"
-            )
-            
-            loadEventsForSelectedDate()
-            Toast.makeText(requireContext(), "Event created!", Toast.LENGTH_SHORT).show()
-        }
-    }
-    
-    private fun createSampleActivity() {
-        lifecycleScope.launch {
-            val calendar = Calendar.getInstance()
-            calendar.timeInMillis = selectedDate
-            calendar.set(Calendar.HOUR_OF_DAY, 16) // 4:00 PM
-            calendar.set(Calendar.MINUTE, 0)
-            val startTime = calendar.timeInMillis
-            
-            calendar.add(Calendar.MINUTE, 30)
-            val endTime = calendar.timeInMillis
-            
-            calendarIntegration.createManualEvent(
-                title = "Coffee Break",
-                description = "Quick coffee with colleague",
-                startTime = startTime,
-                endTime = endTime,
-                location = "Cafe"
-            )
-            
-            loadEventsForSelectedDate()
-            Toast.makeText(requireContext(), "Activity added!", Toast.LENGTH_SHORT).show()
-        }
-    }
     
     private fun requestCalendarPermissionAndImport() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) 
