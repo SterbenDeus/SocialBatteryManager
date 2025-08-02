@@ -240,4 +240,20 @@
     <string name="requirements_error">Error: %1$s</string>
     <string name="requirements_assess_complexity">Assess Complexity</string>
 
+    <!-- ReportsFragment strings -->
+    <string name="energy_usage_daily">Daily Energy Usage</string>
+    <string name="period_last_7_days">Last 7 days</string>
+    <string name="energy_usage_weekly">Weekly Energy Usage</string>
+    <string name="period_last_4_weeks">Last 4 weeks</string>
+    <string name="energy_usage_monthly">Monthly Energy Usage</string>
+    <string name="period_last_12_months">Last 12 months</string>
+    <string name="chart_energy_level_label">Energy Level</string>
+    <string name="chart_energy_efficiency_label">Energy Efficiency</string>
+    <string name="error_export_csv">Error exporting CSV: %1$s</string>
+    <string name="error_export_report">Error exporting report: %1$s</string>
+    <string name="export_csv_title">Export CSV</string>
+    <string name="export_report_title">Export Report</string>
+    <string name="chart_energy_trends_over_time">Energy Trends Over Time</string>
+    <string name="chart_mood_distribution">Mood Distribution</string>
+
 </resources>
