@@ -107,10 +107,10 @@ This implementation provides a comprehensive home screen for the Social Battery 
 - Energy level predictions based on activity patterns
 
 ## Files Modified/Created
-- `home/HomeFragment.kt` - Enhanced with full functionality
-- `home/EnergyBatteryView.kt` - NEW custom component
-- `home/ActivityAdapter.kt` - NEW RecyclerView adapter
-- `home/AddActivityDialog.kt` - NEW activity management dialog
+- `features/home/ui/HomeFragment.kt` - Enhanced with full functionality
+- `features/home/ui/EnergyBatteryView.kt` - NEW custom component
+- `features/home/ui/ActivityAdapter.kt` - NEW RecyclerView adapter
+- `features/home/ui/AddActivityDialog.kt` - NEW activity management dialog
 - `model/EnergyLog.kt` - NEW energy tracking model
 - `model/Activity.kt` - NEW activity model
 - `notification/EnergyReminderWorker.kt` - NEW notification system

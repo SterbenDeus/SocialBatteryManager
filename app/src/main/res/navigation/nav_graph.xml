@@ -29,7 +29,7 @@
 
     <fragment
         android:id="@+id/homeFragment"
-        android:name="com.example.socialbatterymanager.features.home.ui.SimpleHomeFragment"
+        android:name="com.example.socialbatterymanager.features.home.ui.HomeFragment"
         android:label="Home">
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"

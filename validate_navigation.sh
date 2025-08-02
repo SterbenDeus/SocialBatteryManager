@@ -36,7 +36,7 @@ fi
 
 # Check for required fragments
 fragments=(
-    "app/src/main/java/com/example/socialbatterymanager/home/HomeFragment.kt"
+    "app/src/main/java/com/example/socialbatterymanager/features/home/ui/HomeFragment.kt"
     "app/src/main/java/com/example/socialbatterymanager/calendar/CalendarFragment.kt"
     "app/src/main/java/com/example/socialbatterymanager/people/PeopleFragment.kt"
     "app/src/main/java/com/example/socialbatterymanager/ui/activities/ActivitiesFragment.kt"
