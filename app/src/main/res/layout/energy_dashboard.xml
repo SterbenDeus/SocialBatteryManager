@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@android:color/white"
+    android:padding="16dp"
+    android:layout_margin="8dp"
+    android:elevation="4dp">
+
+    <!-- Today's Energy Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Today's Energy"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:textColor="@color/jscc_charcoal"
+        android:layout_marginBottom="8dp" />
+
+    <!-- Energy Progress Bar -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginBottom="12dp">
+
+        <ProgressBar
+            android:id="@+id/energyProgressBar"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="0dp"
+            android:layout_height="8dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="75"
+            android:progressTint="@color/jscc_gold_start"
+            android:progressBackgroundTint="@color/jscc_light_gray"
+            android:layout_marginEnd="8dp" />
+
+        <TextView
+            android:id="@+id/tvEnergyPercentage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="75%"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:textColor="@color/jscc_gold_start" />
+
+    </LinearLayout>
+
+    <!-- Energy Stats Row -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center">
+
+        <!-- Remaining Energy -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvRemainingHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="6.2h"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/primary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Remaining"
+                android:textSize="12sp"
+                android:textColor="@color/jscc_charcoal" />
+
+        </LinearLayout>
+
+        <!-- Activities Counter -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvActivitiesCount"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="4"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/tertiary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Activities"
+                android:textSize="12sp"
+                android:textColor="@color/jscc_charcoal" />
+
+        </LinearLayout>
+
+        <!-- Planned Hours -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center">
+
+            <TextView
+                android:id="@+id/tvPlannedHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2.1h"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@color/secondary_light" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Planned"
+                android:textSize="12sp"
+                android:textColor="@color/jscc_charcoal" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

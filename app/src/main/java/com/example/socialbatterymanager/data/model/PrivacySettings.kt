@@ -1,33 +1,54 @@
 package com.example.socialbatterymanager.data.model
 
-import androidx.room.Entity
-import androidx.room.PrimaryKey
-
-@Entity(tableName = "privacy_settings")
 data class PrivacySettings(
-    @PrimaryKey val userId: String,
-    val moodVisibilityLevel: VisibilityLevel = VisibilityLevel.FRIENDS_ONLY,
-    val energyVisibilityLevel: VisibilityLevel = VisibilityLevel.FRIENDS_ONLY,
-    val moodStatusEnabled: Boolean = true,
-    val energyLevelEnabled: Boolean = true,
-    val activityPatternsEnabled: Boolean = false,
-    val lastUpdated: Long = System.currentTimeMillis()
+    val socialEnergyVisibility: VisibilityLevel = VisibilityLevel.FRIENDS,
+    val moodVisibility: VisibilityLevel = VisibilityLevel.CLOSE_FRIENDS,
+    val activityVisibility: VisibilityLevel = VisibilityLevel.EVERYONE,
+    val profileVisibility: VisibilityLevel = VisibilityLevel.EVERYONE
 )
 
-enum class VisibilityLevel(val displayName: String) {
-    EVERYONE("Everyone"),
-    FRIENDS_ONLY("Friends Only"),
-    CLOSE_FRIENDS("Close Friends"),
-    ONLY_ME("Only Me")
+enum class VisibilityLevel {
+    EVERYONE,       // All contacts can see
+    FRIENDS,        // Friends and Close Friends can see
+    CLOSE_FRIENDS,  // Only Close Friends can see
+    PRIVATE         // Only user can see
 }
 
-@Entity(tableName = "blocked_users")
-data class BlockedUser(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
-    val userId: String, // Current user's ID
-    val blockedUserId: String, // ID of the blocked user
-    val blockedUserName: String, // Name for display
-    val blockedUserEmail: String? = null, // Email for identification
-    val blockedAt: Long = System.currentTimeMillis()
-)
+object PrivacyManager {
+
+    fun canViewSocialEnergy(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
+        return when (privacySettings.socialEnergyVisibility) {
+            VisibilityLevel.EVERYONE -> true
+            VisibilityLevel.FRIENDS -> viewerLabel in listOf(PersonLabel.FRIEND, PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.CLOSE_FRIENDS -> viewerLabel in listOf(PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.PRIVATE -> false
+        }
+    }
+
+    fun canViewMood(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
+        return when (privacySettings.moodVisibility) {
+            VisibilityLevel.EVERYONE -> true
+            VisibilityLevel.FRIENDS -> viewerLabel in listOf(PersonLabel.FRIEND, PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.CLOSE_FRIENDS -> viewerLabel in listOf(PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.PRIVATE -> false
+        }
+    }
+
+    fun canViewActivity(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
+        return when (privacySettings.activityVisibility) {
+            VisibilityLevel.EVERYONE -> true
+            VisibilityLevel.FRIENDS -> viewerLabel in listOf(PersonLabel.FRIEND, PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.CLOSE_FRIENDS -> viewerLabel in listOf(PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.PRIVATE -> false
+        }
+    }
+
+    fun canViewProfile(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
+        return when (privacySettings.profileVisibility) {
+            VisibilityLevel.EVERYONE -> true
+            VisibilityLevel.FRIENDS -> viewerLabel in listOf(PersonLabel.FRIEND, PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.CLOSE_FRIENDS -> viewerLabel in listOf(PersonLabel.CLOSE_FRIEND, PersonLabel.FAMILY)
+            VisibilityLevel.PRIVATE -> false
+        }
+    }
+}

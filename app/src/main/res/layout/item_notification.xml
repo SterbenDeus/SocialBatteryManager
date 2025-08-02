@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@color/jscc_white"
+    android:padding="16dp"
+    android:layout_margin="4dp"
+    android:elevation="2dp"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <!-- Notification Icon -->
+    <ImageView
+        android:id="@+id/ivNotificationIcon"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:src="@drawable/ic_notifications"
+        android:layout_marginEnd="12dp"
+        android:layout_gravity="top"
+        app:tint="@color/jscc_gold_start" />
+
+    <!-- Notification Content -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Title and Time -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tvNotificationTitle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="wrap_content"
+                android:text="Energy Running Low"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:textColor="@color/jscc_charcoal" />
+
+            <TextView
+                android:id="@+id/tvNotificationTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2 min ago"
+                android:textSize="12sp"
+                android:textColor="@color/jscc_light_gray" />
+
+        </LinearLayout>
+
+        <!-- Message -->
+        <TextView
+            android:id="@+id/tvNotificationMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your social energy is at 25%. Time to recharge!"
+            android:textSize="14sp"
+            android:textColor="@color/jscc_charcoal"
+            android:layout_marginTop="4dp" />
+
+        <!-- Action Buttons (for Rate Activity notifications) -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="12dp"
+            android:gravity="end">
+
+            <Button
+                android:id="@+id/btnSkip"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Skip"
+                android:textColor="@color/jscc_charcoal"
+                android:background="@color/jscc_light_gray"
+                android:layout_marginEnd="8dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp"
+                style="?android:attr/borderlessButtonStyle" />
+
+            <Button
+                android:id="@+id/btnRate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit Rating"
+                android:textColor="@color/jscc_white"
+                android:background="@color/jscc_gold_start"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="8dp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

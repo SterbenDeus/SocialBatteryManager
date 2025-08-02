@@ -7,16 +7,22 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.Person
+import com.example.socialbatterymanager.features.people.data.ContactsImporter
+import com.example.socialbatterymanager.features.people.data.PeopleRepository
+import com.example.socialbatterymanager.features.people.data.PersonWithStats
+import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
@@ -25,7 +31,16 @@ class PeopleFragment : Fragment() {
     private lateinit var rvPeople: RecyclerView
     private lateinit var adapter: PersonAdapter
     private lateinit var btnAddPerson: Button
-    private lateinit var btnImportContacts: Button
+    private lateinit var btnImportContacts: MaterialButton
+    private lateinit var btnSortEnergyDrain: MaterialButton
+    private lateinit var btnSortInteractions: MaterialButton
+    private lateinit var btnSortName: MaterialButton
+    private lateinit var tvTotalPeople: TextView
+    private lateinit var tvAvgDrain: TextView
+    private lateinit var tvThisWeek: TextView
+    private lateinit var tvContactsCount: TextView
+    
+    private lateinit var viewModel: PeopleViewModel
     
     companion object {
         private const val CONTACTS_PERMISSION_REQUEST_CODE = 1001
@@ -39,9 +54,10 @@ class PeopleFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_people, container, false)
         
         initViews(view)
+        setupViewModel()
         setupRecyclerView()
         setupClickListeners()
-        loadPeople()
+        observeViewModel()
         
         return view
     }
@@ -50,12 +66,26 @@ class PeopleFragment : Fragment() {
         rvPeople = view.findViewById(R.id.rvPeople)
         btnAddPerson = view.findViewById(R.id.btnAddPerson)
         btnImportContacts = view.findViewById(R.id.btnImportContacts)
+        btnSortEnergyDrain = view.findViewById(R.id.btnSortEnergyDrain)
+        btnSortInteractions = view.findViewById(R.id.btnSortInteractions)
+        btnSortName = view.findViewById(R.id.btnSortName)
+        tvTotalPeople = view.findViewById(R.id.tvTotalPeople)
+        tvAvgDrain = view.findViewById(R.id.tvAvgDrain)
+        tvThisWeek = view.findViewById(R.id.tvThisWeek)
+        tvContactsCount = view.findViewById(R.id.tvContactsCount)
+    }
+
+    private fun setupViewModel() {
+        val database = AppDatabase.getDatabase(requireContext())
+        val repository = PeopleRepository(database)
+        val factory = PeopleViewModelFactory(repository)
+        viewModel = ViewModelProvider(this, factory)[PeopleViewModel::class.java]
     }
 
     private fun setupRecyclerView() {
         adapter = PersonAdapter(
-            onItemClick = { person -> showPersonDetails(person) },
-            onMoreClick = { person -> showPersonOptions(person) }
+            onItemClick = { personWithStats -> showPersonDetails(personWithStats) },
+            onMoreClick = { personWithStats -> showPersonOptions(personWithStats) }
         )
         rvPeople.layoutManager = LinearLayoutManager(requireContext())
         rvPeople.adapter = adapter
@@ -69,15 +99,84 @@ class PeopleFragment : Fragment() {
         btnImportContacts.setOnClickListener {
             importContacts()
         }
+
+        btnSortEnergyDrain.setOnClickListener {
+            setSortOption(SortOption.ENERGY_DRAIN)
+        }
+
+        btnSortInteractions.setOnClickListener {
+            setSortOption(SortOption.INTERACTIONS)
+        }
+
+        btnSortName.setOnClickListener {
+            setSortOption(SortOption.NAME)
+        }
     }
 
-    private fun loadPeople() {
-        val db = AppDatabase.getDatabase(requireContext())
+    private fun observeViewModel() {
         lifecycleScope.launch {
-            db.personDao().getAllPeople().collect { people ->
+            viewModel.people.collect { people ->
                 adapter.submitList(people)
+                updateContactsCount(people.size)
             }
         }
+
+        lifecycleScope.launch {
+            viewModel.weeklyStats.collect { stats ->
+                stats?.let {
+                    tvTotalPeople.text = it.totalPeople.toString()
+                    tvAvgDrain.text = String.format("%.1fh", it.avgDrain)
+                    tvThisWeek.text = it.thisWeekInteractions.toString()
+                }
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.sortOption.collect { sortOption ->
+                updateSortButtons(sortOption)
+            }
+        }
+
+        lifecycleScope.launch {
+            viewModel.error.collect { error ->
+                error?.let {
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                    viewModel.clearError()
+                }
+            }
+        }
+    }
+
+    private fun setSortOption(option: SortOption) {
+        viewModel.setSortOption(option)
+    }
+
+    private fun updateSortButtons(currentSort: SortOption) {
+        // Reset all buttons
+        resetSortButton(btnSortEnergyDrain)
+        resetSortButton(btnSortInteractions)
+        resetSortButton(btnSortName)
+
+        // Highlight selected button
+        when (currentSort) {
+            SortOption.ENERGY_DRAIN -> highlightSortButton(btnSortEnergyDrain)
+            SortOption.INTERACTIONS -> highlightSortButton(btnSortInteractions)
+            SortOption.NAME -> highlightSortButton(btnSortName)
+        }
+    }
+
+    private fun resetSortButton(button: MaterialButton) {
+        button.setTextColor(ContextCompat.getColor(requireContext(), R.color.jscc_charcoal))
+        button.strokeWidth = 0
+    }
+
+    private fun highlightSortButton(button: MaterialButton) {
+        button.setTextColor(ContextCompat.getColor(requireContext(), android.R.color.white))
+        button.backgroundTintList = ContextCompat.getColorStateList(requireContext(), R.color.jscc_sage_green)
+    }
+
+    private fun updateContactsCount(count: Int) {
+        tvContactsCount.text = "$count contacts"
     }
 
     private fun showAddPersonDialog() {
@@ -90,28 +189,28 @@ class PeopleFragment : Fragment() {
         ).show()
     }
 
-    private fun showPersonDetails(person: Person) {
+    private fun showPersonDetails(personWithStats: PersonWithStats) {
         // Show person details - for now, just edit
         EditPersonDialog(
             fragment = this,
-            person = person,
+            person = personWithStats.person,
             onPersonSaved = { updatedPerson ->
                 Toast.makeText(requireContext(), "Person updated successfully", Toast.LENGTH_SHORT).show()
             }
         ).show()
     }
 
-    private fun showPersonOptions(person: Person) {
+    private fun showPersonOptions(personWithStats: PersonWithStats) {
         // Show options menu (edit, delete, etc.)
         val options = arrayOf("Edit", "Delete", "View Stats")
         
         val builder = android.app.AlertDialog.Builder(requireContext())
-        builder.setTitle("Options for ${person.name}")
+        builder.setTitle("Options for ${personWithStats.person.name}")
             .setItems(options) { _, which ->
                 when (which) {
-                    0 -> showPersonDetails(person)
-                    1 -> deletePerson(person)
-                    2 -> showPersonStats(person)
+                    0 -> showPersonDetails(personWithStats)
+                    1 -> deletePerson(personWithStats.person)
+                    2 -> showPersonStats(personWithStats.person)
                 }
             }
             .show()
@@ -122,11 +221,8 @@ class PeopleFragment : Fragment() {
             .setTitle("Delete Person")
             .setMessage("Are you sure you want to delete ${person.name}?")
             .setPositiveButton("Delete") { _, _ ->
-                lifecycleScope.launch {
-                    val db = AppDatabase.getDatabase(requireContext())
-                    db.personDao().deletePerson(person)
-                    Toast.makeText(requireContext(), "Person deleted", Toast.LENGTH_SHORT).show()
-                }
+                viewModel.deletePerson(person)
+                Toast.makeText(requireContext(), "Person deleted", Toast.LENGTH_SHORT).show()
             }
             .setNegativeButton("Cancel", null)
             .show()
@@ -177,6 +273,7 @@ class PeopleFragment : Fragment() {
                         "Imported ${newContacts.size} contacts (${contacts.size - newContacts.size} duplicates skipped)",
                         Toast.LENGTH_LONG
                     ).show()
+                    viewModel.refreshData()
                 }
             } catch (e: Exception) {
                 requireActivity().runOnUiThread {

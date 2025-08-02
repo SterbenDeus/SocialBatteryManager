@@ -7,12 +7,15 @@ import androidx.room.PrimaryKey
 data class ActivityEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val name: String,
+    val description: String? = null,
     val type: String,
     val energy: Int,
     val people: String,
     val mood: String,
     val notes: String,
     val date: Long,
+    val startTime: String? = null,
+    val endTime: String? = null,
     val duration: Long = 0, // Duration in minutes
     val location: String? = null,
     val socialInteractionLevel: Int = 0, // 0-10 scale

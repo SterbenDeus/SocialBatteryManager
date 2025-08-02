@@ -13,6 +13,7 @@ import com.example.socialbatterymanager.data.model.EnergyLog
 import com.example.socialbatterymanager.data.model.User
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.data.model.CalendarEvent
+import com.example.socialbatterymanager.data.model.NotificationEntity
 
 @Database(
     entities = [
@@ -22,9 +23,10 @@ import com.example.socialbatterymanager.data.model.CalendarEvent
         EnergyLog::class,
         User::class,
         Person::class,
-        CalendarEvent::class
+        CalendarEvent::class,
+        NotificationEntity::class
     ],
-    version = 6, // Bump version to force recreation
+    version = 7, // Bump version to add notifications table
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -35,6 +37,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
     abstract fun personDao(): PersonDao
     abstract fun calendarEventDao(): CalendarEventDao
+    abstract fun notificationDao(): NotificationDao
 
     companion object {
         @Volatile

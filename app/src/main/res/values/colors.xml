@@ -42,6 +42,20 @@
     <color name="jscc_gold_end">#f3e085</color>
     <color name="jscc_white">#ffffff</color>
     <color name="jscc_light_gray">#e5e7eb</color>
+    <color name="jscc_sage_green">#4CAF50</color>
+    <color name="jscc_light_blue">#E3F2FD</color>
+    <color name="jscc_coral">#FF7043</color>
+
+    <!-- Energy Level Colors -->
+    <color name="energy_high">#4CAF50</color>     <!-- Green -->
+    <color name="energy_medium">#FFEB3B</color>   <!-- Yellow -->
+    <color name="energy_low">#FF9800</color>      <!-- Orange -->
+    <color name="energy_recharge">#F44336</color> <!-- Red -->
+
+    <!-- Notification colors -->
+    <color name="notification_energy_low">#F44336</color>
+    <color name="notification_busy_week">#FF9800</color>
+    <color name="notification_rate_activity">#2196F3</color>
 
     <!-- Material3 color aliases for theme compatibility -->
     <color name="colorPrimaryContainer">@color/primary_container_light</color>
