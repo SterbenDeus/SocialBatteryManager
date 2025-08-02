@@ -2,7 +2,7 @@ package com.example.socialbatterymanager.calendar
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
-import com.example.socialbatterymanager.data.AppDatabase
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import kotlinx.coroutines.runBlocking
 import org.junit.After
