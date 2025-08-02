@@ -6,6 +6,7 @@ import android.content.pm.PackageManager
 import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import com.example.socialbatterymanager.data.model.Person
+import com.example.socialbatterymanager.R
 
 class ContactsImporter(private val context: Context) {
     
@@ -52,7 +53,7 @@ class ContactsImporter(private val context: Context) {
                             name = name,
                             email = email,
                             phone = phone,
-                            notes = "Imported from contacts"
+                            notes = context.getString(R.string.imported_from_contacts)
                         )
                     )
                 }

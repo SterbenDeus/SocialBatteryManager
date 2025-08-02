@@ -3,6 +3,7 @@ package com.example.socialbatterymanager.calendar
 import android.content.Context
 import android.provider.CalendarContract
 import android.util.Log
+import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.data.model.CalendarEventDao
 import kotlinx.coroutines.Dispatchers
@@ -45,7 +46,7 @@ class CalendarIntegration(
             cursor?.use { c ->
                 while (c.moveToNext()) {
                     val externalId = c.getString(0) ?: ""
-                    val title = c.getString(1) ?: "Untitled Event"
+                    val title = c.getString(1) ?: context.getString(R.string.untitled_event)
                     val description = c.getString(2) ?: ""
                     val startTime = c.getLong(3)
                     val endTime = c.getLong(4)
