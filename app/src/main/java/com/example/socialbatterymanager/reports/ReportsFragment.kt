@@ -189,30 +189,9 @@ class ReportsFragment : Fragment() {
             val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
             val energyLogs = energyLogDao.getEnergyLogsByDateRangeSync(dateRange.first, dateRange.second)
 
-            // Use sample data if no real data is available
-            val activitiesData = if (activities.isEmpty()) {
-                SampleDataGenerator.generateSampleActivities(
-                    when (currentPeriod) {
-                        ReportPeriod.WEEK -> 7
-                        ReportPeriod.MONTH -> 30
-                        ReportPeriod.YEAR -> 365
-                    }
-                )
-            } else {
-                activities
-            }
+            val activitiesData = activities
 
-            val energyLogsData = if (energyLogs.isEmpty()) {
-                SampleDataGenerator.generateSampleEnergyLogs(
-                    when (currentPeriod) {
-                        ReportPeriod.WEEK -> 7
-                        ReportPeriod.MONTH -> 30
-                        ReportPeriod.YEAR -> 365
-                    }
-                )
-            } else {
-                energyLogs
-            }
+            val energyLogsData = energyLogs
 
             // Update charts and data
             updateEnergyChart(activitiesData)
@@ -367,28 +346,14 @@ class ReportsFragment : Fragment() {
 
     private fun updatePeakUsageTimes(activities: List<ActivityEntity>) {
         val peakTimes = ReportDataAnalyzer.analyzePeakUsageTimes(activities)
-        
-        // Use sample data if analysis doesn't produce enough results
-        val finalPeakTimes = if (peakTimes.size < 4) {
-            SampleDataGenerator.generateSamplePeakUsageTimes()
-        } else {
-            peakTimes
-        }
-        
-        peakUsageAdapter.updatePeakUsages(finalPeakTimes)
+
+        peakUsageAdapter.updatePeakUsages(peakTimes)
     }
 
     private fun updateCapacityGrowth(activities: List<ActivityEntity>, energyLogs: List<EnergyLog>) {
         val growthData = ReportDataAnalyzer.calculateCapacityGrowth(activities, energyLogs)
-        
-        // Use sample data if no meaningful growth data is available
-        val finalGrowthData = if (growthData.isEmpty()) {
-            SampleDataGenerator.generateSampleCapacityGrowth()
-        } else {
-            growthData
-        }
-        
-        finalGrowthData.forEach { growth ->
+
+        growthData.forEach { growth ->
             when (growth.period) {
                 "Weekly Growth" -> {
                     val sign = if (growth.isPositive) "+" else "-"
@@ -410,15 +375,8 @@ class ReportsFragment : Fragment() {
 
     private fun updateAIInsights(activities: List<ActivityEntity>) {
         val insights = ReportDataAnalyzer.generateAIInsights(activities)
-        
-        // Use sample insights if no meaningful insights are generated
-        val finalInsights = if (insights.isEmpty()) {
-            SampleDataGenerator.generateSampleAIInsights()
-        } else {
-            insights
-        }
-        
-        insightsAdapter.updateInsights(finalInsights)
+
+        insightsAdapter.updateInsights(insights)
     }
 
     // Keep export functionality from original implementation
