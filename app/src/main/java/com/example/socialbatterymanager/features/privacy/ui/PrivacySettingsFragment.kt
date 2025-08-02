@@ -44,7 +44,6 @@ class PrivacySettingsFragment : Fragment() {
     private lateinit var activityPatternsSwitch: Switch
     private lateinit var addUserButton: Button
     private lateinit var blockedUsersRecyclerView: RecyclerView
-    private lateinit var removeUserButton: View
 
     // Data
     private var currentPrivacySettings: PrivacySettings? = null
@@ -83,7 +82,6 @@ class PrivacySettingsFragment : Fragment() {
         activityPatternsSwitch = view.findViewById(R.id.activityPatternsSwitch)
         addUserButton = view.findViewById(R.id.addUserButton)
         blockedUsersRecyclerView = view.findViewById(R.id.blockedUsersRecyclerView)
-        removeUserButton = view.findViewById(R.id.removeUserButton)
     }
 
     private fun setupRecyclerView() {
@@ -116,18 +114,6 @@ class PrivacySettingsFragment : Fragment() {
         // Add user button
         addUserButton.setOnClickListener {
             showAddUserDialog()
-        }
-
-        // Remove user button (for sample user)
-        removeUserButton.setOnClickListener {
-            val sampleUser = BlockedUser(
-                id = 1,
-                userId = "current_user",
-                blockedUserId = "john_smith",
-                blockedUserName = "John Smith",
-                blockedUserEmail = "john@example.com"
-            )
-            showRemoveUserDialog(sampleUser)
         }
     }
 
