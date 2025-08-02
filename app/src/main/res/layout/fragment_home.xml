@@ -152,9 +152,7 @@
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
                     android:gravity="center">
-
                     <!-- Mood buttons will be added programmatically -->
-
                 </LinearLayout>
 
             </LinearLayout>
