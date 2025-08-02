@@ -57,9 +57,7 @@ class ActivitiesFragment : Fragment() {
         dataRepository = DataRepository.getInstance(requireContext(), passphrase)
 
         view.findViewById<Button>(R.id.btnAddActivity).setOnClickListener {
-
-            Toast.makeText(requireContext(), "Add Activity clicked!", Toast.LENGTH_SHORT).show()
-            // TODO: Show Add Activity dialog and insert to DB using dataRepository
+            showAddActivityDialog()
         }
 
         // Load activities from DB
@@ -78,17 +76,29 @@ class ActivitiesFragment : Fragment() {
         EditActivityDialog(requireContext()) { activity ->
             lifecycleScope.launch {
                 try {
-                    database.activityDao().insertActivity(activity.toEntity())
-                    Toast.makeText(requireContext(), "Activity added successfully!", Toast.LENGTH_SHORT).show()
+                    dataRepository.insertActivity(activity.toEntity())
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.activity_add_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Error adding activity: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.activity_add_error, e.message ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }.show()
     }
 
     private fun onActivityClick(activity: Activity) {
-        val options = arrayOf("Edit", "Delete", "Mark as Used")
+        val options = arrayOf(
+            getString(R.string.edit),
+            getString(R.string.delete),
+            getString(R.string.mark_as_used)
+        )
         AlertDialog.Builder(requireContext())
             .setTitle(activity.name)
             .setItems(options) { _, which ->
@@ -106,9 +116,17 @@ class ActivitiesFragment : Fragment() {
             lifecycleScope.launch {
                 try {
                     database.activityDao().updateActivity(updatedActivity.toEntity())
-                    Toast.makeText(requireContext(), "Activity updated successfully!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.activity_update_success),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 } catch (e: Exception) {
-                    Toast.makeText(requireContext(), "Error updating activity: ${e.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.activity_update_error, e.message ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
         }.show()
@@ -116,19 +134,32 @@ class ActivitiesFragment : Fragment() {
 
     private fun deleteActivity(activity: Activity) {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete Activity")
-            .setMessage("Are you sure you want to delete '${activity.name}'?")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_activity_title))
+            .setMessage(
+                getString(
+                    R.string.delete_activity_confirmation,
+                    activity.name
+                )
+            )
+            .setPositiveButton(R.string.delete) { _, _ ->
                 lifecycleScope.launch {
                     try {
                         database.activityDao().deleteActivity(activity.toEntity())
-                        Toast.makeText(requireContext(), "Activity deleted successfully!", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.activity_delete_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     } catch (e: Exception) {
-                        Toast.makeText(requireContext(), "Error deleting activity: ${e.message}", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.activity_delete_error, e.message ?: ""),
+                            Toast.LENGTH_SHORT
+                        ).show()
                     }
                 }
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(R.string.cancel, null)
             .show()
     }
 
@@ -136,9 +167,17 @@ class ActivitiesFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 database.activityDao().incrementUsageCount(activity.id)
-                Toast.makeText(requireContext(), "Activity marked as used!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.activity_marked_as_used),
+                    Toast.LENGTH_SHORT
+                ).show()
             } catch (e: Exception) {
-                Toast.makeText(requireContext(), "Error updating usage: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.activity_usage_error, e.message ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
     }
