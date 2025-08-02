@@ -1,6 +1,7 @@
 package com.example.socialbatterymanager.sync
 
 import android.content.Context
+import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.socialbatterymanager.data.database.AppDatabase
@@ -9,7 +10,6 @@ import com.example.socialbatterymanager.data.model.SyncStatus
 import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
-import kotlinx.coroutines.flow.first
 
 /**
  * Worker class for syncing local data with Firebase
@@ -38,7 +38,8 @@ class SyncWorker(
             
             Result.success()
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("SyncWorker", "Error during synchronization work", e)
+            // TODO: Forward to crash-reporting service
             Result.retry()
         } finally {
             networkManager.unregister()
@@ -85,7 +86,8 @@ class SyncWorker(
             } catch (e: Exception) {
                 // Mark as sync error
                 database.activityDao().updateSyncStatus(activity.id, SyncStatus.SYNC_ERROR)
-                e.printStackTrace()
+                Log.e("SyncWorker", "Failed to sync activity ${activity.id}", e)
+                // TODO: Forward to crash-reporting service
             }
         }
     }
@@ -137,7 +139,8 @@ class SyncWorker(
             }
             
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.e("SyncWorker", "Failed to download updates from Firebase", e)
+            // TODO: Forward to crash-reporting service
         }
     }
 }
