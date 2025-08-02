@@ -108,4 +108,10 @@
     <string name="mood_unknown">Mood: Unknown</string>
     <string name="activities_0">Activities: 0</string>
 
+    <!-- Reports strings -->
+    <string name="date">Date</string>
+    <string name="energy_0_0">Energy: 0.0</string>
+    <string name="mood_unknown">Mood: Unknown</string>
+    <string name="activities_0">Activities: 0</string>
+
 </resources>
