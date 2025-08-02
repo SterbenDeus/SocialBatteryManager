@@ -26,6 +26,7 @@ import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -194,23 +195,12 @@ class HomeFragment : Fragment() {
 
     private suspend fun calculateAverageBurnRate(): Double {
         val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-        val activities = database.activityDao().getAllActivities()
-        
-        var totalBurn = 0.0
-        var activityCount = 0
-        
-        activities.collect { activityList ->
-            val weeklyActivities = activityList.filter { 
-                it.date >= weekStart && it.energy < 0 
-            }
-            
-            if (weeklyActivities.isNotEmpty()) {
-                totalBurn = weeklyActivities.sumOf { abs(it.energy.toDouble()) }
-                activityCount = weeklyActivities.size
-            }
-        }
-        
-        return if (activityCount > 0) totalBurn / activityCount else 2.0
+        val activityList = database.activityDao().getAllActivities().first()
+
+        val weeklyActivities = activityList.filter { it.date >= weekStart && it.energy < 0 }
+        val totalBurn = weeklyActivities.sumOf { abs(it.energy.toDouble()) }
+
+        return if (weeklyActivities.isNotEmpty()) totalBurn / weeklyActivities.size else 2.0
     }
 
     private fun calculateWeeklyForecast() {
