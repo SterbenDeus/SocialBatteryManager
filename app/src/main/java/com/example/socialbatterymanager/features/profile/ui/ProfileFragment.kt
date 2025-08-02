@@ -36,6 +36,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.User
+import com.example.socialbatterymanager.BuildConfig
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -157,8 +158,12 @@ class ProfileFragment : Fragment() {
             showRecalibrationDialog()
         }
 
-        // Disable survey feature until implemented
-        surveyButton.isEnabled = false
+        // Hide survey feature in release builds until implemented
+        if (!BuildConfig.DEBUG) {
+            surveyButton.visibility = View.GONE
+        } else {
+            surveyButton.isEnabled = false
+        }
 
         privacySettingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_privacySettingsFragment)
