@@ -114,37 +114,37 @@ class EnergyManager {
      * Create sample data for today to demonstrate the energy tracking
      */
     fun createSampleTodayData(): List<CalendarEvent> {
-        if (!BuildConfig.DEBUG) return emptyList()
-
-        val todayStart = getTodayStart()
-        val sampleEvents = listOf(
-            CalendarEvent(
-                id = 1,
-                title = "Team Meeting",
-                description = "Weekly standup with development team",
-                startTime = todayStart + (9 * 60 * 60 * 1000), // 9:00 AM
-                endTime = todayStart + (10.5 * 60 * 60 * 1000), // 10:30 AM
-                source = "google"
-            ),
-            CalendarEvent(
-                id = 2,
-                title = "Lunch with Sarah",
-                description = "Catching up with close friend",
-                startTime = todayStart + (12 * 60 * 60 * 1000), // 12:00 PM
-                endTime = todayStart + (13 * 60 * 60 * 1000), // 1:00 PM
-                source = "manual"
-            ),
-            CalendarEvent(
-                id = 3,
-                title = "Client Presentation",
-                description = "Important project presentation",
-                startTime = todayStart + (15 * 60 * 60 * 1000), // 3:00 PM
-                endTime = todayStart + (16.5 * 60 * 60 * 1000), // 4:30 PM
-                source = "outlook"
+        if (BuildConfig.DEBUG) {
+            val todayStart = getTodayStart()
+            val sampleEvents = listOf(
+                CalendarEvent(
+                    id = 1,
+                    title = "Team Meeting",
+                    description = "Weekly standup with development team",
+                    startTime = todayStart + (9 * 60 * 60 * 1000), // 9:00 AM
+                    endTime = todayStart + (10.5 * 60 * 60 * 1000), // 10:30 AM
+                    source = "google",
+                ),
+                CalendarEvent(
+                    id = 2,
+                    title = "Lunch with Sarah",
+                    description = "Catching up with close friend",
+                    startTime = todayStart + (12 * 60 * 60 * 1000), // 12:00 PM
+                    endTime = todayStart + (13 * 60 * 60 * 1000), // 1:00 PM
+                    source = "manual",
+                ),
+                CalendarEvent(
+                    id = 3,
+                    title = "Client Presentation",
+                    description = "Important project presentation",
+                    startTime = todayStart + (15 * 60 * 60 * 1000), // 3:00 PM
+                    endTime = todayStart + (16.5 * 60 * 60 * 1000), // 4:30 PM
+                    source = "outlook",
+                )
             )
-        )
-
-        return sampleEvents
+            return sampleEvents
+        }
+        return emptyList()
     }
     
     private fun getTodayStart(currentTime: Long = System.currentTimeMillis()): Long {
