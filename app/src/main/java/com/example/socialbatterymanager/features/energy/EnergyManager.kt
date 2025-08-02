@@ -1,9 +1,9 @@
 package com.example.socialbatterymanager.features.energy
 
 import com.example.socialbatterymanager.BuildConfig
+import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.data.model.CalendarActivityEvent
-import com.example.socialbatterymanager.data.model.EnergyLog
 import java.util.Calendar
 
 /**
@@ -68,32 +68,37 @@ class EnergyManager {
      * Get recommended energy allocation for remaining activities
      */
     fun getEnergyRecommendations(energyState: EnergyState, upcomingEvents: List<CalendarEvent>): EnergyRecommendations {
-        val recommendations = mutableListOf<String>()
-        
+        val recommendations = mutableListOf<EnergyRecommendation>()
+
         when {
             energyState.currentEnergyLevel >= 75 -> {
-                recommendations.add("Great energy levels! You can handle demanding activities.")
+                recommendations.add(EnergyRecommendation(R.string.energy_recommendation_great))
             }
             energyState.currentEnergyLevel >= 50 -> {
-                recommendations.add("Good energy. Consider lighter activities in the afternoon.")
+                recommendations.add(EnergyRecommendation(R.string.energy_recommendation_good))
             }
             energyState.currentEnergyLevel >= 25 -> {
-                recommendations.add("Energy running low. Take breaks and avoid high-stress activities.")
+                recommendations.add(EnergyRecommendation(R.string.energy_recommendation_low))
             }
             else -> {
-                recommendations.add("Very low energy. Consider rescheduling non-essential activities.")
+                recommendations.add(EnergyRecommendation(R.string.energy_recommendation_very_low))
             }
         }
-        
+
         // Check upcoming activities
-        val upcomingBurn = upcomingEvents.sumOf { 
-            CalendarActivityEvent.fromCalendarEvent(it).calculateEnergyBurn() 
+        val upcomingBurn = upcomingEvents.sumOf {
+            CalendarActivityEvent.fromCalendarEvent(it).calculateEnergyBurn()
         }
-        
+
         if (upcomingBurn > energyState.remainingHours) {
-            recommendations.add("Warning: Planned activities exceed available energy (${upcomingBurn}h vs ${energyState.remainingHours}h)")
+            recommendations.add(
+                EnergyRecommendation(
+                    R.string.energy_warning_planned_exceed,
+                    listOf<Any>(upcomingBurn, energyState.remainingHours)
+                )
+            )
         }
-        
+
         return EnergyRecommendations(
             recommendations = recommendations,
             warningLevel = when {
@@ -188,7 +193,7 @@ data class EnergyState(
  * Energy recommendations and warnings
  */
 data class EnergyRecommendations(
-    val recommendations: List<String>,
+    val recommendations: List<EnergyRecommendation>,
     val warningLevel: WarningLevel,
     val suggestedBreakDuration: Int // In minutes
 )
@@ -196,3 +201,11 @@ data class EnergyRecommendations(
 enum class WarningLevel {
     LOW, MEDIUM, HIGH
 }
+
+/**
+ * Recommendation message referencing a string resource and optional format arguments
+ */
+data class EnergyRecommendation(
+    val messageRes: Int,
+    val formatArgs: List<Any> = emptyList()
+)

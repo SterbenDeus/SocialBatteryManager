@@ -70,6 +70,13 @@
     <string name="burn_rate">Burn Rate</string>
     <string name="hours_left">%1$.1fh\nSocial energy left</string>
     <string name="burn_rate_value">%1$.1fh\nPer social activity</string>
+
+    <!-- Energy Recommendations -->
+    <string name="energy_recommendation_great">Great energy levels! You can handle demanding activities.</string>
+    <string name="energy_recommendation_good">Good energy. Consider lighter activities in the afternoon.</string>
+    <string name="energy_recommendation_low">Energy running low. Take breaks and avoid high-stress activities.</string>
+    <string name="energy_recommendation_very_low">Very low energy. Consider rescheduling non-essential activities.</string>
+    <string name="energy_warning_planned_exceed">Warning: Planned activities exceed available energy (%1$.1fh vs %2$.1fh)</string>
     
     <!-- Weekly Forecast -->
     <string name="weekly_forecast_title">Weekly Forecast</string>

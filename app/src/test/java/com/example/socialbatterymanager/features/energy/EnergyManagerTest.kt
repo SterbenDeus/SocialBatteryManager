@@ -1,6 +1,7 @@
 package com.example.socialbatterymanager.features.energy
 
 import com.example.socialbatterymanager.data.model.CalendarEvent
+import com.example.socialbatterymanager.R
 import org.junit.Test
 import org.junit.Assert.*
 import java.util.Calendar
@@ -101,10 +102,12 @@ class EnergyManagerTest {
         )
         
         val recommendations = energyManager.getEnergyRecommendations(lowEnergyState, emptyList())
-        
+
         assertEquals(WarningLevel.HIGH, recommendations.warningLevel)
         assertTrue("Should suggest longer break for low energy", recommendations.suggestedBreakDuration >= 30)
-        assertTrue("Should contain energy warning", 
-            recommendations.recommendations.any { it.contains("low energy", ignoreCase = true) })
+        assertTrue(
+            "Should contain energy warning",
+            recommendations.recommendations.any { it.messageRes == R.string.energy_recommendation_very_low }
+        )
     }
 }
