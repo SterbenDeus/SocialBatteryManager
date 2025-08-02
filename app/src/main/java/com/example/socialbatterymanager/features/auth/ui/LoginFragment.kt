@@ -1,6 +1,5 @@
 package com.example.socialbatterymanager.features.auth.ui
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +8,7 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ProgressBar
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
@@ -39,9 +39,21 @@ class LoginFragment : Fragment() {
             }
         }
     }
-    
-    companion object {
-        private const val RC_SIGN_IN = 9001
+
+    private val googleSignInLauncher = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        val task = GoogleSignIn.getSignedInAccountFromIntent(result.data)
+        try {
+            val account = task.getResult(ApiException::class.java)!!
+            userViewModel.signInWithGoogle(account.idToken!!)
+        } catch (e: ApiException) {
+            Toast.makeText(
+                context,
+                getString(R.string.google_sign_in_failed, e.message),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
     
     override fun onCreateView(
@@ -120,21 +132,6 @@ class LoginFragment : Fragment() {
     
     private fun signInWithGoogle() {
         val signInIntent = googleSignInClient.signInIntent
-        startActivityForResult(signInIntent, RC_SIGN_IN)
-    }
-    
-    @Deprecated("Deprecated in Java")
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        
-        if (requestCode == RC_SIGN_IN) {
-            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
-            try {
-                val account = task.getResult(ApiException::class.java)!!
-                userViewModel.signInWithGoogle(account.idToken!!)
-            } catch (e: ApiException) {
-                Toast.makeText(context, getString(R.string.google_sign_in_failed, e.message), Toast.LENGTH_SHORT).show()
-            }
-        }
+        googleSignInLauncher.launch(signInIntent)
     }
 }

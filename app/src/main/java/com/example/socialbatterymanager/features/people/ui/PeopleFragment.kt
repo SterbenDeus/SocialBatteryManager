@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
@@ -41,13 +41,23 @@ class PeopleFragment : Fragment() {
     private lateinit var tvAvgDrain: TextView
     private lateinit var tvThisWeek: TextView
     private lateinit var tvContactsCount: TextView
-    
-    private lateinit var viewModel: PeopleViewModel
-    
-    companion object {
-        private const val CONTACTS_PERMISSION_REQUEST_CODE = 1001
-    }
 
+    private lateinit var viewModel: PeopleViewModel
+
+    private val contactsPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            performContactsImport()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.contacts_permission_denied),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
+    }
+    
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -240,16 +250,14 @@ class PeopleFragment : Fragment() {
     }
 
     private fun importContacts() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CONTACTS) 
-            != PackageManager.PERMISSION_GRANTED) {
-            
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_CONTACTS),
-                CONTACTS_PERMISSION_REQUEST_CODE
-            )
-        } else {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CONTACTS
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             performContactsImport()
+        } else {
+            contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
         }
     }
 
@@ -302,23 +310,6 @@ class PeopleFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                 }
-            }
-        }
-    }
-
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
-        if (requestCode == CONTACTS_PERMISSION_REQUEST_CODE) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                performContactsImport()
-            } else {
-                Toast.makeText(requireContext(), getString(R.string.contacts_permission_denied), Toast.LENGTH_SHORT).show()
             }
         }
     }
