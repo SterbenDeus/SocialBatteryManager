@@ -1,12 +1,21 @@
 package com.example.socialbatterymanager.features.people.data
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.provider.ContactsContract
+import androidx.core.content.ContextCompat
 import com.example.socialbatterymanager.data.model.Person
 
 class ContactsImporter(private val context: Context) {
     
     fun importContacts(): List<Person> {
+        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            throw SecurityException("READ_CONTACTS permission not granted")
+        }
+
         val contacts = mutableListOf<Person>()
         
         val cursor = context.contentResolver.query(
