@@ -59,6 +59,21 @@
     <string name="edit_person">Edit Person</string>
     <string name="error_name_required">Name is required</string>
     <string name="imported_from_contacts">Imported from contacts</string>
+    <plurals name="contacts_count">
+        <item quantity="one">%d contact</item>
+        <item quantity="other">%d contacts</item>
+    </plurals>
+    <string name="person_added_success">Person added successfully</string>
+    <string name="person_updated_success">Person updated successfully</string>
+    <string name="person_deleted">Person deleted</string>
+    <string name="view_stats">View Stats</string>
+    <string name="options_for">Options for %1$s</string>
+    <string name="delete_person_title">Delete Person</string>
+    <string name="delete_person_message">Are you sure you want to delete %1$s?</string>
+    <string name="imported_contacts">Imported %1$d contacts (%2$d duplicates skipped)</string>
+    <string name="contacts_permission_not_granted">Contacts permission not granted</string>
+    <string name="error_importing_contacts">Error importing contacts: %1$s</string>
+    <string name="contacts_permission_denied">Contacts permission denied</string>
 
     <!-- Calendar messages -->
     <string name="event_label">Event: %1$s</string>
