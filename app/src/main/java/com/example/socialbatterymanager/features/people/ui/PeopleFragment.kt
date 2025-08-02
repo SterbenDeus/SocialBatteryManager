@@ -251,22 +251,22 @@ class PeopleFragment : Fragment() {
             try {
                 val importer = ContactsImporter(requireContext())
                 val contacts = importer.importContacts()
-                
+
                 val db = AppDatabase.getDatabase(requireContext())
                 val personDao = db.personDao()
-                
+
                 // Get existing people to avoid duplicates
                 val existingPeople = personDao.getAllPeople().first()
                 val existingNames = existingPeople.map { it.name.lowercase() }.toSet()
-                
+
                 val newContacts = contacts.filter { contact ->
                     !existingNames.contains(contact.name.lowercase())
                 }
-                
+
                 newContacts.forEach { contact ->
                     personDao.insertPerson(contact)
                 }
-                
+
                 requireActivity().runOnUiThread {
                     Toast.makeText(
                         requireContext(),
@@ -274,6 +274,14 @@ class PeopleFragment : Fragment() {
                         Toast.LENGTH_LONG
                     ).show()
                     viewModel.refreshData()
+                }
+            } catch (e: SecurityException) {
+                requireActivity().runOnUiThread {
+                    Toast.makeText(
+                        requireContext(),
+                        "Contacts permission not granted",
+                        Toast.LENGTH_LONG
+                    ).show()
                 }
             } catch (e: Exception) {
                 requireActivity().runOnUiThread {
