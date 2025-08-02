@@ -89,6 +89,7 @@ dependencies {
     implementation("com.google.android.gms:play-services-auth:21.0.0")
     implementation("com.google.firebase:firebase-firestore-ktx:24.10.0")
     implementation("com.google.firebase:firebase-auth-ktx:22.3.0")
+    implementation("com.google.firebase:firebase-crashlytics-ktx:18.5.1")
 
     // SQLCipher
     implementation("net.zetetic:android-database-sqlcipher:4.5.4")

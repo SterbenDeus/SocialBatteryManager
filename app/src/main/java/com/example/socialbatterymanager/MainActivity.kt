@@ -10,6 +10,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -67,7 +68,9 @@ class MainActivity : AppCompatActivity() {
             } catch (e: Exception) {
                 // Handle sync initialization error
                 Log.e("MainActivity", "Failed to schedule periodic sync", e)
-                // TODO: Forward to crash-reporting service
+                FirebaseCrashlytics.getInstance().recordException(
+                    RuntimeException("Failed to schedule periodic sync", e)
+                )
             }
         }
     }

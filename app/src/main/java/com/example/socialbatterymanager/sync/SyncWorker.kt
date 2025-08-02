@@ -8,6 +8,7 @@ import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.SyncStatus
 import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 
@@ -35,11 +36,13 @@ class SyncWorker(
             
             // Download updates from Firebase
             downloadUpdatesFromFirebase()
-            
+
             Result.success()
         } catch (e: Exception) {
             Log.e("SyncWorker", "Error during synchronization work", e)
-            // TODO: Forward to crash-reporting service
+            FirebaseCrashlytics.getInstance().recordException(
+                RuntimeException("Error during synchronization work", e)
+            )
             Result.retry()
         } finally {
             networkManager.unregister()
@@ -87,7 +90,9 @@ class SyncWorker(
                 // Mark as sync error
                 database.activityDao().updateSyncStatus(activity.id, SyncStatus.SYNC_ERROR)
                 Log.e("SyncWorker", "Failed to sync activity ${activity.id}", e)
-                // TODO: Forward to crash-reporting service
+                FirebaseCrashlytics.getInstance().recordException(
+                    RuntimeException("Failed to sync activity ${activity.id}", e)
+                )
             }
         }
     }
@@ -140,7 +145,9 @@ class SyncWorker(
             
         } catch (e: Exception) {
             Log.e("SyncWorker", "Failed to download updates from Firebase", e)
-            // TODO: Forward to crash-reporting service
+            FirebaseCrashlytics.getInstance().recordException(
+                RuntimeException("Failed to download updates from Firebase", e)
+            )
         }
     }
 }
