@@ -2,6 +2,7 @@
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#F5F5F5">
@@ -26,7 +27,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="🔋 Social Energy"
+                android:text="@string/social_energy_header"
                 android:textSize="20sp"
                 android:textStyle="bold"
                 android:textColor="@android:color/white" />
@@ -55,7 +56,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Social Energy Level"
+                    android:text="@string/social_energy_level"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
@@ -64,7 +65,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Current energy status"
+                    android:text="@string/current_energy_status"
                     android:textSize="14sp"
                     android:textColor="@android:color/darker_gray"
                     android:layout_marginBottom="16dp" />
@@ -87,10 +88,10 @@
                         android:id="@+id/tvEnergyPercentage"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="75%"
                         android:textSize="32sp"
                         android:textStyle="bold"
-                        android:textColor="#4CAF50" />
+                        android:textColor="#4CAF50"
+                        tools:text="75%" />
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -103,7 +104,7 @@
                             android:id="@+id/tvEnergyLabel"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="High Energy"
+                            android:text="@string/energy_level_high"
                             android:textSize="16sp"
                             android:textStyle="bold"
                             android:textColor="@android:color/black" />
@@ -111,9 +112,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="↗ +5% from yesterday"
                             android:textSize="12sp"
-                            android:textColor="#4CAF50" />
+                            android:textColor="#4CAF50"
+                            tools:text="↗ +5% from yesterday" />
 
                     </LinearLayout>
 
@@ -140,7 +141,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="How are you feeling?"
+                    android:text="@string/how_are_you_feeling"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
@@ -206,7 +207,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="🔋 Remaining"
+                                android:text="@string/remaining_with_icon"
                                 android:textSize="12sp"
                                 android:textColor="@android:color/white" />
 
@@ -214,15 +215,15 @@
                                 android:id="@+id/tvRemainingHours"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="6.2h"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@android:color/white"
+                                tools:text="6.2h" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Social energy left"
+                                android:text="@string/social_energy_left"
                                 android:textSize="10sp"
                                 android:textColor="@android:color/white" />
 
@@ -249,7 +250,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="⏱ Burn Rate"
+                                android:text="@string/burn_rate_with_icon"
                                 android:textSize="12sp"
                                 android:textColor="@android:color/white" />
 
@@ -257,15 +258,15 @@
                                 android:id="@+id/tvBurnRate"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="2.1h"
                                 android:textSize="16sp"
                                 android:textStyle="bold"
-                                android:textColor="@android:color/white" />
+                                android:textColor="@android:color/white"
+                                tools:text="2.1h" />
 
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Per social activity"
+                                android:text="@string/per_social_activity"
                                 android:textSize="10sp"
                                 android:textColor="@android:color/white" />
 
@@ -312,7 +313,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="📊"
+                        android:text="@string/chart_icon"
                         android:textSize="16sp" />
 
                 </LinearLayout>
@@ -342,10 +343,10 @@
                             android:id="@+id/tvAverageEnergy"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="78%"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#4CAF50" />
+                            android:textColor="#4CAF50"
+                            tools:text="78%" />
 
                     </LinearLayout>
 
@@ -368,10 +369,10 @@
                             android:id="@+id/tvPeakDay"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Saturday"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#2196F3" />
+                            android:textColor="#2196F3"
+                            tools:text="Saturday" />
 
                     </LinearLayout>
 
@@ -393,10 +394,10 @@
                             android:id="@+id/tvRecoveryNeeded"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="2 days"
                             android:textSize="16sp"
                             android:textStyle="bold"
-                            android:textColor="#FF5722" />
+                            android:textColor="#FF5722"
+                            tools:text="2 days" />
 
                     </LinearLayout>
 
@@ -423,7 +424,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Quick Actions"
+                    android:text="@string/quick_actions"
                     android:textSize="18sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/black"
@@ -439,7 +440,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="➕ Log Activity"
+                        android:text="@string/log_activity"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#4CAF50"
                         android:layout_marginEnd="8dp" />
@@ -467,7 +468,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="🔍 View Battery"
+                        android:text="@string/view_battery"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#9C27B0"
                         android:layout_marginEnd="8dp" />
@@ -477,7 +478,7 @@
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:layout_height="wrap_content"
-                        android:text="💡 Get Tips"
+                        android:text="@string/get_tips"
                         android:textColor="@android:color/white"
                         android:backgroundTint="#FF9800"
                         android:layout_marginStart="8dp" />

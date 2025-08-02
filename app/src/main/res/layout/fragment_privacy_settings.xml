@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="16dp">
@@ -36,7 +37,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mood &amp; Energy Privacy"
+                    android:text="@string/mood_energy_privacy_title"
                     android:textSize="20sp"
                     android:textStyle="bold"
                     android:textColor="@android:color/white" />
@@ -44,7 +45,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Control who can see your mood and energy levels. Your privacy matters."
+                    android:text="@string/mood_energy_privacy_description"
                     android:textSize="14sp"
                     android:textColor="@android:color/white"
                     android:alpha="0.9" />
@@ -57,7 +58,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Who can see your mood &amp; energy"
+            android:text="@string/who_can_see_mood_energy"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
@@ -65,7 +66,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Choose who has access to view your emotional state and energy levels"
+            android:text="@string/who_can_see_mood_energy_description"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="16dp" />
@@ -103,14 +104,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Everyone"
+                        android:text="@string/privacy_option_everyone"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Anyone can see your mood and energy"
+                        android:text="@string/privacy_option_everyone_desc"
                         android:textSize="12sp"
                         android:textColor="@android:color/darker_gray" />
 
@@ -151,14 +152,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Friends Only"
+                        android:text="@string/privacy_option_friends_only"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Only your friends can see your status"
+                        android:text="@string/privacy_option_friends_only_desc"
                         android:textSize="12sp"
                         android:textColor="@android:color/darker_gray" />
 
@@ -199,14 +200,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Close Friends"
+                        android:text="@string/privacy_option_close_friends"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Only close friends can see your mood"
+                        android:text="@string/privacy_option_close_friends_desc"
                         android:textSize="12sp"
                         android:textColor="@android:color/darker_gray" />
 
@@ -246,14 +247,14 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Only Me"
+                        android:text="@string/privacy_option_only_me"
                         android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Keep your mood and energy private"
+                        android:text="@string/privacy_option_only_me_desc"
                         android:textSize="12sp"
                         android:textColor="@android:color/darker_gray" />
 
@@ -273,7 +274,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Specific Permissions"
+            android:text="@string/specific_permissions_title"
             android:textStyle="bold"
             android:textSize="18sp"
             android:layout_marginBottom="8dp" />
@@ -281,7 +282,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Customize what information is visible to different groups"
+            android:text="@string/specific_permissions_description"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="16dp" />
@@ -311,14 +312,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Mood Status"
+                    android:text="@string/mood_status"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Allow others to see your current mood"
+                    android:text="@string/mood_status_description"
                     android:textSize="12sp"
                     android:textColor="@android:color/darker_gray" />
 
@@ -358,14 +359,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Energy Level"
+                    android:text="@string/energy_level_label"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Allow others to see your energy levels"
+                    android:text="@string/energy_level_description"
                     android:textSize="12sp"
                     android:textColor="@android:color/darker_gray" />
 
@@ -405,14 +406,14 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Activity Patterns"
+                    android:text="@string/activity_patterns"
                     android:textSize="16sp"
                     android:textStyle="bold" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Share your mood and energy patterns over time"
+                    android:text="@string/activity_patterns_description"
                     android:textSize="12sp"
                     android:textColor="@android:color/darker_gray" />
 
@@ -438,7 +439,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Blocked Users"
+                android:text="@string/blocked_users"
                 android:textStyle="bold"
                 android:textSize="18sp" />
 
@@ -446,7 +447,7 @@
                 android:id="@+id/addUserButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="+ Add User"
+                android:text="@string/add_user"
                 android:textSize="12sp"
                 style="@style/Widget.Material3.Button.TonalButton" />
 
@@ -455,7 +456,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Users who cannot see your mood and energy"
+            android:text="@string/blocked_users_description"
             android:textSize="14sp"
             android:textColor="@android:color/darker_gray"
             android:layout_marginBottom="16dp" />
@@ -466,6 +467,61 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="16dp" />
+
+        <!-- Sample blocked user for demonstration (hidden by default) -->
+        <LinearLayout
+            android:id="@+id/sampleBlockedUserLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="12dp"
+            android:background="@drawable/battery_outline"
+            android:layout_marginBottom="16dp"
+            android:visibility="visible">
+
+            <ImageView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_people"
+                android:background="@drawable/battery_outline"
+                android:backgroundTint="@android:color/darker_gray"
+                android:layout_marginEnd="12dp"
+                android:layout_gravity="center_vertical" />
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:layout_gravity="center_vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    tools:text="John Smith" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12sp"
+                    android:textColor="@android:color/darker_gray"
+                    tools:text="@johnsmith" />
+
+            </LinearLayout>
+
+            <ImageView
+                android:id="@+id/removeUserButton"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
+                android:src="@drawable/ic_delete"
+                android:tint="@color/red_500"
+                android:layout_gravity="center_vertical"
+                android:background="?android:attr/selectableItemBackgroundBorderless"
+                android:padding="4dp" />
+
+        </LinearLayout>
 
         <!-- Privacy Tips section -->
         <LinearLayout
@@ -493,7 +549,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Privacy Tips"
+                    android:text="@string/privacy_tips"
                     android:textSize="16sp"
                     android:textStyle="bold"
                     android:textColor="@color/blue_700"
@@ -502,7 +558,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• You can change these settings anytime"
+                    android:text="@string/privacy_tip_change_anytime"
                     android:textSize="12sp"
                     android:textColor="@color/blue_600"
                     android:layout_marginBottom="2dp" />
@@ -510,7 +566,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• Blocked users won't be notified"
+                    android:text="@string/privacy_tip_blocked_not_notified"
                     android:textSize="12sp"
                     android:textColor="@color/blue_600"
                     android:layout_marginBottom="2dp" />
@@ -518,7 +574,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="• Close friends list can be managed in Friends settings"
+                    android:text="@string/privacy_tip_close_friends_manage"
                     android:textSize="12sp"
                     android:textColor="@color/blue_600" />
 
