@@ -8,6 +8,8 @@
     <string name="battery_percent_65">65%</string>
     <string name="remove_energy">- Remove Energy</string>
     <string name="add_energy">+ Add Energy</string>
+    <string name="weekly_stats_message">This week: %1$d activities tracked</string>
+    <string name="weekly_stats_loading">Weekly stats loading...</string>
     <string name="app_name">Social Battery Manager</string>
     <string name="activities_title">Activities</string>
     <string name="activities_empty">No activities yet. Tap the + button to add one!</string>
