@@ -10,6 +10,8 @@ import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity() {
     
@@ -23,8 +25,20 @@ class MainActivity : AppCompatActivity() {
         preferencesManager = PreferencesManager(this)
         syncManager = SyncManager(this)
         
-        // Apply theme before setting content
-        applyTheme()
+        // Set initial theme before inflating the layout
+        runBlocking {
+            when (preferencesManager.themeFlow.first()) {
+                PreferencesManager.THEME_LIGHT -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                PreferencesManager.THEME_DARK -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                PreferencesManager.THEME_SYSTEM -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            }
+        }
         
         setContentView(R.layout.activity_main) // Fixed typo
 
@@ -41,7 +55,7 @@ class MainActivity : AppCompatActivity() {
         // Initialize sync
         initializeSync()
         
-        // Observe theme changes
+        // Observe theme changes for runtime updates
         observeThemeChanges()
     }
     
@@ -68,24 +82,6 @@ class MainActivity : AppCompatActivity() {
                     // User hasn't completed onboarding, navigate to onboarding if not already there
                     if (navController.currentDestination?.id != R.id.onboardingFragment) {
                         navController.navigate(R.id.onboardingFragment)
-                    }
-                }
-            }
-        }
-    }
-    
-    private fun applyTheme() {
-        lifecycleScope.launch {
-            preferencesManager.themeFlow.collect { theme ->
-                when (theme) {
-                    PreferencesManager.THEME_LIGHT -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                    }
-                    PreferencesManager.THEME_DARK -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                    }
-                    PreferencesManager.THEME_SYSTEM -> {
-                        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
                     }
                 }
             }
