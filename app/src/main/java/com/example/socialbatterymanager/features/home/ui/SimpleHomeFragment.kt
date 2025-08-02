@@ -100,7 +100,7 @@ class SimpleHomeFragment : Fragment() {
         lifecycleScope.launch {
             val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
             try {
-                val activityCount = database.activityDao().getActiveActivityCount()
+                val activityCount = database.activityDao().getActivitiesCountFromDate(weekStart)
                 tvWeeklyStats.text = getString(R.string.weekly_stats_message, activityCount)
             } catch (e: Exception) {
                 tvWeeklyStats.text = getString(R.string.weekly_stats_loading)
