@@ -7,6 +7,7 @@ import com.example.socialbatterymanager.data.model.NotificationType
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.first
 
 class NotificationService(private val context: Context) {
     
@@ -15,34 +16,37 @@ class NotificationService(private val context: Context) {
     
     fun generateSampleNotifications() {
         scope.launch {
-            // Check if we already have notifications
-            val existingNotifications = database.notificationDao().getAllNotifications()
-            
-            // Generate sample notifications
-            val notifications = listOf(
-                NotificationEntity(
-                    type = NotificationType.ENERGY_LOW.name,
-                    title = "Energy Running Low",
-                    message = "Your social energy is at 25%. Time to recharge!",
-                    timestamp = System.currentTimeMillis() - (2 * 60 * 1000) // 2 minutes ago
-                ),
-                NotificationEntity(
-                    type = NotificationType.BUSY_WEEK.name,
-                    title = "Busy Week Ahead",
-                    message = "You have 6 social activities scheduled. Plan recovery time!",
-                    timestamp = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
-                ),
-                NotificationEntity(
-                    type = NotificationType.RATE_ACTIVITY.name,
-                    title = "Rate Your Activity",
-                    message = "How was your team meeting? Help us track your energy better.",
-                    timestamp = System.currentTimeMillis() - (3 * 60 * 60 * 1000), // 3 hours ago
-                    activityId = 1 // Assuming there's an activity with ID 1
+            // Retrieve current notifications to avoid duplicate inserts
+            val existingNotifications =
+                database.notificationDao().getAllNotifications().first()
+
+            if (existingNotifications.isEmpty()) {
+                // Generate sample notifications only when none exist
+                val notifications = listOf(
+                    NotificationEntity(
+                        type = NotificationType.ENERGY_LOW.name,
+                        title = "Energy Running Low",
+                        message = "Your social energy is at 25%. Time to recharge!",
+                        timestamp = System.currentTimeMillis() - (2 * 60 * 1000) // 2 minutes ago
+                    ),
+                    NotificationEntity(
+                        type = NotificationType.BUSY_WEEK.name,
+                        title = "Busy Week Ahead",
+                        message = "You have 6 social activities scheduled. Plan recovery time!",
+                        timestamp = System.currentTimeMillis() - (60 * 60 * 1000) // 1 hour ago
+                    ),
+                    NotificationEntity(
+                        type = NotificationType.RATE_ACTIVITY.name,
+                        title = "Rate Your Activity",
+                        message = "How was your team meeting? Help us track your energy better.",
+                        timestamp = System.currentTimeMillis() - (3 * 60 * 60 * 1000), // 3 hours ago
+                        activityId = 1 // Assuming there's an activity with ID 1
+                    )
                 )
-            )
-            
-            notifications.forEach { notification ->
-                database.notificationDao().insertNotification(notification)
+
+                notifications.forEach { notification ->
+                    database.notificationDao().insertNotification(notification)
+                }
             }
         }
     }
