@@ -229,16 +229,17 @@ class HomeFragment : Fragment() {
         }
     }
 
-    private fun findPeakDay(): String {
+    private suspend fun findPeakDay(): String {
         val dayFormatter = SimpleDateFormat("EEEE", Locale.getDefault())
-        val calendar = Calendar.getInstance()
-        
-        // For demo purposes, return a day based on current day
-        val dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK)
-        return when (dayOfWeek) {
-            Calendar.SATURDAY, Calendar.SUNDAY -> "Saturday"
-            else -> "Friday"
-        }
+        val now = System.currentTimeMillis()
+        val weekStart = now - TimeUnit.DAYS.toMillis(7)
+
+        val activities = database.activityDao().getActivitiesByDateRangeSync(weekStart, now)
+        val countsByDay = activities.groupingBy { activity ->
+            dayFormatter.format(Date(activity.date))
+        }.eachCount()
+
+        return countsByDay.maxByOrNull { it.value }?.key ?: dayFormatter.format(Date())
     }
 
     private fun calculateRecoveryNeeded(avgEnergy: Int): Int {
