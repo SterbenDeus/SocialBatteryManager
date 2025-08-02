@@ -65,6 +65,7 @@ dependencies {
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.sqlite.framework)
     implementation("com.google.android.material:material:1.11.0")
+    implementation("androidx.cardview:cardview:1.0.0")
 
 
     // Room

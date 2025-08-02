@@ -11,7 +11,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ActivityDao {
     @Insert
-    suspend fun insertActivity(activity: ActivityEntity)
+    suspend fun insertActivity(activity: ActivityEntity): Long
     
     @Update
     suspend fun updateActivity(activity: ActivityEntity)
@@ -48,4 +48,10 @@ interface ActivityDao {
 
     @Query("SELECT * FROM activities WHERE date BETWEEN :start AND :end AND isDeleted = 0 ORDER BY date DESC")
     suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity>
+
+    @Query("SELECT COUNT(*) FROM activities WHERE date >= :fromDate AND isDeleted = 0")
+    suspend fun getActivitiesCountFromDate(fromDate: Long): Int
+
+    @Query("SELECT COALESCE(SUM(ABS(energy)), 0) FROM activities WHERE date >= :fromDate AND isDeleted = 0")
+    suspend fun getTotalEnergyUsedFromDate(fromDate: Long): Int
 }
