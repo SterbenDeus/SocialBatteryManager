@@ -96,6 +96,24 @@
     <string name="energy_recommendation_low">Energy running low. Take breaks and avoid high-stress activities.</string>
     <string name="energy_recommendation_very_low">Very low energy. Consider rescheduling non-essential activities.</string>
     <string name="energy_warning_planned_exceed">Warning: Planned activities exceed available energy (%1$.1fh vs %2$.1fh)</string>
+
+    <!-- Battery details -->
+    <string name="battery_details_title">Battery Details</string>
+    <string name="battery_details_message">Current Energy: %1$d%%
+Energy Level: %2$s
+
+Energy Ranges:
+• 100-80%%: High Energy
+• 79-60%%: Medium Energy
+• 59-30%%: Low Energy
+• 29-0%%: Recharge</string>
+
+    <!-- Energy tips -->
+    <string name="energy_tips_title">Energy Tips</string>
+    <string name="energy_tip_high">You're in great shape! Consider taking on social activities.</string>
+    <string name="energy_tip_medium">Good energy levels. Balance social time with some rest.</string>
+    <string name="energy_tip_low">Energy is getting low. Consider lighter social activities.</string>
+    <string name="energy_tip_recharge">Time to recharge! Take some alone time to restore your energy.</string>
     
     <!-- Weekly Forecast -->
     <string name="weekly_forecast_title">Weekly Forecast</string>
@@ -212,7 +230,6 @@
     <string name="survey_message">Take a quick survey to help us better understand your social energy patterns and improve your experience.</string>
     <string name="take_survey">Take Survey</string>
     <string name="later">Later</string>
-    <string name="survey_coming_soon">Survey feature coming soon!</string>
     <string name="sign_out_success">Signed out successfully</string>
     <string name="account_deleted_success">Account deleted successfully</string>
     <string name="battery_recalibrated_success">Battery recalibrated successfully</string>

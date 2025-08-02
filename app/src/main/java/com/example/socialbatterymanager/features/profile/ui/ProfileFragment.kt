@@ -157,9 +157,8 @@ class ProfileFragment : Fragment() {
             showRecalibrationDialog()
         }
 
-        surveyButton.setOnClickListener {
-            showSurveyDialog()
-        }
+        // Disable survey feature until implemented
+        surveyButton.isEnabled = false
 
         privacySettingsButton.setOnClickListener {
             findNavController().navigate(R.id.action_profileFragment_to_privacySettingsFragment)
@@ -353,18 +352,6 @@ class ProfileFragment : Fragment() {
                 performRecalibration()
             }
             .setNegativeButton(getString(R.string.cancel), null)
-            .show()
-    }
-
-    private fun showSurveyDialog() {
-        AlertDialog.Builder(requireContext())
-            .setTitle(getString(R.string.survey_title))
-            .setMessage(getString(R.string.survey_message))
-            .setPositiveButton(getString(R.string.take_survey)) { _, _ ->
-                // In a real app, this would open a survey activity or web view
-                Toast.makeText(requireContext(), getString(R.string.survey_coming_soon), Toast.LENGTH_SHORT).show()
-            }
-            .setNegativeButton(getString(R.string.later), null)
             .show()
     }
 

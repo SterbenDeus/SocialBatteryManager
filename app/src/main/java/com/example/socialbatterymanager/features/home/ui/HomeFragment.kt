@@ -263,15 +263,8 @@ class HomeFragment : Fragment() {
             dialog.show()
         }
 
-        btnPlanDay.setOnClickListener {
-            // Navigate to calendar or planning feature
-            // For now, show a simple message
-            AlertDialog.Builder(requireContext())
-                .setTitle("Plan Day")
-                .setMessage("Day planning feature coming soon!")
-                .setPositiveButton("OK", null)
-                .show()
-        }
+        // Disable unimplemented planning feature
+        btnPlanDay.isEnabled = false
 
         btnViewBattery.setOnClickListener {
             // Show detailed battery info
@@ -313,36 +306,31 @@ class HomeFragment : Fragment() {
     }
 
     private fun showBatteryDetails() {
-        val message = """
-            Current Energy: $currentEnergyLevel%
-            Energy Level: ${energyBatteryView.getEnergyLevelLabel()}
-            
-            Energy Ranges:
-            • 100-80%: High Energy
-            • 79-60%: Medium Energy  
-            • 59-30%: Low Energy
-            • 29-0%: Recharge
-        """.trimIndent()
-        
+        val message = getString(
+            R.string.battery_details_message,
+            currentEnergyLevel,
+            energyBatteryView.getEnergyLevelLabel()
+        )
+
         AlertDialog.Builder(requireContext())
-            .setTitle("Battery Details")
+            .setTitle(R.string.battery_details_title)
             .setMessage(message)
-            .setPositiveButton("OK", null)
+            .setPositiveButton(android.R.string.ok, null)
             .show()
     }
 
     private fun showEnergyTips() {
-        val tips = when {
-            currentEnergyLevel >= 80 -> "You're in great shape! Consider taking on social activities."
-            currentEnergyLevel >= 60 -> "Good energy levels. Balance social time with some rest."
-            currentEnergyLevel >= 30 -> "Energy is getting low. Consider lighter social activities."
-            else -> "Time to recharge! Take some alone time to restore your energy."
+        val tipsResId = when {
+            currentEnergyLevel >= 80 -> R.string.energy_tip_high
+            currentEnergyLevel >= 60 -> R.string.energy_tip_medium
+            currentEnergyLevel >= 30 -> R.string.energy_tip_low
+            else -> R.string.energy_tip_recharge
         }
-        
+
         AlertDialog.Builder(requireContext())
-            .setTitle("Energy Tips")
-            .setMessage(tips)
-            .setPositiveButton("OK", null)
+            .setTitle(R.string.energy_tips_title)
+            .setMessage(getString(tipsResId))
+            .setPositiveButton(android.R.string.ok, null)
             .show()
     }
 
