@@ -108,10 +108,57 @@
     <string name="mood_unknown">Mood: Unknown</string>
     <string name="activities_0">Activities: 0</string>
 
-    <!-- Reports strings -->
-    <string name="date">Date</string>
-    <string name="energy_0_0">Energy: 0.0</string>
-    <string name="mood_unknown">Mood: Unknown</string>
-    <string name="activities_0">Activities: 0</string>
+    <!-- Connectivity status messages -->
+    <string name="connection_wifi">Connected via Wi-Fi</string>
+    <string name="connection_mobile">Connected via Mobile Data</string>
+    <string name="connection_ethernet">Connected via Ethernet</string>
+    <string name="connection_none">Not connected</string>
+
+    <!-- Biometric availability messages -->
+    <string name="biometric_available_message">Biometric authentication available</string>
+    <string name="biometric_no_hardware">No biometric hardware available</string>
+    <string name="biometric_hw_unavailable">Biometric hardware unavailable</string>
+    <string name="biometric_none_enrolled">No biometric credentials enrolled</string>
+    <string name="biometric_security_update_required">Security update required</string>
+    <string name="biometric_unsupported">Biometric authentication not supported</string>
+    <string name="biometric_unknown_status">Unknown biometric status</string>
+    <string name="biometric_setup_message">Would you like to enable biometric authentication for secure access to your social battery data?</string>
+    <string name="yes">Yes</string>
+
+    <!-- Profile strings -->
+    <string name="permission_denied">Permission denied</string>
+    <string name="permission_access_photos">Permission needed to access photos</string>
+    <string name="choose_from_gallery">Choose from Gallery</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="cancel">Cancel</string>
+    <string name="select_image">Select Image</string>
+    <string name="default_user_name">John Doe</string>
+    <string name="default_user_email">john@example.com</string>
+    <string name="default_mood">neutral</string>
+    <string name="percent_format">%1$d%%</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="save_changes">Save Changes</string>
+    <string name="profile_updated_success">Profile updated successfully</string>
+    <string name="sign_out_title">Sign Out</string>
+    <string name="sign_out_message">Are you sure you want to sign out?</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="delete_account_title">Delete Account</string>
+    <string name="delete_account_message">Are you sure you want to delete your account? This action cannot be undone.</string>
+    <string name="delete">Delete</string>
+    <string name="battery_recalibration_title">Battery Recalibration</string>
+    <string name="battery_recalibration_message">This will reset your battery settings to default values and recalibrate based on your recent activity. Continue?</string>
+    <string name="recalibrate">Recalibrate</string>
+    <string name="survey_title">Social Battery Survey</string>
+    <string name="survey_message">Take a quick survey to help us better understand your social energy patterns and improve your experience.</string>
+    <string name="take_survey">Take Survey</string>
+    <string name="later">Later</string>
+    <string name="survey_coming_soon">Survey feature coming soon!</string>
+    <string name="sign_out_success">Signed out successfully</string>
+    <string name="account_deleted_success">Account deleted successfully</string>
+    <string name="battery_recalibrated_success">Battery recalibrated successfully</string>
+
+    <!-- Login strings -->
+    <string name="enter_email_password">Please enter email and password</string>
+    <string name="google_sign_in_failed">Google sign in failed: %1$s</string>
 
 </resources>

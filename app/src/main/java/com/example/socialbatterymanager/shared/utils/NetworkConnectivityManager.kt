@@ -8,6 +8,7 @@ import android.net.NetworkRequest
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import com.example.socialbatterymanager.R
 
 /**
  * Utility class for monitoring network connectivity
@@ -126,9 +127,9 @@ enum class ConnectionType {
  */
 fun ConnectionType.getMessage(context: Context): String {
     return when (this) {
-        ConnectionType.WIFI -> "Connected via Wi-Fi"
-        ConnectionType.MOBILE -> "Connected via Mobile Data"
-        ConnectionType.ETHERNET -> "Connected via Ethernet"
-        ConnectionType.NONE -> "Not connected"
+        ConnectionType.WIFI -> context.getString(R.string.connection_wifi)
+        ConnectionType.MOBILE -> context.getString(R.string.connection_mobile)
+        ConnectionType.ETHERNET -> context.getString(R.string.connection_ethernet)
+        ConnectionType.NONE -> context.getString(R.string.connection_none)
     }
 }
