@@ -70,16 +70,21 @@ class EditPersonDialog(
             etEmail.setText(it.email)
             etPhone.setText(it.phone)
             etNotes.setText(it.notes)
-            
-            // TODO: Load avatar image if available
+
             if (!it.avatarPath.isNullOrEmpty()) {
+                val uri = Uri.parse(it.avatarPath)
                 try {
-                    val uri = Uri.parse(it.avatarPath)
+                    // Ensure the file exists and is readable before displaying
+                    context.contentResolver.openInputStream(uri)?.use { }
                     ivAvatar.setImageURI(uri)
                     selectedImageUri = uri
                 } catch (e: Exception) {
-                    // If avatar can't be loaded, keep default
+                    // If avatar can't be loaded, fall back to placeholder image
+                    ivAvatar.setImageResource(R.drawable.ic_person)
+                    selectedImageUri = null
                 }
+            } else {
+                ivAvatar.setImageResource(R.drawable.ic_person)
             }
         }
 
