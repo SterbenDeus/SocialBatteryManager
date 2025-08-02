@@ -29,9 +29,6 @@ interface CalendarEventDao {
     @Query("SELECT * FROM calendar_events WHERE startTime >= :startTime AND startTime < :endTime ORDER BY startTime ASC")
     suspend fun getEventsForDay(startTime: Long, endTime: Long): List<CalendarEvent>
     
-    @Query("SELECT * FROM calendar_events WHERE source = :source")
-    suspend fun getEventsBySource(source: String): List<CalendarEvent>
-    
-    @Query("DELETE FROM calendar_events WHERE source = :source")
-    suspend fun deleteEventsBySource(source: String)
+    @Query("DELETE FROM calendar_events WHERE isImported = 1")
+    suspend fun deleteImportedEvents()
 }

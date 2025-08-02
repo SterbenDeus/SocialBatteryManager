@@ -11,7 +11,7 @@ data class CalendarEvent(
     val startTime: Long,
     val endTime: Long,
     val location: String = "",
-    val source: String = "", // "google", "teams", "manual"
+    val source: String = "", // "device" for imported events, "manual" for user-created
     val externalId: String = "", // ID from external calendar
     val isImported: Boolean = false
 )
