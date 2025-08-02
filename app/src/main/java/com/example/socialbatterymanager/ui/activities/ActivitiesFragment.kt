@@ -146,7 +146,8 @@ class ActivitiesFragment : Fragment() {
             .setPositiveButton(R.string.delete) { _, _ ->
                 lifecycleScope.launch {
                     try {
-                        database.activityDao().deleteActivity(activity.toEntity())
+                        val entity = activity.toEntity()
+                        database.activityDao().deleteActivity(entity)
                         Toast.makeText(
                             requireContext(),
                             getString(R.string.activity_delete_success),
