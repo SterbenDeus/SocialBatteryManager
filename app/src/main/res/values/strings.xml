@@ -35,11 +35,13 @@
     <string name="add_to_calendar">+ Create New Activity</string>
     <string name="import_events">Import Events</string>
     <string name="events_for_day">Events for Selected Day</string>
+    <string name="untitled_event">Untitled Event</string>
 
     <!-- People -->
     <string name="add_person">Add Person</string>
     <string name="edit_person">Edit Person</string>
     <string name="error_name_required">Name is required</string>
+    <string name="imported_from_contacts">Imported from contacts</string>
 
     <!-- Calendar messages -->
     <string name="event_label">Event: %1$s</string>
