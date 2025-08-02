@@ -97,7 +97,7 @@ class ProfileFragment : Fragment() {
         if (granted) {
             showImageSourceDialog()
         } else {
-            Toast.makeText(requireContext(), "Permission denied", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -165,7 +165,7 @@ class ProfileFragment : Fragment() {
 
         capacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                capacityText.text = "$progress%"
+                capacityText.text = getString(R.string.percent_format, progress)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -173,7 +173,7 @@ class ProfileFragment : Fragment() {
 
         warningSeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
             override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
-                warningText.text = "$progress%"
+                warningText.text = getString(R.string.percent_format, progress)
             }
             override fun onStartTrackingTouch(seekBar: SeekBar?) {}
             override fun onStopTrackingTouch(seekBar: SeekBar?) {}
@@ -189,7 +189,7 @@ class ProfileFragment : Fragment() {
                 showImageSourceDialog()
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
-                Toast.makeText(requireContext(), "Permission needed to access photos", Toast.LENGTH_LONG).show()
+                Toast.makeText(requireContext(), getString(R.string.permission_access_photos), Toast.LENGTH_LONG).show()
                 permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
             }
             else -> {
@@ -199,9 +199,13 @@ class ProfileFragment : Fragment() {
     }
 
     private fun showImageSourceDialog() {
-        val options = arrayOf("Choose from Gallery", "Take Photo", "Cancel")
+        val options = arrayOf(
+            getString(R.string.choose_from_gallery),
+            getString(R.string.take_photo),
+            getString(R.string.cancel)
+        )
         AlertDialog.Builder(requireContext())
-            .setTitle("Select Image")
+            .setTitle(getString(R.string.select_image))
             .setItems(options) { _, which ->
                 when (which) {
                     0 -> imagePickerLauncher.launch("image/*")
@@ -230,12 +234,12 @@ class ProfileFragment : Fragment() {
             requireContext().dataStore.data.map { preferences ->
                 User(
                     id = "1",
-                    name = preferences[NAME_KEY] ?: "John Doe",
-                    email = preferences[EMAIL_KEY] ?: "john@example.com",
+                    name = preferences[NAME_KEY] ?: getString(R.string.default_user_name),
+                    email = preferences[EMAIL_KEY] ?: getString(R.string.default_user_email),
                     photoUri = preferences[PHOTO_KEY],
                     batteryCapacity = preferences[CAPACITY_KEY] ?: 100,
                     warningLevel = preferences[WARNING_KEY] ?: 30,
-                    currentMood = preferences[MOOD_KEY] ?: "neutral",
+                    currentMood = preferences[MOOD_KEY] ?: getString(R.string.default_mood),
                     notificationsEnabled = preferences[NOTIFICATIONS_KEY] ?: true
                 )
             }.collect { user ->
@@ -250,9 +254,9 @@ class ProfileFragment : Fragment() {
             nameEditText.setText(user.name)
             emailEditText.setText(user.email)
             capacitySeekBar.progress = user.batteryCapacity
-            capacityText.text = "${user.batteryCapacity}%"
+            capacityText.text = getString(R.string.percent_format, user.batteryCapacity)
             warningSeekBar.progress = user.warningLevel
-            warningText.text = "${user.warningLevel}%"
+            warningText.text = getString(R.string.percent_format, user.warningLevel)
             notificationsSwitch.isChecked = user.notificationsEnabled
             
             user.photoUri?.let { uri ->
@@ -263,7 +267,7 @@ class ProfileFragment : Fragment() {
     }
 
     private fun toggleEditMode() {
-        val isEditMode = editProfileButton.text == "Edit Profile"
+        val isEditMode = editProfileButton.text == getString(R.string.edit_profile)
         
         if (isEditMode) {
             // Switch to edit mode
@@ -273,7 +277,7 @@ class ProfileFragment : Fragment() {
             warningSeekBar.isEnabled = true
             moodSpinner.isEnabled = true
             notificationsSwitch.isEnabled = true
-            editProfileButton.text = "Save Changes"
+            editProfileButton.text = getString(R.string.save_changes)
         } else {
             // Save changes and switch to view mode
             saveProfileChanges()
@@ -283,7 +287,7 @@ class ProfileFragment : Fragment() {
             warningSeekBar.isEnabled = false
             moodSpinner.isEnabled = false
             notificationsSwitch.isEnabled = false
-            editProfileButton.text = "Edit Profile"
+            editProfileButton.text = getString(R.string.edit_profile)
         }
     }
 
@@ -297,7 +301,7 @@ class ProfileFragment : Fragment() {
                 preferences[NOTIFICATIONS_KEY] = notificationsSwitch.isChecked
                 preferences[MOOD_KEY] = getMoodFromSpinner()
             }
-            Toast.makeText(requireContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.profile_updated_success), Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -311,51 +315,52 @@ class ProfileFragment : Fragment() {
 
     private fun getMoodFromSpinner(): String {
         val moods = resources.getStringArray(R.array.mood_options)
-        return moods.getOrNull(moodSpinner.selectedItemPosition)?.lowercase() ?: "neutral"
+        return moods.getOrNull(moodSpinner.selectedItemPosition)?.lowercase()
+            ?: getString(R.string.default_mood)
     }
 
     private fun showSignOutDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Sign Out")
-            .setMessage("Are you sure you want to sign out?")
-            .setPositiveButton("Sign Out") { _, _ ->
+            .setTitle(getString(R.string.sign_out_title))
+            .setMessage(getString(R.string.sign_out_message))
+            .setPositiveButton(getString(R.string.sign_out)) { _, _ ->
                 performSignOut()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun showDeleteAccountDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Delete Account")
-            .setMessage("Are you sure you want to delete your account? This action cannot be undone.")
-            .setPositiveButton("Delete") { _, _ ->
+            .setTitle(getString(R.string.delete_account_title))
+            .setMessage(getString(R.string.delete_account_message))
+            .setPositiveButton(getString(R.string.delete)) { _, _ ->
                 performDeleteAccount()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun showRecalibrationDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Battery Recalibration")
-            .setMessage("This will reset your battery settings to default values and recalibrate based on your recent activity. Continue?")
-            .setPositiveButton("Recalibrate") { _, _ ->
+            .setTitle(getString(R.string.battery_recalibration_title))
+            .setMessage(getString(R.string.battery_recalibration_message))
+            .setPositiveButton(getString(R.string.recalibrate)) { _, _ ->
                 performRecalibration()
             }
-            .setNegativeButton("Cancel", null)
+            .setNegativeButton(getString(R.string.cancel), null)
             .show()
     }
 
     private fun showSurveyDialog() {
         AlertDialog.Builder(requireContext())
-            .setTitle("Social Battery Survey")
-            .setMessage("Take a quick survey to help us better understand your social energy patterns and improve your experience.")
-            .setPositiveButton("Take Survey") { _, _ ->
+            .setTitle(getString(R.string.survey_title))
+            .setMessage(getString(R.string.survey_message))
+            .setPositiveButton(getString(R.string.take_survey)) { _, _ ->
                 // In a real app, this would open a survey activity or web view
-                Toast.makeText(requireContext(), "Survey feature coming soon!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireContext(), getString(R.string.survey_coming_soon), Toast.LENGTH_SHORT).show()
             }
-            .setNegativeButton("Later", null)
+            .setNegativeButton(getString(R.string.later), null)
             .show()
     }
 
@@ -364,7 +369,7 @@ class ProfileFragment : Fragment() {
             requireContext().dataStore.edit { preferences ->
                 preferences.clear()
             }
-            Toast.makeText(requireContext(), "Signed out successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.sign_out_success), Toast.LENGTH_SHORT).show()
             requireActivity().finish()
         }
     }
@@ -375,7 +380,7 @@ class ProfileFragment : Fragment() {
                 preferences.clear()
             }
             // In a real app, this would also delete from server/database
-            Toast.makeText(requireContext(), "Account deleted successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.account_deleted_success), Toast.LENGTH_SHORT).show()
             requireActivity().finish()
         }
     }
@@ -387,7 +392,7 @@ class ProfileFragment : Fragment() {
                 preferences[WARNING_KEY] = 30
             }
             loadUserProfile()
-            Toast.makeText(requireContext(), "Battery recalibrated successfully", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), getString(R.string.battery_recalibrated_success), Toast.LENGTH_SHORT).show()
         }
     }
 }

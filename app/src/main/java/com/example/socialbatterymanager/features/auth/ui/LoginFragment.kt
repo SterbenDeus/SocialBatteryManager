@@ -74,7 +74,7 @@ class LoginFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 userViewModel.signInWithEmailAndPassword(email, password)
             } else {
-                Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.enter_email_password), Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -85,7 +85,7 @@ class LoginFragment : Fragment() {
             if (email.isNotEmpty() && password.isNotEmpty()) {
                 userViewModel.signUpWithEmailAndPassword(email, password)
             } else {
-                Toast.makeText(context, "Please enter email and password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.enter_email_password), Toast.LENGTH_SHORT).show()
             }
         }
         
@@ -133,7 +133,7 @@ class LoginFragment : Fragment() {
                 val account = task.getResult(ApiException::class.java)!!
                 userViewModel.signInWithGoogle(account.idToken!!)
             } catch (e: ApiException) {
-                Toast.makeText(context, "Google sign in failed: ${e.message}", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, getString(R.string.google_sign_in_failed, e.message), Toast.LENGTH_SHORT).show()
             }
         }
     }

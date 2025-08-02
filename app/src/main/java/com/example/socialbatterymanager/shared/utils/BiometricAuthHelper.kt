@@ -98,12 +98,12 @@ enum class BiometricAvailability {
  */
 fun BiometricAvailability.getMessage(context: Context): String {
     return when (this) {
-        BiometricAvailability.AVAILABLE -> "Biometric authentication available"
-        BiometricAvailability.NO_HARDWARE -> "No biometric hardware available"
-        BiometricAvailability.HW_UNAVAILABLE -> "Biometric hardware unavailable"
-        BiometricAvailability.NONE_ENROLLED -> "No biometric credentials enrolled"
-        BiometricAvailability.SECURITY_UPDATE_REQUIRED -> "Security update required"
-        BiometricAvailability.UNSUPPORTED -> "Biometric authentication not supported"
-        BiometricAvailability.UNKNOWN -> "Unknown biometric status"
+        BiometricAvailability.AVAILABLE -> context.getString(R.string.biometric_available_message)
+        BiometricAvailability.NO_HARDWARE -> context.getString(R.string.biometric_no_hardware)
+        BiometricAvailability.HW_UNAVAILABLE -> context.getString(R.string.biometric_hw_unavailable)
+        BiometricAvailability.NONE_ENROLLED -> context.getString(R.string.biometric_none_enrolled)
+        BiometricAvailability.SECURITY_UPDATE_REQUIRED -> context.getString(R.string.biometric_security_update_required)
+        BiometricAvailability.UNSUPPORTED -> context.getString(R.string.biometric_unsupported)
+        BiometricAvailability.UNKNOWN -> context.getString(R.string.biometric_unknown_status)
     }
 }

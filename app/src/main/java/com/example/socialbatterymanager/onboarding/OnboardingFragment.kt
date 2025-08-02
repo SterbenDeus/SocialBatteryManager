@@ -93,11 +93,11 @@ class OnboardingFragment : Fragment() {
     private fun showBiometricSetupDialog() {
         val builder = androidx.appcompat.app.AlertDialog.Builder(requireContext())
         builder.setTitle(getString(R.string.biometric_title))
-        builder.setMessage("Would you like to enable biometric authentication for secure access to your social battery data?")
-        builder.setPositiveButton("Yes") { _, _ ->
+        builder.setMessage(getString(R.string.biometric_setup_message))
+        builder.setPositiveButton(getString(R.string.yes)) { _, _ ->
             setupBiometricAuthentication()
         }
-        builder.setNegativeButton("Skip") { _, _ ->
+        builder.setNegativeButton(getString(R.string.skip)) { _, _ ->
             finalizeOnboarding()
         }
         builder.setCancelable(false)
