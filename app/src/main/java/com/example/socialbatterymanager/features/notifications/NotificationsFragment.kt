@@ -12,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
@@ -83,16 +84,34 @@ class NotificationsFragment : Fragment() {
     private fun handleNotificationClick(notification: NotificationEntity) {
         when (NotificationType.valueOf(notification.type)) {
             NotificationType.ENERGY_LOW -> {
-                // Navigate to home or show energy tips
+                showEnergyTipsDialog()
                 markNotificationAsRead(notification)
             }
             NotificationType.BUSY_WEEK -> {
-                // Navigate to calendar or show week overview  
+                findNavController().navigate(R.id.calendarFragment)
                 markNotificationAsRead(notification)
             }
             NotificationType.RATE_ACTIVITY -> {
                 showRatingDialog(notification)
             }
+        }
+    }
+
+    private fun showEnergyTipsDialog() {
+        lifecycleScope.launch {
+            val latestEnergy = database.energyLogDao().getLatestEnergyLog()?.energyLevel ?: 50
+            val tipsResId = when {
+                latestEnergy >= 80 -> R.string.energy_tip_high
+                latestEnergy >= 60 -> R.string.energy_tip_medium
+                latestEnergy >= 30 -> R.string.energy_tip_low
+                else -> R.string.energy_tip_recharge
+            }
+
+            AlertDialog.Builder(requireContext())
+                .setTitle(R.string.energy_tips_title)
+                .setMessage(getString(tipsResId))
+                .setPositiveButton(android.R.string.ok, null)
+                .show()
         }
     }
 
