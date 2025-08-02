@@ -23,3 +23,9 @@
 # Keep data model classes used for Gson serialization and Firebase
 # to ensure fields are not stripped or obfuscated during minification.
 -keep class com.example.socialbatterymanager.data.model.** { *; }
+
+# Keep ViewModel subclasses that may be accessed via reflection
+-keep class com.example.socialbatterymanager.**ViewModel { *; }
+
+# Keep Worker implementations for WorkManager
+-keep class com.example.socialbatterymanager.sync.** { *; }
