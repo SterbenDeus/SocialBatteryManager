@@ -49,11 +49,11 @@ class SecurityManager private constructor(private val context: Context) {
             
             // Get the key and create a passphrase
             val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
-            val passphrase = android.util.Base64.encodeToString(secretKey.encoded, android.util.Base64.DEFAULT)
-            
+            val passphrase = android.util.Base64.encodeToString(secretKey.encoded, android.util.Base64.NO_WRAP)
+
             // Store the passphrase in encrypted preferences
             encryptedPrefs.edit().putString("db_passphrase", passphrase).apply()
-            
+
             passphrase
         } catch (e: Exception) {
             // Fallback to a simple generated passphrase
@@ -65,6 +65,8 @@ class SecurityManager private constructor(private val context: Context) {
     
     fun getDatabasePassphrase(): String? {
         return encryptedPrefs.getString("db_passphrase", null)
+            ?.replace("\n", "")
+            ?.replace("\r", "")
     }
     
     fun isEncryptionEnabled(): Boolean {

@@ -1,5 +1,6 @@
 package com.example.socialbatterymanager.features.energy
 
+import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.data.model.CalendarActivityEvent
 import com.example.socialbatterymanager.data.model.EnergyLog
@@ -108,6 +109,8 @@ class EnergyManager {
      * Create sample data for today to demonstrate the energy tracking
      */
     fun createSampleTodayData(): List<CalendarEvent> {
+        if (!BuildConfig.DEBUG) return emptyList()
+
         val todayStart = getTodayStart()
         val sampleEvents = listOf(
             CalendarEvent(
@@ -135,7 +138,7 @@ class EnergyManager {
                 source = "outlook"
             )
         )
-        
+
         return sampleEvents
     }
     

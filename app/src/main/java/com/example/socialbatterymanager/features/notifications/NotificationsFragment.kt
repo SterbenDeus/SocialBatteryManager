@@ -9,7 +9,9 @@ import android.widget.Button
 import android.widget.SeekBar
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
@@ -62,15 +64,17 @@ class NotificationsFragment : Fragment() {
     }
 
     private fun loadNotifications() {
-        lifecycleScope.launch {
-            database.notificationDao().getAllNotifications().collect { notifications ->
-                if (notifications.isEmpty()) {
-                    tvNoNotifications.visibility = View.VISIBLE
-                    recyclerViewNotifications.visibility = View.GONE
-                } else {
-                    tvNoNotifications.visibility = View.GONE
-                    recyclerViewNotifications.visibility = View.VISIBLE
-                    notificationAdapter.submitList(notifications)
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                database.notificationDao().getAllNotifications().collect { notifications ->
+                    if (notifications.isEmpty()) {
+                        tvNoNotifications.visibility = View.VISIBLE
+                        recyclerViewNotifications.visibility = View.GONE
+                    } else {
+                        tvNoNotifications.visibility = View.GONE
+                        recyclerViewNotifications.visibility = View.VISIBLE
+                        notificationAdapter.submitList(notifications)
+                    }
                 }
             }
         }

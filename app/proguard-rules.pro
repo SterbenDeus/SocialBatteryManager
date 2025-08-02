@@ -19,3 +19,7 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+
+# Keep data model classes used for Gson serialization and Firebase
+# to ensure fields are not stripped or obfuscated during minification.
+-keep class com.example.socialbatterymanager.data.model.** { *; }
