@@ -14,7 +14,7 @@ class ContactsImporter(private val context: Context) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
             != PackageManager.PERMISSION_GRANTED
         ) {
-            throw SecurityException("READ_CONTACTS permission not granted")
+            return emptyList()
         }
 
         val contacts = mutableListOf<Person>()
