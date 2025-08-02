@@ -23,6 +23,27 @@
     <string name="add_to_calendar">+ Create New Activity</string>
     <string name="import_events">Import Events</string>
     <string name="events_for_day">Events for Selected Day</string>
+
+    <!-- People -->
+    <string name="add_person">Add Person</string>
+    <string name="edit_person">Edit Person</string>
+    <string name="error_name_required">Name is required</string>
+
+    <!-- Calendar messages -->
+    <string name="event_label">Event: %1$s</string>
+    <string name="activity_scheduled_success">Activity '%1$s' scheduled successfully!</string>
+    <string name="error_creating_activity">Error creating activity: %1$s</string>
+    <string name="sample_event_meeting_title">New Meeting</string>
+    <string name="sample_event_meeting_description">Newly created meeting</string>
+    <string name="sample_event_meeting_location">Conference Room</string>
+    <string name="event_created">Event created!</string>
+    <string name="sample_activity_coffee_title">Coffee Break</string>
+    <string name="sample_activity_coffee_description">Quick coffee with colleague</string>
+    <string name="sample_activity_coffee_location">Cafe</string>
+    <string name="activity_added">Activity added!</string>
+    <string name="imported_events">Imported %1$d events</string>
+    <string name="error_importing_events">Error importing events: %1$s</string>
+    <string name="calendar_permission_denied_import">Calendar permission denied. Cannot import events.</string>
     
 
     <!-- Energy Level Labels -->

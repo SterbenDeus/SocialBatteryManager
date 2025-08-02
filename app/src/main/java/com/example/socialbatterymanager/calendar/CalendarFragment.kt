@@ -99,7 +99,11 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         // Setup RecyclerView
         calendarAdapter = CalendarAdapter { event ->
             // Handle event click
-            Toast.makeText(requireContext(), "Event: ${event.title}", Toast.LENGTH_SHORT).show()
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.event_label, event.title),
+                Toast.LENGTH_SHORT
+            ).show()
         }
         
         eventsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
@@ -194,14 +198,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                     
                     Toast.makeText(
                         requireContext(),
-                        "Activity '${activity.name}' scheduled successfully!",
+                        getString(R.string.activity_scheduled_success, activity.name),
                         Toast.LENGTH_SHORT
                     ).show()
                     
                 } catch (e: Exception) {
                     Toast.makeText(
                         requireContext(),
-                        "Error creating activity: ${e.message}",
+                        getString(R.string.error_creating_activity, e.message),
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -209,7 +213,6 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         }
         dialog.show(parentFragmentManager, "CreateNewActivityDialog")
     }
-
     
     private fun requestCalendarPermissionAndImport() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) 
@@ -231,14 +234,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 val importedEvents = calendarIntegration.importDeviceCalendarEvents()
                 loadEventsForSelectedDate()
                 Toast.makeText(
-                    requireContext(), 
-                    "Imported ${importedEvents.size} events", 
+                    requireContext(),
+                    getString(R.string.imported_events, importedEvents.size),
                     Toast.LENGTH_SHORT
                 ).show()
             } catch (e: Exception) {
                 Toast.makeText(
-                    requireContext(), 
-                    "Error importing events: ${e.message}", 
+                    requireContext(),
+                    getString(R.string.error_importing_events, e.message),
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -268,8 +271,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 importCalendarEvents()
             } else {
                 Toast.makeText(
-                    requireContext(), 
-                    "Calendar permission denied. Cannot import events.", 
+                    requireContext(),
+                    getString(R.string.calendar_permission_denied_import),
                     Toast.LENGTH_SHORT
                 ).show()
             }

@@ -96,7 +96,13 @@ class EditPersonDialog(
         }
 
         dialog = AlertDialog.Builder(context)
-            .setTitle(if (person == null) "Add Person" else "Edit Person")
+            .setTitle(
+                if (person == null) {
+                    context.getString(R.string.add_person)
+                } else {
+                    context.getString(R.string.edit_person)
+                }
+            )
             .setView(view)
             .create()
             
@@ -112,7 +118,7 @@ class EditPersonDialog(
     private fun savePerson() {
         val name = etName.text.toString().trim()
         if (name.isEmpty()) {
-            etName.error = "Name is required"
+            etName.error = context.getString(R.string.error_name_required)
             return
         }
 
