@@ -107,8 +107,8 @@ object ErrorHandler {
             is java.net.UnknownHostException,
             is java.net.SocketTimeoutException,
             is java.net.ConnectException -> context.getString(R.string.error_network)
-            is SecurityException -> "Permission denied"
-            is IllegalArgumentException -> "Invalid input"
+            is SecurityException -> context.getString(R.string.permission_denied)
+            is IllegalArgumentException -> context.getString(R.string.invalid_input)
             else -> context.getString(R.string.error_general)
         }
         

@@ -143,10 +143,10 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         
         // Update energy dashboard
         energyProgressBar.progress = energyState.currentEnergyLevel
-        tvEnergyPercentage.text = "${energyState.currentEnergyLevel}%"
-        tvRemainingHours.text = String.format("%.1fh", energyState.remainingHours)
+        tvEnergyPercentage.text = getString(R.string.percent_format, energyState.currentEnergyLevel)
+        tvRemainingHours.text = getString(R.string.hours_format, energyState.remainingHours)
         tvActivitiesCount.text = energyState.activitiesCount.toString()
-        tvPlannedHours.text = String.format("%.1fh", energyState.plannedHours)
+        tvPlannedHours.text = getString(R.string.hours_format, energyState.plannedHours)
     }
     
     private fun loadEventsForSelectedDate() {
