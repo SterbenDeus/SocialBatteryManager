@@ -6,10 +6,11 @@ This document describes the calendar functionality implemented for the Social Ba
 
 The calendar feature allows users to:
 - View events in a calendar interface
-- Import events from device calendar (Google, Teams, Outlook)
+- Import events from the device calendar
 - Create manual events
 - Store events locally in Room database
 - View events for selected dates
+- Direct integrations with Google Calendar and Microsoft Teams are not yet implemented
 
 ## Files Implemented
 
@@ -47,8 +48,8 @@ The calendar feature allows users to:
 ### 3. Event Import
 - Device calendar integration
 - Permission handling for READ_CALENDAR
-- Support for Google, Teams, Outlook calendars
-- Source detection based on calendar name
+- Source detection for Google, Teams, Outlook calendars based on calendar name
+- Direct API integrations for Google Calendar and Microsoft Teams are not yet available
 
 ### 4. Event Display
 - RecyclerView showing events for selected date

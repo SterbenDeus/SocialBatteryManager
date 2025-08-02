@@ -7,8 +7,13 @@ import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.data.model.CalendarEventDao
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import java.util.Calendar
 
+/**
+ * Handles interactions with the user's calendars.
+ *
+ * Only events available on the device's calendar can be imported. Direct API
+ * integrations for Google Calendar or Microsoft Teams are not implemented.
+ */
 class CalendarIntegration(
     private val context: Context,
     private val calendarEventDao: CalendarEventDao
@@ -79,32 +84,6 @@ class CalendarIntegration(
         }
         
         events
-    }
-    
-    /**
-     * Placeholder for Google Calendar integration.
-     *
-     * Returns an empty list until a real API integration is provided.
-     */
-    suspend fun importGoogleCalendarEvents(): List<CalendarEvent> = withContext(Dispatchers.IO) {
-        Log.i(
-            "CalendarIntegration",
-            "Google Calendar integration not available; returning empty list."
-        )
-        emptyList()
-    }
-
-    /**
-     * Placeholder for Microsoft Teams calendar integration.
-     *
-     * Returns an empty list until a real API integration is provided.
-     */
-    suspend fun importTeamsCalendarEvents(): List<CalendarEvent> = withContext(Dispatchers.IO) {
-        Log.i(
-            "CalendarIntegration",
-            "Microsoft Teams calendar integration not available; returning empty list."
-        )
-        emptyList()
     }
     
     suspend fun createManualEvent(
