@@ -15,7 +15,7 @@ enum class VisibilityLevel {
 }
 
 object PrivacyManager {
-    
+
     fun canViewSocialEnergy(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
         return when (privacySettings.socialEnergyVisibility) {
             VisibilityLevel.EVERYONE -> true
@@ -24,7 +24,7 @@ object PrivacyManager {
             VisibilityLevel.PRIVATE -> false
         }
     }
-    
+
     fun canViewMood(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
         return when (privacySettings.moodVisibility) {
             VisibilityLevel.EVERYONE -> true
@@ -33,7 +33,7 @@ object PrivacyManager {
             VisibilityLevel.PRIVATE -> false
         }
     }
-    
+
     fun canViewActivity(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
         return when (privacySettings.activityVisibility) {
             VisibilityLevel.EVERYONE -> true
@@ -42,7 +42,7 @@ object PrivacyManager {
             VisibilityLevel.PRIVATE -> false
         }
     }
-    
+
     fun canViewProfile(viewerLabel: PersonLabel, privacySettings: PrivacySettings): Boolean {
         return when (privacySettings.profileVisibility) {
             VisibilityLevel.EVERYONE -> true

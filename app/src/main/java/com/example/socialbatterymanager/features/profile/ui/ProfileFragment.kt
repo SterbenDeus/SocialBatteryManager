@@ -31,6 +31,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.User
 import kotlinx.coroutines.flow.map
@@ -55,6 +56,7 @@ class ProfileFragment : Fragment() {
     private lateinit var deleteAccountButton: Button
     private lateinit var recalibrationButton: Button
     private lateinit var surveyButton: Button
+    private lateinit var privacySettingsButton: Button
 
     private var currentUser: User? = null
     private var selectedImageUri: Uri? = null
@@ -129,6 +131,7 @@ class ProfileFragment : Fragment() {
         deleteAccountButton = view.findViewById(R.id.deleteAccountButton)
         recalibrationButton = view.findViewById(R.id.recalibrationButton)
         surveyButton = view.findViewById(R.id.surveyButton)
+        privacySettingsButton = view.findViewById(R.id.privacySettingsButton)
     }
 
     private fun setupClickListeners() {
@@ -154,6 +157,10 @@ class ProfileFragment : Fragment() {
 
         surveyButton.setOnClickListener {
             showSurveyDialog()
+        }
+
+        privacySettingsButton.setOnClickListener {
+            findNavController().navigate(R.id.action_profileFragment_to_privacySettingsFragment)
         }
 
         capacitySeekBar.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
