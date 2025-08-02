@@ -24,6 +24,7 @@ import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.EnergyLog
 import com.example.socialbatterymanager.notification.EnergyReminderWorker
+import com.example.socialbatterymanager.BuildConfig
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -263,8 +264,12 @@ class HomeFragment : Fragment() {
             dialog.show()
         }
 
-        // Disable unimplemented planning feature
-        btnPlanDay.isEnabled = false
+        // Hide planning feature in release builds until implemented
+        if (!BuildConfig.DEBUG) {
+            btnPlanDay.visibility = View.GONE
+        } else {
+            btnPlanDay.isEnabled = false
+        }
 
         btnViewBattery.setOnClickListener {
             // Show detailed battery info

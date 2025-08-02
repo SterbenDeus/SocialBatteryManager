@@ -138,6 +138,9 @@ Energy Ranges:
     <string name="average_energy">Average Energy</string>
     <string name="peak_day">Peak Day</string>
     <string name="recovery_needed">Recovery Needed</string>
+
+    <!-- Day Planning -->
+    <string name="plan_day">📅 Plan Day</string>
     
     <!-- Mood Options -->
     <string-array name="mood_options">
