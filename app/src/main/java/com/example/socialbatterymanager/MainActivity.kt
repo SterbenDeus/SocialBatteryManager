@@ -1,6 +1,7 @@
 package com.example.socialbatterymanager
 
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.lifecycle.lifecycleScope
@@ -65,7 +66,8 @@ class MainActivity : AppCompatActivity() {
                 syncManager.schedulePeriodicSync()
             } catch (e: Exception) {
                 // Handle sync initialization error
-                e.printStackTrace()
+                Log.e("MainActivity", "Failed to schedule periodic sync", e)
+                // TODO: Forward to crash-reporting service
             }
         }
     }
