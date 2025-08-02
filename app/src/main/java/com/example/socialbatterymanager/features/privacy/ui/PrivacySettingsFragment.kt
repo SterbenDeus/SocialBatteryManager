@@ -26,6 +26,7 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.BlockedUser
 import com.example.socialbatterymanager.data.model.PrivacySettings
 import com.example.socialbatterymanager.data.model.VisibilityLevel
+import com.example.socialbatterymanager.features.auth.data.AuthRepository
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 
@@ -49,6 +50,7 @@ class PrivacySettingsFragment : Fragment() {
     private var currentPrivacySettings: PrivacySettings? = null
     private val blockedUsers = mutableListOf<BlockedUser>()
     private lateinit var blockedUsersAdapter: BlockedUsersAdapter
+    private val authRepository = AuthRepository()
 
     // DataStore keys
     private val VISIBILITY_LEVEL_KEY = stringPreferencesKey("visibility_level")
@@ -56,6 +58,7 @@ class PrivacySettingsFragment : Fragment() {
     private val ENERGY_LEVEL_ENABLED_KEY = booleanPreferencesKey("energy_level_enabled")
     private val ACTIVITY_PATTERNS_ENABLED_KEY = booleanPreferencesKey("activity_patterns_enabled")
     private val BLOCKED_USERS_KEY = stringPreferencesKey("blocked_users_json")
+    private val USER_ID_KEY = stringPreferencesKey("user_id")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -121,8 +124,9 @@ class PrivacySettingsFragment : Fragment() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 requireContext().privacyDataStore.data.map { preferences ->
+                    val userId = authRepository.currentUser?.uid ?: ""
                     PrivacySettings(
-                        userId = "current_user", // In real app, get from auth
+                        userId = userId,
                         moodVisibilityLevel = VisibilityLevel.valueOf(
                             preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
                         ),
@@ -157,6 +161,7 @@ class PrivacySettingsFragment : Fragment() {
 
     private fun savePrivacySettings() {
         lifecycleScope.launch {
+            val userId = authRepository.currentUser?.uid ?: return@launch
             val visibilityLevel = when {
                 everyoneRadioButton.isChecked -> VisibilityLevel.EVERYONE
                 friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS_ONLY
@@ -166,11 +171,20 @@ class PrivacySettingsFragment : Fragment() {
             }
 
             requireContext().privacyDataStore.edit { preferences ->
+                preferences[USER_ID_KEY] = userId
                 preferences[VISIBILITY_LEVEL_KEY] = visibilityLevel.name
                 preferences[MOOD_STATUS_ENABLED_KEY] = moodStatusSwitch.isChecked
                 preferences[ENERGY_LEVEL_ENABLED_KEY] = energyLevelSwitch.isChecked
                 preferences[ACTIVITY_PATTERNS_ENABLED_KEY] = activityPatternsSwitch.isChecked
             }
+
+            currentPrivacySettings = PrivacySettings(
+                userId = userId,
+                moodVisibilityLevel = visibilityLevel,
+                moodStatusEnabled = moodStatusSwitch.isChecked,
+                energyLevelEnabled = energyLevelSwitch.isChecked,
+                activityPatternsEnabled = activityPatternsSwitch.isChecked
+            )
 
             Toast.makeText(
                 requireContext(),
@@ -224,8 +238,9 @@ class PrivacySettingsFragment : Fragment() {
     }
 
     private fun addBlockedUser(name: String, email: String) {
+        val userId = authRepository.currentUser?.uid ?: return
         val blockedUser = BlockedUser(
-            userId = "current_user",
+            userId = userId,
             blockedUserId = email.ifEmpty { "user_${System.currentTimeMillis()}" },
             blockedUserName = name,
             blockedUserEmail = email.ifEmpty { null }
@@ -234,7 +249,7 @@ class PrivacySettingsFragment : Fragment() {
         blockedUsers.add(blockedUser)
         blockedUsersAdapter.notifyItemInserted(blockedUsers.size - 1)
         
-        // In real app, save to database
+        // In real app, save to database for this user
         Toast.makeText(
             requireContext(),
             getString(R.string.blocked_user_added, name),
@@ -243,12 +258,15 @@ class PrivacySettingsFragment : Fragment() {
     }
 
     private fun removeBlockedUser(blockedUser: BlockedUser) {
-        val position = blockedUsers.indexOf(blockedUser)
+        val userId = authRepository.currentUser?.uid ?: return
+        val position = blockedUsers.indexOfFirst {
+            it.blockedUserId == blockedUser.blockedUserId && it.userId == userId
+        }
         if (position != -1) {
             blockedUsers.removeAt(position)
             blockedUsersAdapter.notifyItemRemoved(position)
-            
-            // In real app, remove from database
+
+            // In real app, remove from database for this user
             Toast.makeText(
                 requireContext(),
                 getString(
