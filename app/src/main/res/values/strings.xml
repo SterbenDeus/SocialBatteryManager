@@ -205,4 +205,12 @@
     <string name="enter_email_password">Please enter email and password</string>
     <string name="google_sign_in_failed">Google sign in failed: %1$s</string>
 
+    <!-- Requirements feature strings -->
+    <string name="requirements_enter_prompt">Please enter requirements</string>
+    <string name="requirements_generating">Generating...</string>
+    <string name="requirements_generate_code">Generate Code</string>
+    <string name="requirements_generate_success">Code generated successfully!</string>
+    <string name="requirements_error">Error: %1$s</string>
+    <string name="requirements_assess_complexity">Assess Complexity</string>
+
 </resources>

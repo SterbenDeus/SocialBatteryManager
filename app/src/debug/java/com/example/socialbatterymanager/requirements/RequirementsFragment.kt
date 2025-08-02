@@ -12,8 +12,9 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.requirements.RequirementsWebInterface
 import com.example.requirements.ComplexityLevel
+import com.example.socialbatterymanager.BuildConfig
+import com.example.socialbatterymanager.R
 import kotlinx.coroutines.launch
-import java.io.File
 
 
 /**
@@ -50,8 +51,10 @@ class RequirementsFragment : Fragment() {
         resultText = view.findViewById(R.id.resultText)
         complexityText = view.findViewById(R.id.complexityText)
         
-        // Load a sample requirement
-        loadSampleRequirement()
+        if (BuildConfig.DEBUG) {
+            // Load a sample requirement in debug builds
+            loadSampleRequirement()
+        }
     }
     
     private fun setupClickListeners() {
@@ -101,12 +104,12 @@ class RequirementsFragment : Fragment() {
         val requirements = requirementsInput.text.toString()
         
         if (requirements.isBlank()) {
-            Toast.makeText(context, "Please enter requirements", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.requirements_enter_prompt), Toast.LENGTH_SHORT).show()
             return
         }
         
         generateButton.isEnabled = false
-        generateButton.text = "Generating..."
+        generateButton.text = getString(R.string.requirements_generating)
         
         lifecycleScope.launch {
             try {
@@ -118,14 +121,14 @@ class RequirementsFragment : Fragment() {
                 if (result.success) {
                     displayResults(result)
                 } else {
-                    resultText.text = "Error: ${result.message}"
+                    resultText.text = getString(R.string.requirements_error, result.message)
                 }
                 
             } catch (e: Exception) {
-                resultText.text = "Error: ${e.message}"
+                resultText.text = getString(R.string.requirements_error, e.message)
             } finally {
                 generateButton.isEnabled = true
-                generateButton.text = "Generate Code"
+                generateButton.text = getString(R.string.requirements_generate_code)
             }
         }
     }
@@ -134,7 +137,7 @@ class RequirementsFragment : Fragment() {
         val requirements = requirementsInput.text.toString()
         
         if (requirements.isBlank()) {
-            Toast.makeText(context, "Please enter requirements", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, getString(R.string.requirements_enter_prompt), Toast.LENGTH_SHORT).show()
             return
         }
         
@@ -184,7 +187,7 @@ class RequirementsFragment : Fragment() {
         resultText.text = output.toString()
         
         // Show success message
-        Toast.makeText(context, "Code generated successfully!", Toast.LENGTH_LONG).show()
+        Toast.makeText(context, getString(R.string.requirements_generate_success), Toast.LENGTH_LONG).show()
     }
     
     companion object {
