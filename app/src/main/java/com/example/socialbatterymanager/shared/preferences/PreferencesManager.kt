@@ -11,6 +11,7 @@ import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import java.io.IOException
 
 private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "app_preferences")
 
@@ -44,7 +45,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[THEME_KEY] ?: THEME_SYSTEM
         }
-        .catch { emit(THEME_SYSTEM) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(THEME_SYSTEM)
+            } else {
+                throw e
+            }
+        }
     
     /**
      * Emits whether onboarding is completed. Defaults to `false` on errors.
@@ -53,7 +60,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[ONBOARDING_COMPLETED_KEY] ?: false
         }
-        .catch { emit(false) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(false)
+            } else {
+                throw e
+            }
+        }
     
     /**
      * Emits the biometric preference, defaulting to `false` when reading fails.
@@ -62,7 +75,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[BIOMETRIC_ENABLED_KEY] ?: false
         }
-        .catch { emit(false) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(false)
+            } else {
+                throw e
+            }
+        }
     
     /**
      * Emits notification setting, defaulting to `true` on errors.
@@ -71,7 +90,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[NOTIFICATIONS_ENABLED_KEY] ?: true
         }
-        .catch { emit(true) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(true)
+            } else {
+                throw e
+            }
+        }
     
     /**
      * Emits sync setting, defaulting to `true` on errors.
@@ -80,7 +105,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[SYNC_ENABLED_KEY] ?: true
         }
-        .catch { emit(true) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(true)
+            } else {
+                throw e
+            }
+        }
     
     /**
      * Emits notification threshold, defaulting to `25` on errors.
@@ -89,7 +120,13 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         .map { preferences ->
             preferences[BATTERY_NOTIFICATION_THRESHOLD_KEY] ?: 25
         }
-        .catch { emit(25) }
+        .catch { e ->
+            if (e is IOException) {
+                emit(25)
+            } else {
+                throw e
+            }
+        }
     
     suspend fun setTheme(theme: String) {
         dataStore.edit { preferences ->

@@ -11,9 +11,11 @@ import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
+import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
     
@@ -28,17 +30,35 @@ class MainActivity : AppCompatActivity() {
         syncManager = SyncManager(this)
         
         // Set initial theme before inflating the layout
-        runBlocking {
-            when (preferencesManager.themeFlow.first()) {
-                PreferencesManager.THEME_LIGHT -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                }
-                PreferencesManager.THEME_DARK -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                }
-                PreferencesManager.THEME_SYSTEM -> {
-                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-                }
+        val initialTheme = try {
+            runBlocking {
+                preferencesManager.themeFlow
+                    .catch { e ->
+                        if (e is IOException) {
+                            emit(PreferencesManager.THEME_SYSTEM)
+                        } else {
+                            throw e
+                        }
+                    }
+                    .first()
+            }
+        } catch (e: Exception) {
+            Log.e("MainActivity", "Failed to load theme preference", e)
+            FirebaseCrashlytics.getInstance().recordException(
+                RuntimeException("Failed to load theme preference", e)
+            )
+            PreferencesManager.THEME_SYSTEM
+        }
+
+        when (initialTheme) {
+            PreferencesManager.THEME_LIGHT -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
+            PreferencesManager.THEME_DARK -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            }
+            PreferencesManager.THEME_SYSTEM -> {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
             }
         }
         
@@ -77,43 +97,59 @@ class MainActivity : AppCompatActivity() {
     
     private fun checkOnboardingStatus(navController: androidx.navigation.NavController) {
         lifecycleScope.launch {
-            preferencesManager.onboardingCompletedFlow.collect { completed ->
-                if (completed) {
-                    // User has completed onboarding, navigate to home if currently on onboarding
-                    if (navController.currentDestination?.id == R.id.onboardingFragment) {
-                        navController.navigate(R.id.action_onboarding_to_home)
-                    }
-                } else {
-                    // User hasn't completed onboarding, navigate to onboarding if not already there
-                    if (navController.currentDestination?.id != R.id.onboardingFragment) {
-                        navController.navigate(R.id.onboardingFragment)
+            preferencesManager.onboardingCompletedFlow
+                .catch { e ->
+                    if (e is IOException) {
+                        emit(false)
+                    } else {
+                        throw e
                     }
                 }
-            }
+                .collect { completed ->
+                    if (completed) {
+                        // User has completed onboarding, navigate to home if currently on onboarding
+                        if (navController.currentDestination?.id == R.id.onboardingFragment) {
+                            navController.navigate(R.id.action_onboarding_to_home)
+                        }
+                    } else {
+                        // User hasn't completed onboarding, navigate to onboarding if not already there
+                        if (navController.currentDestination?.id != R.id.onboardingFragment) {
+                            navController.navigate(R.id.onboardingFragment)
+                        }
+                    }
+                }
         }
     }
     
     private fun observeThemeChanges() {
         lifecycleScope.launch {
-            preferencesManager.themeFlow.collect { theme ->
-                when (theme) {
-                    PreferencesManager.THEME_LIGHT -> {
-                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                        }
+            preferencesManager.themeFlow
+                .catch { e ->
+                    if (e is IOException) {
+                        emit(PreferencesManager.THEME_SYSTEM)
+                    } else {
+                        throw e
                     }
-                    PreferencesManager.THEME_DARK -> {
-                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                .collect { theme ->
+                    when (theme) {
+                        PreferencesManager.THEME_LIGHT -> {
+                            if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_NO) {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                            }
                         }
-                    }
-                    PreferencesManager.THEME_SYSTEM -> {
-                        if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
-                            AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                        PreferencesManager.THEME_DARK -> {
+                            if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_YES) {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                            }
+                        }
+                        PreferencesManager.THEME_SYSTEM -> {
+                            if (AppCompatDelegate.getDefaultNightMode() != AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM) {
+                                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                            }
                         }
                     }
                 }
-            }
         }
     }
 }
