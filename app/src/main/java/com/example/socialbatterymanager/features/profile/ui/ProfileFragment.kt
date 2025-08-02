@@ -29,8 +29,10 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.User
@@ -230,21 +232,23 @@ class ProfileFragment : Fragment() {
     }
 
     private fun loadUserProfile() {
-        lifecycleScope.launch {
-            requireContext().dataStore.data.map { preferences ->
-                User(
-                    id = "1",
-                    name = preferences[NAME_KEY] ?: getString(R.string.default_user_name),
-                    email = preferences[EMAIL_KEY] ?: getString(R.string.default_user_email),
-                    photoUri = preferences[PHOTO_KEY],
-                    batteryCapacity = preferences[CAPACITY_KEY] ?: 100,
-                    warningLevel = preferences[WARNING_KEY] ?: 30,
-                    currentMood = preferences[MOOD_KEY] ?: getString(R.string.default_mood),
-                    notificationsEnabled = preferences[NOTIFICATIONS_KEY] ?: true
-                )
-            }.collect { user ->
-                currentUser = user
-                updateUI()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                requireContext().dataStore.data.map { preferences ->
+                    User(
+                        id = "1",
+                        name = preferences[NAME_KEY] ?: getString(R.string.default_user_name),
+                        email = preferences[EMAIL_KEY] ?: getString(R.string.default_user_email),
+                        photoUri = preferences[PHOTO_KEY],
+                        batteryCapacity = preferences[CAPACITY_KEY] ?: 100,
+                        warningLevel = preferences[WARNING_KEY] ?: 30,
+                        currentMood = preferences[MOOD_KEY] ?: getString(R.string.default_mood),
+                        notificationsEnabled = preferences[NOTIFICATIONS_KEY] ?: true
+                    )
+                }.collect { user ->
+                    currentUser = user
+                    updateUI()
+                }
             }
         }
     }

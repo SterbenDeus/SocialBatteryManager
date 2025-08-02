@@ -12,8 +12,10 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
@@ -114,34 +116,35 @@ class PeopleFragment : Fragment() {
     }
 
     private fun observeViewModel() {
-        lifecycleScope.launch {
-            viewModel.people.collect { people ->
-                adapter.submitList(people)
-                updateContactsCount(people.size)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.weeklyStats.collect { stats ->
-                stats?.let {
-                    tvTotalPeople.text = it.totalPeople.toString()
-                    tvAvgDrain.text = String.format("%.1fh", it.avgDrain)
-                    tvThisWeek.text = it.thisWeekInteractions.toString()
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                launch {
+                    viewModel.people.collect { people ->
+                        adapter.submitList(people)
+                        updateContactsCount(people.size)
+                    }
                 }
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.sortOption.collect { sortOption ->
-                updateSortButtons(sortOption)
-            }
-        }
-
-        lifecycleScope.launch {
-            viewModel.error.collect { error ->
-                error?.let {
-                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                    viewModel.clearError()
+                launch {
+                    viewModel.weeklyStats.collect { stats ->
+                        stats?.let {
+                            tvTotalPeople.text = it.totalPeople.toString()
+                            tvAvgDrain.text = String.format("%.1fh", it.avgDrain)
+                            tvThisWeek.text = it.thisWeekInteractions.toString()
+                        }
+                    }
+                }
+                launch {
+                    viewModel.sortOption.collect { sortOption ->
+                        updateSortButtons(sortOption)
+                    }
+                }
+                launch {
+                    viewModel.error.collect { error ->
+                        error?.let {
+                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                            viewModel.clearError()
+                        }
+                    }
                 }
             }
         }

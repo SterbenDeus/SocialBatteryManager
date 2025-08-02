@@ -9,7 +9,9 @@ import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.shared.utils.ErrorHandler
 import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
@@ -204,22 +206,24 @@ class HomeFragment : Fragment() {
     }
 
     private fun calculateWeeklyForecast() {
-        lifecycleScope.launch {
-            val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-            
-            database.energyLogDao().getEnergyLogsAfter(weekStart).collect { energyLogs ->
-                if (energyLogs.isNotEmpty()) {
-                    // Calculate average energy
-                    val avgEnergy = energyLogs.map { it.energyLevel }.average()
-                    tvAverageEnergy.text = "${avgEnergy.toInt()}%"
-                    
-                    // Find peak day (day with most activities)
-                    val peakDay = findPeakDay()
-                    tvPeakDay.text = peakDay
-                    
-                    // Calculate recovery needed
-                    val recoveryDays = calculateRecoveryNeeded(avgEnergy.toInt())
-                    tvRecoveryNeeded.text = "$recoveryDays days"
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
+
+                database.energyLogDao().getEnergyLogsAfter(weekStart).collect { energyLogs ->
+                    if (energyLogs.isNotEmpty()) {
+                        // Calculate average energy
+                        val avgEnergy = energyLogs.map { it.energyLevel }.average()
+                        tvAverageEnergy.text = "${avgEnergy.toInt()}%"
+
+                        // Find peak day (day with most activities)
+                        val peakDay = findPeakDay()
+                        tvPeakDay.text = peakDay
+
+                        // Calculate recovery needed
+                        val recoveryDays = calculateRecoveryNeeded(avgEnergy.toInt())
+                        tvRecoveryNeeded.text = "$recoveryDays days"
+                    }
                 }
             }
         }
@@ -398,10 +402,12 @@ class HomeFragment : Fragment() {
     }
 
     private fun observeNetworkState() {
-        lifecycleScope.launch {
-            networkManager.isConnected.collect { isConnected ->
-                if (!isConnected) {
-                    view?.let { ErrorHandler.showOfflineSnackbar(it) }
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+                networkManager.isConnected.collect { isConnected ->
+                    if (!isConnected) {
+                        view?.let { ErrorHandler.showOfflineSnackbar(it) }
+                    }
                 }
             }
         }
