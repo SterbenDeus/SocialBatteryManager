@@ -58,12 +58,20 @@
         <action
             android:id="@+id/action_profileFragment_to_privacySettingsFragment"
             app:destination="@id/privacySettingsFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_surveyFragment"
+            app:destination="@id/surveyFragment" />
     </fragment>
 
     <fragment
         android:id="@+id/privacySettingsFragment"
         android:name="com.example.socialbatterymanager.features.privacy.ui.PrivacySettingsFragment"
         android:label="Privacy Settings" />
+
+    <fragment
+        android:id="@+id/surveyFragment"
+        android:name="com.example.socialbatterymanager.features.survey.ui.SurveyFragment"
+        android:label="@string/survey_title" />
 
     <fragment
         android:id="@+id/activitiesFragment"
