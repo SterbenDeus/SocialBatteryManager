@@ -8,6 +8,7 @@ import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.SyncStatus
 import com.example.socialbatterymanager.shared.utils.NetworkConnectivityManager
+import com.example.socialbatterymanager.shared.utils.NetworkStatusProvider
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
@@ -17,12 +18,11 @@ import kotlinx.coroutines.tasks.await
  */
 class SyncWorker(
     context: Context,
-    workerParams: WorkerParameters
+    workerParams: WorkerParameters,
+    private val database: AppDatabase = AppDatabase.getDatabase(context),
+    private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
+    private val networkManager: NetworkStatusProvider = NetworkConnectivityManager(context),
 ) : CoroutineWorker(context, workerParams) {
-    
-    private val database = AppDatabase.getDatabase(applicationContext)
-    private val firestore = FirebaseFirestore.getInstance()
-    private val networkManager = NetworkConnectivityManager(applicationContext)
     
     override suspend fun doWork(): Result {
         return try {

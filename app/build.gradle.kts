@@ -128,6 +128,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.fragment:fragment-testing:1.8.8")
+    androidTestImplementation("androidx.work:work-testing:2.9.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.fragment:fragment-testing:1.8.8")
