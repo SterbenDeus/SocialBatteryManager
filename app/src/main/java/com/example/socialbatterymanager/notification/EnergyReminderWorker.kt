@@ -5,35 +5,33 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
-import androidx.work.Worker
+import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
-import kotlinx.coroutines.runBlocking
 
 class EnergyReminderWorker(
     private val context: Context,
     workerParams: WorkerParameters
-) : Worker(context, workerParams) {
 
-    override fun doWork(): Result {
+) : CoroutineWorker(context, workerParams) {
+
+    override suspend fun doWork(): Result {
         return try {
-            runBlocking {
-                val database = AppDatabase.getDatabase(context)
-                val latestEnergyLog = database.energyLogDao().getLatestEnergyLog()
-                
-                val energyLevel = latestEnergyLog?.energyLevel ?: 65
-                
-                // Show notification if energy is low
-                if (energyLevel < 30) {
-                    showNotification(
-                        "Low Social Battery",
-                        "Your social battery is at $energyLevel%. Consider taking a break or doing something relaxing."
-                    )
-                }
-                
-                Result.success()
+            val database = AppDatabase.getDatabase(context)
+            val latestEnergyLog = database.energyLogDao().getLatestEnergyLog()
+
+            val energyLevel = latestEnergyLog?.energyLevel ?: 65
+
+            // Show notification if energy is low
+            if (energyLevel < 30) {
+                showNotification(
+                    "Low Social Battery",
+                    "Your social battery is at $energyLevel%. Consider taking a break or doing something relaxing."
+                )
             }
+
+            Result.success()
         } catch (e: Exception) {
             Result.failure()
         }
