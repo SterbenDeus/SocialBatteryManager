@@ -250,6 +250,15 @@ Energy Ranges:
     <string name="survey_title">Social Battery Survey</string>
     <string name="survey_message">Take a quick survey to help us better understand your social energy patterns and improve your experience.</string>
     <string name="take_survey">Take Survey</string>
+    <string name="survey_question_energy">How much energy do you have right now?</string>
+    <string name="survey_question_social">How social do you feel today?</string>
+    <string name="survey_question_stress">How stressed do you feel?</string>
+    <string name="survey_option_low">Low</string>
+    <string name="survey_option_medium">Medium</string>
+    <string name="survey_option_high">High</string>
+    <string name="survey_submit">Submit</string>
+    <string name="survey_incomplete">Please answer all questions</string>
+    <string name="survey_submitted">Survey submitted. Thank you!</string>
     <string name="later">Later</string>
     <string name="sign_out_success">Signed out successfully</string>
     <string name="account_deleted_success">Account deleted successfully</string>

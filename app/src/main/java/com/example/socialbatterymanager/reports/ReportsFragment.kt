@@ -1,6 +1,5 @@
 package com.example.socialbatterymanager.reports
 
-import android.content.Context
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -12,22 +11,20 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.room.Room
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.database.ActivityDao
-import com.example.socialbatterymanager.data.database.EnergyLogDao
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.EnergyLog
-import com.example.socialbatterymanager.data.database.AppDatabase
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
-import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -35,9 +32,14 @@ import java.util.*
 
 class ReportsFragment : Fragment() {
 
-    private lateinit var database: AppDatabase
-    private lateinit var activityDao: ActivityDao
-    private lateinit var energyLogDao: EnergyLogDao
+    private val viewModel: ReportsViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val db = AppDatabase.getDatabase(requireContext())
+                return ReportsViewModel(db) as T
+            }
+        }
+    }
     
     // Adapters
     private lateinit var peakUsageAdapter: PeakUsageAdapter
@@ -76,15 +78,6 @@ class ReportsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        // Initialize database
-        database = Room.databaseBuilder(
-            requireContext(),
-            AppDatabase::class.java,
-            "social_battery_db"
-        ).build()
-        activityDao = database.activityDao()
-        energyLogDao = database.energyLogDao()
-
         // Initialize views
         initializeViews(view)
         
@@ -94,8 +87,14 @@ class ReportsFragment : Fragment() {
         // Setup period buttons
         setupPeriodButtons()
 
-        // Load and display data
-        loadReportData()
+        // Observe data
+        viewModel.reportData.observe(viewLifecycleOwner) { (activitiesData, energyLogsData) ->
+            updateEnergyChart(activitiesData)
+            updateEfficiencyChart(activitiesData)
+            updatePeakUsageTimes(activitiesData)
+            updateCapacityGrowth(activitiesData, energyLogsData)
+            updateAIInsights(activitiesData)
+        }
     }
 
     private fun initializeViews(view: View) {
@@ -184,22 +183,8 @@ class ReportsFragment : Fragment() {
     }
 
     private fun loadReportData() {
-        lifecycleScope.launch {
-            val dateRange = getDateRangeForPeriod(currentPeriod)
-            val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
-            val energyLogs = energyLogDao.getEnergyLogsByDateRangeSync(dateRange.first, dateRange.second)
-
-            val activitiesData = activities
-
-            val energyLogsData = energyLogs
-
-            // Update charts and data
-            updateEnergyChart(activitiesData)
-            updateEfficiencyChart(activitiesData)
-            updatePeakUsageTimes(activitiesData)
-            updateCapacityGrowth(activitiesData, energyLogsData)
-            updateAIInsights(activitiesData)
-        }
+        val dateRange = getDateRangeForPeriod(currentPeriod)
+        viewModel.loadReportData(dateRange.first, dateRange.second)
     }
 
     private fun getDateRangeForPeriod(period: ReportPeriod): Pair<Long, Long> {
@@ -381,11 +366,9 @@ class ReportsFragment : Fragment() {
 
     // Keep export functionality from original implementation
     private fun exportToCSV() {
-        lifecycleScope.launch {
+        val dateRange = getDateRangeForPeriod(currentPeriod)
+        viewModel.getActivitiesForPeriod(dateRange.first, dateRange.second) { activities ->
             try {
-                val dateRange = getDateRangeForPeriod(currentPeriod)
-                val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
-
                 val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.csv")
                 val writer = FileWriter(file)
 
@@ -422,11 +405,9 @@ class ReportsFragment : Fragment() {
     }
 
     private fun exportToPDF() {
-        lifecycleScope.launch {
+        val dateRange = getDateRangeForPeriod(currentPeriod)
+        viewModel.getActivitiesForPeriod(dateRange.first, dateRange.second) { activities ->
             try {
-                val dateRange = getDateRangeForPeriod(currentPeriod)
-                val activities = activityDao.getActivitiesByDateRangeSync(dateRange.first, dateRange.second)
-
                 // Group activities by date for trends
                 val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
                 val trends = activities.groupBy { activity ->

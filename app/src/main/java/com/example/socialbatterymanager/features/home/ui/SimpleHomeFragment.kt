@@ -8,6 +8,9 @@ import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.BuildConfig
@@ -24,8 +27,15 @@ class SimpleHomeFragment : Fragment() {
     private lateinit var btnTestBattery: Button
     private lateinit var tvWeeklyStats: TextView
     private lateinit var tvEnergyLevel: TextView
-    private lateinit var database: AppDatabase
     private lateinit var notificationService: NotificationService
+    private val viewModel: SimpleHomeViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val db = AppDatabase.getDatabase(requireContext())
+                return SimpleHomeViewModel(db) as T
+            }
+        }
+    }
 
     // Current energy level
     private var currentEnergyLevel = 65
@@ -36,8 +46,7 @@ class SimpleHomeFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
-        // Initialize database and notification service
-        database = AppDatabase.getDatabase(requireContext())
+        // Initialize notification service
         notificationService = NotificationService(requireContext())
 
         // Initialize views
@@ -52,7 +61,11 @@ class SimpleHomeFragment : Fragment() {
         if (BuildConfig.DEBUG) {
             generateSampleNotifications()
         }
-        updateWeeklyStats()
+
+        viewModel.weeklyActivityCount.observe(viewLifecycleOwner) { count ->
+            tvWeeklyStats.text = getString(R.string.weekly_stats_message, count)
+        }
+        viewModel.loadWeeklyStats()
 
         return view
     }
@@ -90,20 +103,8 @@ class SimpleHomeFragment : Fragment() {
 
     private fun generateSampleNotifications() {
         if (BuildConfig.DEBUG) {
-            lifecycleScope.launch {
+            viewLifecycleOwner.lifecycleScope.launch {
                 notificationService.generateSampleNotifications()
-            }
-        }
-    }
-
-    private fun updateWeeklyStats() {
-        lifecycleScope.launch {
-            val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-            try {
-                val activityCount = database.activityDao().getActivitiesCountFromDate(weekStart)
-                tvWeeklyStats.text = getString(R.string.weekly_stats_message, activityCount)
-            } catch (e: Exception) {
-                tvWeeklyStats.text = getString(R.string.weekly_stats_loading)
             }
         }
     }

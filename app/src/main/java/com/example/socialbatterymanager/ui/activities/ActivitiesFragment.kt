@@ -8,27 +8,36 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.lifecycleScope
-import androidx.lifecycle.repeatOnLifecycle
+import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.repository.DataRepository
 import com.example.socialbatterymanager.data.repository.SecurityManager
-import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
-import kotlinx.coroutines.launch
 
 class ActivitiesFragment : Fragment() {
 
     private lateinit var rvActivities: RecyclerView
     private lateinit var adapter: ActivitiesAdapter
 
-    private lateinit var dataRepository: DataRepository
-
-    private lateinit var database: AppDatabase
+    private val viewModel: ActivitiesViewModel by viewModels {
+        object : ViewModelProvider.Factory {
+            override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                val securityManager = SecurityManager.getInstance(requireContext())
+                val passphrase = if (securityManager.isEncryptionEnabled()) {
+                    securityManager.getDatabasePassphrase() ?: securityManager.generateDatabasePassphrase()
+                } else {
+                    null
+                }
+                val repo = DataRepository.getInstance(requireContext(), passphrase)
+                return ActivitiesViewModel(repo) as T
+            }
+        }
+    }
 
 
     override fun onCreateView(
@@ -38,8 +47,6 @@ class ActivitiesFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_activities, container, false)
 
-        database = AppDatabase.getDatabase(requireContext())
-
         rvActivities = view.findViewById(R.id.rvActivities)
         adapter = ActivitiesAdapter { activity: Activity ->
             onActivityClick(activity)
@@ -47,26 +54,12 @@ class ActivitiesFragment : Fragment() {
         rvActivities.layoutManager = LinearLayoutManager(requireContext())
         rvActivities.adapter = adapter
 
-        // Initialize data repository with encryption support
-        val securityManager = SecurityManager.getInstance(requireContext())
-        val passphrase = if (securityManager.isEncryptionEnabled()) {
-            securityManager.getDatabasePassphrase() ?: securityManager.generateDatabasePassphrase()
-        } else {
-            null
-        }
-        dataRepository = DataRepository.getInstance(requireContext(), passphrase)
-
         view.findViewById<Button>(R.id.btnAddActivity).setOnClickListener {
             showAddActivityDialog()
         }
 
-        // Load activities from DB
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                database.activityDao().getAllActivities().collect { activities ->
-                    adapter.submitList(activities)
-                }
-            }
+        viewModel.activities.observe(viewLifecycleOwner) { activities ->
+            adapter.submitList(activities)
         }
 
         return view
@@ -75,21 +68,15 @@ class ActivitiesFragment : Fragment() {
     private fun showAddActivityDialog() {
         val dialog = CreateNewActivityDialog()
         dialog.setOnActivityCreatedListener { activity ->
-            lifecycleScope.launch {
-                try {
-                    dataRepository.insertActivity(activity.toEntity())
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.activity_add_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.activity_add_error, e.message ?: ""),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            viewModel.insertActivity(activity.toEntity()) { success, error ->
+                Toast.makeText(
+                    requireContext(),
+                    if (success)
+                        getString(R.string.activity_add_success)
+                    else
+                        getString(R.string.activity_add_error, error ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
         dialog.show(parentFragmentManager, "CreateNewActivityDialog")
@@ -115,21 +102,15 @@ class ActivitiesFragment : Fragment() {
 
     private fun editActivity(activity: Activity) {
         EditActivityDialog(requireContext(), activity) { updatedActivity ->
-            lifecycleScope.launch {
-                try {
-                    database.activityDao().updateActivity(updatedActivity.toEntity())
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.activity_update_success),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                } catch (e: Exception) {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.activity_update_error, e.message ?: ""),
-                        Toast.LENGTH_SHORT
-                    ).show()
-                }
+            viewModel.updateActivity(updatedActivity.toEntity()) { success, error ->
+                Toast.makeText(
+                    requireContext(),
+                    if (success)
+                        getString(R.string.activity_update_success)
+                    else
+                        getString(R.string.activity_update_error, error ?: ""),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }.show()
     }
@@ -144,6 +125,7 @@ class ActivitiesFragment : Fragment() {
                 )
             )
             .setPositiveButton(R.string.delete) { _, _ ->
+
                 lifecycleScope.launch {
                     try {
                         val entity = activity.toEntity()
@@ -167,21 +149,15 @@ class ActivitiesFragment : Fragment() {
     }
 
     private fun markAsUsed(activity: Activity) {
-        lifecycleScope.launch {
-            try {
-                database.activityDao().incrementUsageCount(activity.id)
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.activity_marked_as_used),
-                    Toast.LENGTH_SHORT
-                ).show()
-            } catch (e: Exception) {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.activity_usage_error, e.message ?: ""),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
+        viewModel.markAsUsed(activity.id) { success, error ->
+            Toast.makeText(
+                requireContext(),
+                if (success)
+                    getString(R.string.activity_marked_as_used)
+                else
+                    getString(R.string.activity_usage_error, error ?: ""),
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
 }

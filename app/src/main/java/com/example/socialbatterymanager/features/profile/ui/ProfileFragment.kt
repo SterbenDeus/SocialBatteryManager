@@ -186,16 +186,16 @@ class ProfileFragment : Fragment() {
         when {
             ContextCompat.checkSelfPermission(
                 requireContext(),
-                Manifest.permission.READ_EXTERNAL_STORAGE
+                Manifest.permission.READ_MEDIA_IMAGES
             ) == PackageManager.PERMISSION_GRANTED -> {
                 showImageSourceDialog()
             }
-            shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE) -> {
+            shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
                 Toast.makeText(requireContext(), getString(R.string.permission_access_photos), Toast.LENGTH_LONG).show()
-                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
             else -> {
-                permissionLauncher.launch(Manifest.permission.READ_EXTERNAL_STORAGE)
+                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
         }
     }
