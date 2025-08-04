@@ -43,7 +43,7 @@ android {
         viewBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.4.3"
+        kotlinCompilerExtensionVersion = "1.5.11"
     }
 }
 
@@ -52,13 +52,13 @@ dependencies {
     implementation("com.airbnb.android:lottie:6.4.0")
 
     // AndroidX
-    implementation(libs.androidx.core.ktx.v1101)
-    implementation(libs.androidx.lifecycle.runtime.ktx.v261)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.fragment.ktx)
     implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.activity.compose.v172)
+    implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.work.runtime.ktx)
@@ -81,7 +81,7 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
 
     // Jetpack Compose
-    implementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
@@ -115,7 +115,7 @@ dependencies {
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.03.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.fragment:fragment-testing:1.8.8")
     debugImplementation("androidx.compose.ui:ui-tooling")
