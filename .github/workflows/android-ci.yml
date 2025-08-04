@@ -34,7 +34,7 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
 
       - name: Install SDK components
-        run: sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3"
+        run: sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3" "platforms;android-35" "build-tools;35.0.0"
 
       - name: Run JVM unit tests
         run: ./gradlew test
@@ -54,7 +54,7 @@ jobs:
     needs: build
     strategy:
       matrix:
-        api-level: [30, 34]
+        api-level: [30, 34, 35]
 
     steps:
       - name: Checkout repository
