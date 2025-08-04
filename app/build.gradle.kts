@@ -54,7 +54,7 @@ android {
         viewBinding = true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
+        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
@@ -92,8 +92,8 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
 
     // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.6.0")
-    implementation("androidx.navigation:navigation-ui-ktx:2.6.0")
+    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
+    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
 
     // Jetpack Compose
     implementation(platform("androidx.compose:compose-bom:2024.09.00"))
@@ -103,8 +103,8 @@ dependencies {
     implementation("androidx.compose.material3:material3")
 
     // Google / Firebase
-    implementation("com.google.android.gms:play-services-fitness:21.1.0")
-    implementation("com.google.android.gms:play-services-auth:21.0.0")
+    implementation("com.google.android.gms:play-services-fitness:21.2.0")
+    implementation("com.google.android.gms:play-services-auth:21.2.0")
     implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
     implementation("com.google.firebase:firebase-firestore-ktx")
     implementation("com.google.firebase:firebase-auth-ktx")
@@ -121,7 +121,7 @@ dependencies {
     implementation("com.google.code.gson:gson:2.10.1")
 
     // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
 
     // Charts
     implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
@@ -133,6 +133,7 @@ dependencies {
     androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.00"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     androidTestImplementation("androidx.fragment:fragment-testing:1.8.8")
+    androidTestImplementation("androidx.work:work-testing:2.9.0")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.fragment:fragment-testing:1.8.8")
