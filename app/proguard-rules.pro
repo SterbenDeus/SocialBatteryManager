@@ -29,3 +29,25 @@
 
 # Keep Worker implementations for WorkManager
 -keep class com.example.socialbatterymanager.sync.** { *; }
+
+# Keep only the PDFBox classes referenced in the app
+-keep class org.apache.pdfbox.pdmodel.PDDocument { *; }
+-keep class org.apache.pdfbox.pdmodel.PDPage { *; }
+-keep class org.apache.pdfbox.pdmodel.common.PDRectangle { *; }
+-keep class org.apache.pdfbox.pdmodel.PDPageContentStream { *; }
+-keep class org.apache.pdfbox.pdmodel.font.PDType1Font { *; }
+
+# Keep only the MPAndroidChart classes referenced in the app
+-keep class com.github.mikephil.charting.charts.LineChart { *; }
+-keep class com.github.mikephil.charting.charts.BarChart { *; }
+-keep class com.github.mikephil.charting.data.Entry { *; }
+-keep class com.github.mikephil.charting.data.LineData { *; }
+-keep class com.github.mikephil.charting.data.LineDataSet { *; }
+-keep class com.github.mikephil.charting.data.BarEntry { *; }
+-keep class com.github.mikephil.charting.data.BarData { *; }
+-keep class com.github.mikephil.charting.data.BarDataSet { *; }
+-keep class com.github.mikephil.charting.formatter.IndexAxisValueFormatter { *; }
+
+# Suppress warnings from unused classes in these libraries
+-dontwarn org.apache.pdfbox.**
+-dontwarn com.github.mikephil.charting.**
