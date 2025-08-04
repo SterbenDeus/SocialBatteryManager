@@ -14,7 +14,6 @@ import com.google.firebase.crashlytics.FirebaseCrashlytics
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
 class MainActivity : AppCompatActivity() {
@@ -28,10 +27,13 @@ class MainActivity : AppCompatActivity() {
         
         preferencesManager = PreferencesManager(this)
         syncManager = SyncManager(this)
-        
-        // Set initial theme before inflating the layout
-        val initialTheme = try {
-            runBlocking {
+
+        // Show a splash screen while preferences load
+        setContentView(R.layout.activity_splash)
+
+        lifecycleScope.launch {
+            // Set initial theme before inflating the main layout
+            val initialTheme = try {
                 preferencesManager.themeFlow
                     .catch { e ->
                         if (e is IOException) {
@@ -41,44 +43,44 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                     .first()
+            } catch (e: Exception) {
+                Log.e("MainActivity", "Failed to load theme preference", e)
+                FirebaseCrashlytics.getInstance().recordException(
+                    RuntimeException("Failed to load theme preference", e)
+                )
+                PreferencesManager.THEME_SYSTEM
             }
-        } catch (e: Exception) {
-            Log.e("MainActivity", "Failed to load theme preference", e)
-            FirebaseCrashlytics.getInstance().recordException(
-                RuntimeException("Failed to load theme preference", e)
-            )
-            PreferencesManager.THEME_SYSTEM
+
+            when (initialTheme) {
+                PreferencesManager.THEME_LIGHT -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+                }
+                PreferencesManager.THEME_DARK -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+                }
+                PreferencesManager.THEME_SYSTEM -> {
+                    AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
+                }
+            }
+
+            setContentView(R.layout.activity_main)
+
+            val navHostFragment = supportFragmentManager
+                .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.navController
+
+            bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
+            bottomNavigationView.setupWithNavController(navController)
+
+            // Check onboarding status and navigate accordingly
+            checkOnboardingStatus(navController)
+
+            // Initialize sync
+            initializeSync()
+
+            // Observe theme changes for runtime updates
+            observeThemeChanges()
         }
-
-        when (initialTheme) {
-            PreferencesManager.THEME_LIGHT -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-            }
-            PreferencesManager.THEME_DARK -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-            }
-            PreferencesManager.THEME_SYSTEM -> {
-                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_FOLLOW_SYSTEM)
-            }
-        }
-        
-        setContentView(R.layout.activity_main) // Fixed typo
-
-        val navHostFragment = supportFragmentManager
-            .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
-
-        bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
-        bottomNavigationView.setupWithNavController(navController)
-        
-        // Check onboarding status and navigate accordingly
-        checkOnboardingStatus(navController)
-        
-        // Initialize sync
-        initializeSync()
-        
-        // Observe theme changes for runtime updates
-        observeThemeChanges()
     }
     
     private fun initializeSync() {
