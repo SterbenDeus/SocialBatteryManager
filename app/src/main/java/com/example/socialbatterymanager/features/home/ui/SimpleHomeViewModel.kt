@@ -9,8 +9,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+class SimpleHomeViewModel(private val homeRepository: HomeRepository) : ViewModel() {
 @HiltViewModel
 class SimpleHomeViewModel @Inject constructor(private val database: AppDatabase) : ViewModel() {
+
 
     private val _weeklyActivityCount = MutableLiveData<Int>()
     val weeklyActivityCount: LiveData<Int> = _weeklyActivityCount
@@ -18,7 +20,7 @@ class SimpleHomeViewModel @Inject constructor(private val database: AppDatabase)
     fun loadWeeklyStats() {
         viewModelScope.launch {
             val weekStart = System.currentTimeMillis() - (7 * 24 * 60 * 60 * 1000)
-            val count = database.activityDao().getActivitiesCountFromDate(weekStart)
+            val count = homeRepository.getActivitiesCountFromDate(weekStart)
             _weeklyActivityCount.value = count
         }
     }
