@@ -27,7 +27,8 @@ import com.example.socialbatterymanager.data.model.BlockedUser
 import com.example.socialbatterymanager.data.model.PrivacySettings
 import com.example.socialbatterymanager.data.model.VisibilityLevel
 import com.example.socialbatterymanager.features.auth.data.AuthRepository
-import kotlinx.coroutines.flow.map
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 
 private val Context.privacyDataStore by preferencesDataStore(name = "privacy_preferences")
@@ -51,6 +52,7 @@ class PrivacySettingsFragment : Fragment() {
     private val blockedUsers = mutableListOf<BlockedUser>()
     private lateinit var blockedUsersAdapter: BlockedUsersAdapter
     private val authRepository = AuthRepository()
+    private val gson = Gson()
 
     // DataStore keys
     private val VISIBILITY_LEVEL_KEY = stringPreferencesKey("visibility_level")
@@ -123,9 +125,9 @@ class PrivacySettingsFragment : Fragment() {
     private fun loadPrivacySettings() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                requireContext().privacyDataStore.data.map { preferences ->
+                requireContext().privacyDataStore.data.collect { preferences ->
                     val userId = authRepository.currentUser?.uid ?: ""
-                    PrivacySettings(
+                    currentPrivacySettings = PrivacySettings(
                         userId = userId,
                         moodVisibilityLevel = VisibilityLevel.valueOf(
                             preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
@@ -134,8 +136,15 @@ class PrivacySettingsFragment : Fragment() {
                         energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
                         activityPatternsEnabled = preferences[ACTIVITY_PATTERNS_ENABLED_KEY] ?: false
                     )
-                }.collect { settings ->
-                    currentPrivacySettings = settings
+
+                    val blockedUsersJson = preferences[BLOCKED_USERS_KEY]
+                    blockedUsers.clear()
+                    if (!blockedUsersJson.isNullOrEmpty()) {
+                        val listType = object : TypeToken<List<BlockedUser>>() {}.type
+                        blockedUsers.addAll(gson.fromJson(blockedUsersJson, listType))
+                    }
+                    blockedUsersAdapter.notifyDataSetChanged()
+
                     updateUI()
                 }
             }
@@ -176,6 +185,7 @@ class PrivacySettingsFragment : Fragment() {
                 preferences[MOOD_STATUS_ENABLED_KEY] = moodStatusSwitch.isChecked
                 preferences[ENERGY_LEVEL_ENABLED_KEY] = energyLevelSwitch.isChecked
                 preferences[ACTIVITY_PATTERNS_ENABLED_KEY] = activityPatternsSwitch.isChecked
+                preferences[BLOCKED_USERS_KEY] = gson.toJson(blockedUsers)
             }
 
             currentPrivacySettings = PrivacySettings(
@@ -191,6 +201,14 @@ class PrivacySettingsFragment : Fragment() {
                 getString(R.string.privacy_settings_updated),
                 Toast.LENGTH_SHORT
             ).show()
+        }
+    }
+
+    private fun persistBlockedUsers() {
+        lifecycleScope.launch {
+            requireContext().privacyDataStore.edit { preferences ->
+                preferences[BLOCKED_USERS_KEY] = gson.toJson(blockedUsers)
+            }
         }
     }
 
@@ -248,8 +266,8 @@ class PrivacySettingsFragment : Fragment() {
 
         blockedUsers.add(blockedUser)
         blockedUsersAdapter.notifyItemInserted(blockedUsers.size - 1)
-        
-        // In real app, save to database for this user
+
+        persistBlockedUsers()
         Toast.makeText(
             requireContext(),
             getString(R.string.blocked_user_added, name),
@@ -265,8 +283,7 @@ class PrivacySettingsFragment : Fragment() {
         if (position != -1) {
             blockedUsers.removeAt(position)
             blockedUsersAdapter.notifyItemRemoved(position)
-
-            // In real app, remove from database for this user
+            persistBlockedUsers()
             Toast.makeText(
                 requireContext(),
                 getString(
