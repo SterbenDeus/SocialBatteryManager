@@ -14,8 +14,8 @@ import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.features.notifications.NotificationService
-import kotlinx.coroutines.launch
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class SimpleHomeFragment : Fragment() {

@@ -6,14 +6,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.socialbatterymanager.features.home.data.HomeRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlinx.coroutines.launch
 
 @HiltViewModel
 class SimpleHomeViewModel @Inject constructor(
     private val homeRepository: HomeRepository
 ) : ViewModel() {
-
 
     private val _weeklyActivityCount = MutableLiveData<Int>()
     val weeklyActivityCount: LiveData<Int> = _weeklyActivityCount
