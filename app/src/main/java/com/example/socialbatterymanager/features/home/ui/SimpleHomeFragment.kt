@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
+import com.example.socialbatterymanager.features.home.data.HomeRepository
 import com.example.socialbatterymanager.features.notifications.NotificationService
 import kotlinx.coroutines.launch
 
@@ -32,7 +33,8 @@ class SimpleHomeFragment : Fragment() {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
                 val db = AppDatabase.getDatabase(requireContext())
-                return SimpleHomeViewModel(db) as T
+                val repository = HomeRepository(db)
+                return SimpleHomeViewModel(repository) as T
             }
         }
     }
