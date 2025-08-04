@@ -25,6 +25,9 @@ interface ActivityDao {
     
     @Query("UPDATE activities SET isDeleted = 1, updatedAt = :timestamp WHERE id = :id")
     suspend fun softDeleteActivity(id: Int, timestamp: Long = System.currentTimeMillis())
+
+    @Delete
+    suspend fun deleteActivity(activity: ActivityEntity)
     
     @Query("SELECT * FROM activities WHERE isDeleted = 0")
     suspend fun getAllActivitiesForBackup(): List<ActivityEntity>

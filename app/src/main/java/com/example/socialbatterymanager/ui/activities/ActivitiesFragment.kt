@@ -125,15 +125,23 @@ class ActivitiesFragment : Fragment() {
                 )
             )
             .setPositiveButton(R.string.delete) { _, _ ->
-                viewModel.deleteActivity(activity.id) { success, error ->
-                    Toast.makeText(
-                        requireContext(),
-                        if (success)
-                            getString(R.string.activity_delete_success)
-                        else
-                            getString(R.string.activity_delete_error, error ?: ""),
-                        Toast.LENGTH_SHORT
-                    ).show()
+
+                lifecycleScope.launch {
+                    try {
+                        val entity = activity.toEntity()
+                        database.activityDao().deleteActivity(entity)
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.activity_delete_success),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    } catch (e: Exception) {
+                        Toast.makeText(
+                            requireContext(),
+                            getString(R.string.activity_delete_error, e.message ?: ""),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
                 }
             }
             .setNegativeButton(R.string.cancel, null)
