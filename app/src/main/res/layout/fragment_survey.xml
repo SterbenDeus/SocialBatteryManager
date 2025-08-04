@@ -19,4 +19,104 @@
         android:layout_height="wrap_content"
         android:text="@string/survey_message" />
 
+    <TextView
+        android:id="@+id/energyQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/survey_question_energy" />
+
+    <RadioGroup
+        android:id="@+id/energyGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/energyLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_low" />
+
+        <RadioButton
+            android:id="@+id/energyMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_medium" />
+
+        <RadioButton
+            android:id="@+id/energyHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_high" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/socialQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/survey_question_social" />
+
+    <RadioGroup
+        android:id="@+id/socialGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/socialLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_low" />
+
+        <RadioButton
+            android:id="@+id/socialMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_medium" />
+
+        <RadioButton
+            android:id="@+id/socialHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_high" />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/stressQuestion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="@string/survey_question_stress" />
+
+    <RadioGroup
+        android:id="@+id/stressGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RadioButton
+            android:id="@+id/stressLow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_low" />
+
+        <RadioButton
+            android:id="@+id/stressMedium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_medium" />
+
+        <RadioButton
+            android:id="@+id/stressHigh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/survey_option_high" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/submitSurveyButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:text="@string/survey_submit" />
+
 </LinearLayout>
