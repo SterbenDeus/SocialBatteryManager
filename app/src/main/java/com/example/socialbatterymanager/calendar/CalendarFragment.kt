@@ -1,5 +1,3 @@
-@file:Suppress("OverrideDeprecatedMigration")
-
 package com.example.socialbatterymanager.calendar
 
 import android.Manifest
@@ -11,8 +9,8 @@ import android.widget.CalendarView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -25,7 +23,6 @@ import com.example.socialbatterymanager.ui.activities.CreateNewActivityDialog
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
-@Suppress("OverrideDeprecatedMigration")
 class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     
     private lateinit var calendarView: CalendarView
@@ -45,10 +42,20 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     private var selectedDate: Long = System.currentTimeMillis()
     private var allEvents: List<CalendarEvent> = emptyList()
     
-    companion object {
-        private const val CALENDAR_PERMISSION_REQUEST = 1001
+    private val calendarPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) {
+            importCalendarEvents()
+        } else {
+            Toast.makeText(
+                requireContext(),
+                getString(R.string.calendar_permission_denied_import),
+                Toast.LENGTH_SHORT
+            ).show()
+        }
     }
-    
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         
@@ -211,16 +218,14 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
     }
     
     private fun requestCalendarPermissionAndImport() {
-        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_CALENDAR) 
-            != PackageManager.PERMISSION_GRANTED) {
-            
-            ActivityCompat.requestPermissions(
-                requireActivity(),
-                arrayOf(Manifest.permission.READ_CALENDAR),
-                CALENDAR_PERMISSION_REQUEST
-            )
-        } else {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.READ_CALENDAR
+            ) == PackageManager.PERMISSION_GRANTED
+        ) {
             importCalendarEvents()
+        } else {
+            calendarPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
         }
     }
     
@@ -251,27 +256,5 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         return calendar.timeInMillis
-    }
-    
-    @Suppress("OverrideDeprecatedMigration")
-    @Deprecated("Deprecated in Java")
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        
-        if (requestCode == CALENDAR_PERMISSION_REQUEST) {
-            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                importCalendarEvents()
-            } else {
-                Toast.makeText(
-                    requireContext(),
-                    getString(R.string.calendar_permission_denied_import),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
     }
 }
