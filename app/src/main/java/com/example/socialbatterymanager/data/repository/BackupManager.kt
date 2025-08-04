@@ -6,13 +6,17 @@ import com.example.socialbatterymanager.data.model.BackupMetadataEntity
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import java.io.File
 import java.util.UUID
 
-class BackupManager private constructor(
-    private val context: Context,
+@Singleton
+class BackupManager @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val activityRepository: ActivityRepository,
     private val auditRepository: AuditRepository,
     private val backupRepository: BackupRepository,
@@ -172,26 +176,4 @@ class BackupManager private constructor(
         return (currentTime - lastBackupTime) >= interval
     }
     
-    companion object {
-        @Volatile
-        private var INSTANCE: BackupManager? = null
-        
-        fun getInstance(
-            context: Context,
-            repositoryProvider: RepositoryProvider,
-            preferencesManager: PreferencesManager
-        ): BackupManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = BackupManager(
-                    context,
-                    repositoryProvider.activityRepository,
-                    repositoryProvider.auditRepository,
-                    repositoryProvider.backupRepository,
-                    preferencesManager
-                )
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }

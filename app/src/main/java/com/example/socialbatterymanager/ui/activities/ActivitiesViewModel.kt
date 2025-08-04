@@ -10,7 +10,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-class ActivitiesViewModel(private val repository: ActivityRepository) : ViewModel() {
+@HiltViewModel
+class ActivitiesViewModel @Inject constructor(
+    private val repository: ActivityRepository
+) : ViewModel() {
 
     val activities: LiveData<List<ActivityEntity>> = repository.getAllActivities().asLiveData()
 

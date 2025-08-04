@@ -3,6 +3,9 @@ package com.example.socialbatterymanager.data.repository
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.opencsv.CSVWriter
+import dagger.hilt.android.qualifiers.ApplicationContext
+import javax.inject.Inject
+import javax.inject.Singleton
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
 import org.apache.pdfbox.pdmodel.common.PDRectangle
@@ -17,8 +20,9 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class ImportExportManager private constructor(
-    private val context: Context,
+@Singleton
+class ImportExportManager @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val activityRepository: ActivityRepository
 ) {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
@@ -186,16 +190,4 @@ class ImportExportManager private constructor(
         val message: String
     )
 
-    companion object {
-        @Volatile
-        private var INSTANCE: ImportExportManager? = null
-
-        fun getInstance(context: Context, activityRepository: ActivityRepository): ImportExportManager {
-            return INSTANCE ?: synchronized(this) {
-                val instance = ImportExportManager(context, activityRepository)
-                INSTANCE = instance
-                instance
-            }
-        }
-    }
 }
