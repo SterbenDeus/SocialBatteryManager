@@ -9,8 +9,6 @@ import android.widget.ImageButton
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.BuildConfig
@@ -19,7 +17,9 @@ import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.features.home.data.HomeRepository
 import com.example.socialbatterymanager.features.notifications.NotificationService
 import kotlinx.coroutines.launch
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class SimpleHomeFragment : Fragment() {
 
     private lateinit var btnNotifications: ImageButton
@@ -29,6 +29,7 @@ class SimpleHomeFragment : Fragment() {
     private lateinit var tvWeeklyStats: TextView
     private lateinit var tvEnergyLevel: TextView
     private lateinit var notificationService: NotificationService
+
     private val viewModel: SimpleHomeViewModel by viewModels {
         object : ViewModelProvider.Factory {
             override fun <T : ViewModel> create(modelClass: Class<T>): T {
@@ -38,6 +39,9 @@ class SimpleHomeFragment : Fragment() {
             }
         }
     }
+
+    private val viewModel: SimpleHomeViewModel by viewModels()
+
 
     // Current energy level
     private var currentEnergyLevel = 65

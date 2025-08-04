@@ -11,9 +11,17 @@ import kotlinx.coroutines.flow.asStateFlow
 import com.example.socialbatterymanager.R
 
 /**
+ * Minimal interface used for testing network connectivity
+ */
+interface NetworkStatusProvider {
+    fun isCurrentlyConnected(): Boolean
+    fun unregister()
+}
+
+/**
  * Utility class for monitoring network connectivity
  */
-class NetworkConnectivityManager(private val context: Context) {
+class NetworkConnectivityManager(private val context: Context) : NetworkStatusProvider {
     
     private val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
     
@@ -56,7 +64,7 @@ class NetworkConnectivityManager(private val context: Context) {
     /**
      * Check if device is currently connected to the internet
      */
-    fun isCurrentlyConnected(): Boolean {
+    override fun isCurrentlyConnected(): Boolean {
         val network = connectivityManager.activeNetwork
         val networkCapabilities = connectivityManager.getNetworkCapabilities(network)
         return networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) == true
@@ -107,7 +115,7 @@ class NetworkConnectivityManager(private val context: Context) {
     /**
      * Unregister network callback to prevent memory leaks
      */
-    fun unregister() {
+    override fun unregister() {
         connectivityManager.unregisterNetworkCallback(networkCallback)
     }
 }

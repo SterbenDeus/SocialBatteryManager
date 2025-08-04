@@ -1,6 +1,5 @@
 package com.example.socialbatterymanager.data.repository
 
-import android.content.Context
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
@@ -11,10 +10,13 @@ import kotlinx.coroutines.flow.first
 import java.security.MessageDigest
 import java.nio.charset.StandardCharsets
 import java.util.UUID
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class DataRepository private constructor(
-    internal val database: AppDatabase,
-    private val gson: Gson = Gson()
+@Singleton
+class DataRepository @Inject constructor(
+    val database: AppDatabase,
+    private val gson: Gson,
 ) {
     
     // Activity operations with audit trail
@@ -165,21 +167,4 @@ class DataRepository private constructor(
         database.activityDao().hardDeleteOldActivities(cutoff)
     }
     
-    companion object {
-        @Volatile
-        private var INSTANCE: DataRepository? = null
-        
-        fun getInstance(context: Context, passphrase: String? = null): DataRepository {
-            return INSTANCE ?: synchronized(this) {
-                val database = AppDatabase.getDatabase(context, passphrase)
-                val instance = DataRepository(database)
-                INSTANCE = instance
-                instance
-            }
-        }
-        
-        fun clearInstance() {
-            INSTANCE = null
-        }
-    }
 }

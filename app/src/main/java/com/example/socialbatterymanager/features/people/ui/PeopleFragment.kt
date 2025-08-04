@@ -12,22 +12,23 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import dagger.hilt.android.AndroidEntryPoint
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.features.people.data.ContactsImporter
-import com.example.socialbatterymanager.features.people.data.PeopleRepository
 import com.example.socialbatterymanager.features.people.data.PersonWithStats
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.first
 
+@AndroidEntryPoint
 class PeopleFragment : Fragment() {
     
     private lateinit var rvPeople: RecyclerView
@@ -42,7 +43,7 @@ class PeopleFragment : Fragment() {
     private lateinit var tvThisWeek: TextView
     private lateinit var tvContactsCount: TextView
 
-    private lateinit var viewModel: PeopleViewModel
+    private val viewModel: PeopleViewModel by viewModels()
 
     private val contactsPermissionLauncher = registerForActivityResult(
         ActivityResultContracts.RequestPermission()
@@ -66,7 +67,6 @@ class PeopleFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_people, container, false)
         
         initViews(view)
-        setupViewModel()
         setupRecyclerView()
         setupClickListeners()
         observeViewModel()
@@ -85,13 +85,6 @@ class PeopleFragment : Fragment() {
         tvAvgDrain = view.findViewById(R.id.tvAvgDrain)
         tvThisWeek = view.findViewById(R.id.tvThisWeek)
         tvContactsCount = view.findViewById(R.id.tvContactsCount)
-    }
-
-    private fun setupViewModel() {
-        val database = AppDatabase.getDatabase(requireContext())
-        val repository = PeopleRepository(database)
-        val factory = PeopleViewModelFactory(repository)
-        viewModel = ViewModelProvider(this, factory)[PeopleViewModel::class.java]
     }
 
     private fun setupRecyclerView() {
