@@ -3,8 +3,11 @@ package com.example.socialbatterymanager.features.people.data
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.Person
 import kotlinx.coroutines.flow.Flow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class PeopleRepository(private val database: AppDatabase) {
+@Singleton
+class PeopleRepository @Inject constructor(private val database: AppDatabase) {
     
     fun getAllPeople(): Flow<List<Person>> {
         return database.personDao().getAllPeople()
