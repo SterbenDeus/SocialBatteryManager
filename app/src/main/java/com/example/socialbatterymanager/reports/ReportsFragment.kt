@@ -12,12 +12,10 @@ import android.widget.Toast
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import dagger.hilt.android.AndroidEntryPoint
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.EnergyLog
 import com.github.mikephil.charting.charts.LineChart
@@ -30,16 +28,10 @@ import java.io.FileWriter
 import java.text.SimpleDateFormat
 import java.util.*
 
+@AndroidEntryPoint
 class ReportsFragment : Fragment() {
 
-    private val viewModel: ReportsViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val db = AppDatabase.getDatabase(requireContext())
-                return ReportsViewModel(db) as T
-            }
-        }
-    }
+    private val viewModel: ReportsViewModel by viewModels()
     
     // Adapters
     private lateinit var peakUsageAdapter: PeakUsageAdapter

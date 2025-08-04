@@ -9,35 +9,20 @@ import android.widget.Button
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.repository.DataRepository
-import com.example.socialbatterymanager.data.repository.SecurityManager
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ActivitiesFragment : Fragment() {
 
     private lateinit var rvActivities: RecyclerView
     private lateinit var adapter: ActivitiesAdapter
 
-    private val viewModel: ActivitiesViewModel by viewModels {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                val securityManager = SecurityManager.getInstance(requireContext())
-                val passphrase = if (securityManager.isEncryptionEnabled()) {
-                    securityManager.getDatabasePassphrase() ?: securityManager.generateDatabasePassphrase()
-                } else {
-                    null
-                }
-                val repo = DataRepository.getInstance(requireContext(), passphrase)
-                return ActivitiesViewModel(repo) as T
-            }
-        }
-    }
+    private val viewModel: ActivitiesViewModel by viewModels()
 
 
     override fun onCreateView(
@@ -125,23 +110,15 @@ class ActivitiesFragment : Fragment() {
                 )
             )
             .setPositiveButton(R.string.delete) { _, _ ->
-
-                lifecycleScope.launch {
-                    try {
-                        val entity = activity.toEntity()
-                        database.activityDao().deleteActivity(entity)
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.activity_delete_success),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.activity_delete_error, e.message ?: ""),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                viewModel.deleteActivity(activity.id) { success, error ->
+                    Toast.makeText(
+                        requireContext(),
+                        if (success)
+                            getString(R.string.activity_delete_success)
+                        else
+                            getString(R.string.activity_delete_error, error ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .setNegativeButton(R.string.cancel, null)
