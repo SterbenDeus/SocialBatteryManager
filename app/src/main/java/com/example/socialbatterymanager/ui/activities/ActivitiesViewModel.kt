@@ -6,9 +6,12 @@ import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.socialbatterymanager.data.repository.DataRepository
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ActivitiesViewModel(private val repository: DataRepository) : ViewModel() {
+@HiltViewModel
+class ActivitiesViewModel @Inject constructor(private val repository: DataRepository) : ViewModel() {
 
     val activities: LiveData<List<ActivityEntity>> = repository.getAllActivities().asLiveData()
 

@@ -7,9 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.EnergyLog
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ReportsViewModel(private val database: AppDatabase) : ViewModel() {
+@HiltViewModel
+class ReportsViewModel @Inject constructor(private val database: AppDatabase) : ViewModel() {
 
     private val _reportData = MutableLiveData<Pair<List<ActivityEntity>, List<EnergyLog>>>()
     val reportData: LiveData<Pair<List<ActivityEntity>, List<EnergyLog>>> = _reportData

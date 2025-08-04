@@ -6,6 +6,7 @@ plugins {
     id("io.gitlab.arturbosch.detekt") version "1.23.4"
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -80,6 +81,10 @@ dependencies {
     implementation("com.google.android.material:material:1.11.0")
     implementation("androidx.cardview:cardview:1.0.0")
 
+    // Hilt
+    implementation("com.google.dagger:hilt-android:2.48")
+    kapt("com.google.dagger:hilt-compiler:2.48")
+    implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
 
     // Room
     implementation("androidx.room:room-runtime:2.6.1")
@@ -131,6 +136,10 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     debugImplementation("androidx.fragment:fragment-testing:1.8.8")
+}
+
+kapt {
+    correctErrorTypes = true
 }
 
 // Ktlint configuration

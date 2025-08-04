@@ -1,23 +1,25 @@
 package com.example.socialbatterymanager.features.people.ui
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.features.people.data.PeopleRepository
 import com.example.socialbatterymanager.features.people.data.PersonWithStats
 import com.example.socialbatterymanager.features.people.data.WeeklyStats
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 enum class SortOption {
     NAME, ENERGY_DRAIN, INTERACTIONS
 }
 
-class PeopleViewModel(private val peopleRepository: PeopleRepository) : ViewModel() {
+@HiltViewModel
+class PeopleViewModel @Inject constructor(private val peopleRepository: PeopleRepository) : ViewModel() {
     
     private val _people = MutableStateFlow<List<PersonWithStats>>(emptyList())
     val people: StateFlow<List<PersonWithStats>> = _people.asStateFlow()
@@ -148,15 +150,5 @@ class PeopleViewModel(private val peopleRepository: PeopleRepository) : ViewMode
     fun refreshData() {
         loadPeople()
         loadWeeklyStats()
-    }
-}
-
-class PeopleViewModelFactory(private val peopleRepository: PeopleRepository) : ViewModelProvider.Factory {
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(PeopleViewModel::class.java)) {
-            @Suppress("UNCHECKED_CAST")
-            return PeopleViewModel(peopleRepository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class")
     }
 }

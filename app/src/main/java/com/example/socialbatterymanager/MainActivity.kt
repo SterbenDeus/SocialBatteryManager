@@ -11,12 +11,14 @@ import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.IOException
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     
     private lateinit var preferencesManager: PreferencesManager
