@@ -12,8 +12,6 @@ import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.repository.RepositoryProvider
-import com.example.socialbatterymanager.data.repository.SecurityManager
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
 import dagger.hilt.android.AndroidEntryPoint
@@ -24,9 +22,17 @@ class ActivitiesFragment : Fragment() {
     private lateinit var rvActivities: RecyclerView
     private lateinit var adapter: ActivitiesAdapter
 
-    private val viewModel: ActivitiesViewModel by viewModels {
-        ActivitiesViewModelFactory(requireContext())
-    }
+    private val viewModel: ActivitiesViewModel by viewModels()
+
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View {
+        val view = inflater.inflate(R.layout.fragment_activities, container, false)
+
+        rvActivities = view.findViewById(R.id.rvActivities)
+        adapter = ActivitiesAdapter(::onActivityClick)
         rvActivities.layoutManager = LinearLayoutManager(requireContext())
         rvActivities.adapter = adapter
 
