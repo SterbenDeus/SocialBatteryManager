@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.socialbatterymanager.auth.LoginFragment"
+        android:name="com.example.socialbatterymanager.features.auth.ui.LoginFragment"
         android:label="Login">
         <action
             android:id="@+id/action_loginFragment_to_homeFragment"
@@ -48,7 +48,7 @@
 
     <fragment
         android:id="@+id/peopleFragment"
-        android:name="com.example.socialbatterymanager.people.PeopleFragment"
+        android:name="com.example.socialbatterymanager.features.people.ui.PeopleFragment"
         android:label="People" />
 
     <fragment
