@@ -14,7 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.repository.DataRepository
+import com.example.socialbatterymanager.data.repository.RepositoryProvider
 import com.example.socialbatterymanager.data.repository.SecurityManager
 import com.example.socialbatterymanager.model.Activity
 import com.example.socialbatterymanager.model.toEntity
@@ -33,8 +33,8 @@ class ActivitiesFragment : Fragment() {
                 } else {
                     null
                 }
-                val repo = DataRepository.getInstance(requireContext(), passphrase)
-                return ActivitiesViewModel(repo) as T
+                val provider = RepositoryProvider.getInstance(requireContext(), passphrase)
+                return ActivitiesViewModel(provider.activityRepository) as T
             }
         }
     }
@@ -125,23 +125,15 @@ class ActivitiesFragment : Fragment() {
                 )
             )
             .setPositiveButton(R.string.delete) { _, _ ->
-
-                lifecycleScope.launch {
-                    try {
-                        val entity = activity.toEntity()
-                        database.activityDao().deleteActivity(entity)
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.activity_delete_success),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    } catch (e: Exception) {
-                        Toast.makeText(
-                            requireContext(),
-                            getString(R.string.activity_delete_error, e.message ?: ""),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
+                viewModel.deleteActivity(activity.id) { success, error ->
+                    Toast.makeText(
+                        requireContext(),
+                        if (success)
+                            getString(R.string.activity_delete_success)
+                        else
+                            getString(R.string.activity_delete_error, error ?: ""),
+                        Toast.LENGTH_SHORT
+                    ).show()
                 }
             }
             .setNegativeButton(R.string.cancel, null)

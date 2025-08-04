@@ -2,7 +2,6 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
-import com.example.socialbatterymanager.data.model.SyncStatus
 import com.opencsv.CSVWriter
 import org.apache.pdfbox.pdmodel.PDDocument
 import org.apache.pdfbox.pdmodel.PDPage
@@ -20,13 +19,13 @@ import java.util.Locale
 
 class ImportExportManager private constructor(
     private val context: Context,
-    private val dataRepository: DataRepository
+    private val activityRepository: ActivityRepository
 ) {
     private val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
 
     suspend fun exportToCsv(): File? {
         return try {
-            val activities = dataRepository.getAllActivities().first()
+            val activities = activityRepository.getAllActivities().first()
             val fileName = "social_battery_export_${System.currentTimeMillis()}.csv"
             val file = File(context.getExternalFilesDir(null), fileName)
 
@@ -62,7 +61,7 @@ class ImportExportManager private constructor(
 
     suspend fun exportToPdf(): File? {
         val activities = try {
-            dataRepository.getAllActivities().first()
+            activityRepository.getAllActivities().first()
         } catch (e: Exception) {
             return null
         }
@@ -161,7 +160,7 @@ class ImportExportManager private constructor(
                                 lastModified = System.currentTimeMillis(),
                                 updatedAt = System.currentTimeMillis()
                             )
-                            dataRepository.insertActivity(activity, "import")
+                            activityRepository.insertActivity(activity, "import")
                             successCount++
                         } else {
                             errorCount++
@@ -191,9 +190,9 @@ class ImportExportManager private constructor(
         @Volatile
         private var INSTANCE: ImportExportManager? = null
 
-        fun getInstance(context: Context, dataRepository: DataRepository): ImportExportManager {
+        fun getInstance(context: Context, activityRepository: ActivityRepository): ImportExportManager {
             return INSTANCE ?: synchronized(this) {
-                val instance = ImportExportManager(context, dataRepository)
+                val instance = ImportExportManager(context, activityRepository)
                 INSTANCE = instance
                 instance
             }

@@ -3,32 +3,31 @@ package com.example.socialbatterymanager.data.repository
 import android.content.Context
 import com.example.socialbatterymanager.data.model.BackupData
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
+import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.tasks.await
 import java.io.File
-import java.io.FileWriter
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 import java.util.UUID
 
 class BackupManager private constructor(
     private val context: Context,
-    private val dataRepository: DataRepository,
+    private val activityRepository: ActivityRepository,
+    private val auditRepository: AuditRepository,
+    private val backupRepository: BackupRepository,
     private val preferencesManager: PreferencesManager,
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
     private val gson: Gson = Gson()
 ) {
     
     suspend fun createLocalBackup(): BackupMetadataEntity {
-        val metadata = dataRepository.createBackup()
+        val metadata = backupRepository.createBackup()
         
         // Create backup file
         val backupFile = File(context.getExternalFilesDir(null), "backup_${metadata.id}.json")
-        val activities = dataRepository.getAllActivities().first()
-        val auditLogs = dataRepository.getAllAuditLogs().first()
+        val activities = activityRepository.getAllActivities().first()
+        val auditLogs = auditRepository.getAllAuditLogs().first()
         
         val backupData = BackupData(
             version = metadata.version,
@@ -55,8 +54,8 @@ class BackupManager private constructor(
         val metadata = createLocalBackup()
         
         try {
-            val activities = dataRepository.getAllActivities().first()
-            val auditLogs = dataRepository.getAllAuditLogs().first()
+            val activities = activityRepository.getAllActivities().first()
+            val auditLogs = auditRepository.getAllAuditLogs().first()
             
             val backupData = BackupData(
                 version = metadata.version,
@@ -74,7 +73,7 @@ class BackupManager private constructor(
             
             // Update metadata with cloud backup ID
             val updatedMetadata = metadata.copy(cloudBackupId = cloudBackupId)
-            dataRepository.database.backupMetadataDao().updateBackupMetadata(updatedMetadata)
+            backupRepository.updateBackupMetadata(updatedMetadata)
             
             return updatedMetadata
         } catch (e: Exception) {
@@ -124,12 +123,12 @@ class BackupManager private constructor(
         
         // Restore activities
         for (activity in backupData.activities) {
-            dataRepository.database.activityDao().insertActivity(activity)
+            activityRepository.insertActivityRaw(activity)
         }
-        
+
         // Restore audit logs
         for (auditLog in backupData.auditLogs) {
-            dataRepository.database.auditLogDao().insertAuditLog(auditLog)
+            auditRepository.insertAuditLogRaw(auditLog)
         }
         
         // Create restore metadata
@@ -142,11 +141,11 @@ class BackupManager private constructor(
             isRestored = true
         )
         
-        dataRepository.database.backupMetadataDao().insertBackupMetadata(restoreMetadata)
+        backupRepository.insertBackupMetadata(restoreMetadata)
     }
     
     suspend fun getAvailableBackups(): List<BackupMetadataEntity> {
-        return dataRepository.getAllBackupMetadata().first()
+        return backupRepository.getAllBackupMetadata().first()
     }
     
     suspend fun deleteBackup(backupId: String) {
@@ -157,7 +156,7 @@ class BackupManager private constructor(
         }
         
         // Delete metadata
-        dataRepository.database.backupMetadataDao().deleteBackupMetadata(backupId)
+        backupRepository.deleteBackupMetadata(backupId)
     }
     
     suspend fun shouldCreateAutoBackup(): Boolean {
@@ -179,11 +178,17 @@ class BackupManager private constructor(
         
         fun getInstance(
             context: Context,
-            dataRepository: DataRepository,
+            repositoryProvider: RepositoryProvider,
             preferencesManager: PreferencesManager
         ): BackupManager {
             return INSTANCE ?: synchronized(this) {
-                val instance = BackupManager(context, dataRepository, preferencesManager)
+                val instance = BackupManager(
+                    context,
+                    repositoryProvider.activityRepository,
+                    repositoryProvider.auditRepository,
+                    repositoryProvider.backupRepository,
+                    preferencesManager
+                )
                 INSTANCE = instance
                 instance
             }

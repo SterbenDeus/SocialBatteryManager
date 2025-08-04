@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.example.socialbatterymanager.data.repository.DataRepository
+import com.example.socialbatterymanager.data.repository.ActivityRepository
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import kotlinx.coroutines.launch
 
-class ActivitiesViewModel(private val repository: DataRepository) : ViewModel() {
+class ActivitiesViewModel(private val repository: ActivityRepository) : ViewModel() {
 
     val activities: LiveData<List<ActivityEntity>> = repository.getAllActivities().asLiveData()
 
@@ -48,7 +48,7 @@ class ActivitiesViewModel(private val repository: DataRepository) : ViewModel() 
     fun markAsUsed(activityId: Int, onResult: (Boolean, String?) -> Unit) {
         viewModelScope.launch {
             try {
-                repository.database.activityDao().incrementUsageCount(activityId)
+                repository.markAsUsed(activityId)
                 onResult(true, null)
             } catch (e: Exception) {
                 onResult(false, e.message)
