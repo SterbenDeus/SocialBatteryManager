@@ -1,6 +1,8 @@
 package com.example.socialbatterymanager.data.repository
 
-import com.example.socialbatterymanager.data.database.*
+import com.example.socialbatterymanager.data.database.ActivityDao
+import com.example.socialbatterymanager.data.database.AuditLogDao
+import com.example.socialbatterymanager.data.database.BackupMetadataDao
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.AuditLogEntity
 import com.google.gson.Gson
@@ -9,30 +11,24 @@ import java.util.Locale
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
-private class FakeAppDatabase : AppDatabase() {
-    override fun activityDao(): ActivityDao = throw NotImplementedError()
-    override fun auditLogDao(): AuditLogDao = throw NotImplementedError()
-    override fun backupMetadataDao(): BackupMetadataDao = throw NotImplementedError()
-    override fun energyLogDao(): EnergyLogDao = throw NotImplementedError()
-    override fun userDao(): UserDao = throw NotImplementedError()
-    override fun personDao(): PersonDao = throw NotImplementedError()
-    override fun calendarEventDao(): CalendarEventDao = throw NotImplementedError()
-    override fun notificationDao(): NotificationDao = throw NotImplementedError()
-}
-
-class DataRepositoryChecksumTest {
-    private fun createRepository(): DataRepository {
-        val constructor = DataRepository::class.java.getDeclaredConstructor(AppDatabase::class.java, Gson::class.java)
+class BackupRepositoryChecksumTest {
+    private fun createRepository(): BackupRepository {
+        val constructor = BackupRepository::class.java.getDeclaredConstructor(
+            ActivityDao::class.java,
+            AuditLogDao::class.java,
+            BackupMetadataDao::class.java,
+            Gson::class.java
+        )
         constructor.isAccessible = true
-        return constructor.newInstance(FakeAppDatabase(), Gson())
+        return constructor.newInstance(null, null, null, Gson())
     }
 
     private fun invokeChecksum(
-        repo: DataRepository,
+        repo: BackupRepository,
         activities: List<ActivityEntity>,
         auditLogs: List<AuditLogEntity>
     ): String {
-        val method = DataRepository::class.java.getDeclaredMethod(
+        val method = BackupRepository::class.java.getDeclaredMethod(
             "generateChecksum",
             List::class.java,
             List::class.java

@@ -8,7 +8,7 @@ import org.junit.Assert.*
 /**
  * Unit tests for the data models and basic repository functionality.
  */
-class DataRepositoryTest {
+class DataModelsTest {
 
     @Test
     fun activityEntity_creation_isCorrect() {
