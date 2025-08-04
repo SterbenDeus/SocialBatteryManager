@@ -1,20 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <data-extraction-rules>
     <cloud-backup>
-        <include domain="sharedpref" path="profile_prefs.xml"/>
-        <exclude domain="sharedpref" path="encrypted_prefs.xml"/>
-        <include domain="database" path="social_battery_db"/>
-        <exclude domain="database" path="*-journal"/>
-        <include domain="file" path="."/>
-        <exclude domain="file" path="cache/"/>
+        <!-- Exclude all data from cloud backups -->
+        <exclude domain="sharedpref" path="."/>
+        <exclude domain="database" path="."/>
+        <exclude domain="file" path="."/>
     </cloud-backup>
     <device-transfer>
-        <include domain="sharedpref" path="profile_prefs.xml"/>
-        <exclude domain="sharedpref" path="encrypted_prefs.xml"/>
-        <include domain="database" path="social_battery_db"/>
-        <exclude domain="database" path="*-journal"/>
-        <include domain="file" path="."/>
-        <exclude domain="file" path="cache/"/>
+        <!-- Exclude all data from device-to-device transfers -->
+        <exclude domain="sharedpref" path="."/>
+        <exclude domain="database" path="."/>
+        <exclude domain="file" path="."/>
     </device-transfer>
 </data-extraction-rules>
-
