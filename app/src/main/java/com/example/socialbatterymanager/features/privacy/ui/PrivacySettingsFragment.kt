@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.BlockedUser
-import com.example.socialbatterymanager.data.model.PrivacySettings
+import com.example.socialbatterymanager.data.model.UserPrivacySettings
 import com.example.socialbatterymanager.data.model.VisibilityLevel
 import com.example.socialbatterymanager.features.auth.data.AuthRepository
 import com.google.gson.Gson
@@ -48,7 +48,7 @@ class PrivacySettingsFragment : Fragment() {
     private lateinit var blockedUsersRecyclerView: RecyclerView
 
     // Data
-    private var currentPrivacySettings: PrivacySettings? = null
+    private var currentPrivacySettings: UserPrivacySettings? = null
     private val blockedUsers = mutableListOf<BlockedUser>()
     private lateinit var blockedUsersAdapter: BlockedUsersAdapter
     private val authRepository = AuthRepository()
@@ -127,19 +127,11 @@ class PrivacySettingsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 requireContext().privacyDataStore.data.collect { preferences ->
                     val userId = authRepository.currentUser?.uid ?: ""
-                    val storedLevel = preferences[VISIBILITY_LEVEL_KEY]
-                    val visibilityLevel = when (storedLevel) {
-                        null -> VisibilityLevel.FRIENDS
-                        // Handle legacy values
-                        "FRIENDS_ONLY" -> VisibilityLevel.FRIENDS
-                        "ONLY_ME" -> VisibilityLevel.PRIVATE
-                        else -> runCatching { VisibilityLevel.valueOf(storedLevel) }
-                            .getOrDefault(VisibilityLevel.FRIENDS)
-                    }
-
-                    currentPrivacySettings = PrivacySettings(
+                    currentPrivacySettings = UserPrivacySettings(
                         userId = userId,
-                        moodVisibilityLevel = visibilityLevel,
+                        moodVisibilityLevel = VisibilityLevel.valueOf(
+                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS.name
+                        ),
                         moodStatusEnabled = preferences[MOOD_STATUS_ENABLED_KEY] ?: true,
                         energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
                         activityPatternsEnabled = preferences[ACTIVITY_PATTERNS_ENABLED_KEY] ?: false
@@ -196,7 +188,7 @@ class PrivacySettingsFragment : Fragment() {
                 preferences[BLOCKED_USERS_KEY] = gson.toJson(blockedUsers)
             }
 
-            currentPrivacySettings = PrivacySettings(
+            currentPrivacySettings = UserPrivacySettings(
                 userId = userId,
                 moodVisibilityLevel = visibilityLevel,
                 moodStatusEnabled = moodStatusSwitch.isChecked,
