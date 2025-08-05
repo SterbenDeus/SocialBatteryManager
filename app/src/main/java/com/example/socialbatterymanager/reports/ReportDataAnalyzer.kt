@@ -82,7 +82,7 @@ class ReportDataAnalyzer {
             val totalActivities = activities.size.toFloat()
             val peakTimes = mutableListOf<PeakUsageTime>()
 
-            hourlyData.forEach { (hour, hourActivities) ->
+            hourlyData.forEach { (hour: Int, hourActivities: List<ActivityEntity>) ->
                 val avgEnergy = hourActivities.map { it.energy }.average()
                 val percentage = (hourActivities.size / totalActivities) * 100
 
