@@ -1,11 +1,14 @@
 package com.example.socialbatterymanager.sync
 
 import android.content.Context
+import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
+import com.google.common.util.concurrent.ListenableFuture
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
@@ -77,8 +80,18 @@ class SyncManager(private val context: Context) {
     /**
      * Check if sync is currently running
      */
-    suspend fun isSyncRunning(): Boolean {
-        val workInfos = workManager.getWorkInfosForUniqueWork(SYNC_WORK_NAME).get()
-        return workInfos.any { it.state == androidx.work.WorkInfo.State.RUNNING }
+    fun isSyncRunning(): ListenableFuture<Boolean> {
+        val workInfosFuture = workManager.getWorkInfosForUniqueWork(SYNC_WORK_NAME)
+        return CallbackToFutureAdapter.getFuture { completer ->
+            workInfosFuture.addListener({
+                try {
+                    val isRunning = workInfosFuture.get().any { it.state == WorkInfo.State.RUNNING }
+                    completer.set(isRunning)
+                } catch (e: Exception) {
+                    completer.setException(e)
+                }
+            }, { it.run() })
+            "isSyncRunning"
+        }
     }
 }
