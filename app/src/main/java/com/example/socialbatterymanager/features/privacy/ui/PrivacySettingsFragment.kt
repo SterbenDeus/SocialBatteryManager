@@ -24,7 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.BlockedUser
-import com.example.socialbatterymanager.data.model.PrivacySettings
+import com.example.socialbatterymanager.data.model.UserPrivacySettings
 import com.example.socialbatterymanager.data.model.VisibilityLevel
 import com.example.socialbatterymanager.features.auth.data.AuthRepository
 import com.google.gson.Gson
@@ -48,7 +48,7 @@ class PrivacySettingsFragment : Fragment() {
     private lateinit var blockedUsersRecyclerView: RecyclerView
 
     // Data
-    private var currentPrivacySettings: PrivacySettings? = null
+    private var currentPrivacySettings: UserPrivacySettings? = null
     private val blockedUsers = mutableListOf<BlockedUser>()
     private lateinit var blockedUsersAdapter: BlockedUsersAdapter
     private val authRepository = AuthRepository()
@@ -127,10 +127,10 @@ class PrivacySettingsFragment : Fragment() {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
                 requireContext().privacyDataStore.data.collect { preferences ->
                     val userId = authRepository.currentUser?.uid ?: ""
-                    currentPrivacySettings = PrivacySettings(
+                    currentPrivacySettings = UserPrivacySettings(
                         userId = userId,
                         moodVisibilityLevel = VisibilityLevel.valueOf(
-                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
+                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS.name
                         ),
                         moodStatusEnabled = preferences[MOOD_STATUS_ENABLED_KEY] ?: true,
                         energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
@@ -156,9 +156,9 @@ class PrivacySettingsFragment : Fragment() {
             // Update radio buttons
             when (settings.moodVisibilityLevel) {
                 VisibilityLevel.EVERYONE -> everyoneRadioButton.isChecked = true
-                VisibilityLevel.FRIENDS_ONLY -> friendsOnlyRadioButton.isChecked = true
+                VisibilityLevel.FRIENDS -> friendsOnlyRadioButton.isChecked = true
                 VisibilityLevel.CLOSE_FRIENDS -> closeFriendsRadioButton.isChecked = true
-                VisibilityLevel.ONLY_ME -> onlyMeRadioButton.isChecked = true
+                VisibilityLevel.PRIVATE -> onlyMeRadioButton.isChecked = true
             }
 
             // Update switches
@@ -173,10 +173,10 @@ class PrivacySettingsFragment : Fragment() {
             val userId = authRepository.currentUser?.uid ?: return@launch
             val visibilityLevel = when {
                 everyoneRadioButton.isChecked -> VisibilityLevel.EVERYONE
-                friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS_ONLY
+                friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS
                 closeFriendsRadioButton.isChecked -> VisibilityLevel.CLOSE_FRIENDS
-                onlyMeRadioButton.isChecked -> VisibilityLevel.ONLY_ME
-                else -> VisibilityLevel.FRIENDS_ONLY
+                onlyMeRadioButton.isChecked -> VisibilityLevel.PRIVATE
+                else -> VisibilityLevel.FRIENDS
             }
 
             requireContext().privacyDataStore.edit { preferences ->
@@ -188,7 +188,7 @@ class PrivacySettingsFragment : Fragment() {
                 preferences[BLOCKED_USERS_KEY] = gson.toJson(blockedUsers)
             }
 
-            currentPrivacySettings = PrivacySettings(
+            currentPrivacySettings = UserPrivacySettings(
                 userId = userId,
                 moodVisibilityLevel = visibilityLevel,
                 moodStatusEnabled = moodStatusSwitch.isChecked,
@@ -298,10 +298,10 @@ class PrivacySettingsFragment : Fragment() {
     private fun getSelectedVisibilityLevel(): VisibilityLevel {
         return when {
             everyoneRadioButton.isChecked -> VisibilityLevel.EVERYONE
-            friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS_ONLY
+            friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS
             closeFriendsRadioButton.isChecked -> VisibilityLevel.CLOSE_FRIENDS
-            onlyMeRadioButton.isChecked -> VisibilityLevel.ONLY_ME
-            else -> VisibilityLevel.FRIENDS_ONLY
+            onlyMeRadioButton.isChecked -> VisibilityLevel.PRIVATE
+            else -> VisibilityLevel.FRIENDS
         }
     }
 }
