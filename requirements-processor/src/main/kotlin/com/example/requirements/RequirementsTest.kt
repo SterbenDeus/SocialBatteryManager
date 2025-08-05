@@ -120,7 +120,7 @@ object RequirementsTest {
     private fun testWebInterface() {
         println("\n3. Testing web interface...")
         
-        val webInterface = RequirementsWebInterface()
+        val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
         
         // Test with sample requirements
         val sampleRequirements = webInterface.generateSampleRequirements()
@@ -147,7 +147,7 @@ object RequirementsTest {
     private fun testComplexityAssessment() {
         println("\n4. Testing complexity assessment...")
         
-        val webInterface = RequirementsWebInterface()
+        val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
         
         val testCases = listOf(
             "Simple app with login" to "Simple mobile app with user login feature",
@@ -212,7 +212,7 @@ object RequirementsDemo {
     }
     
     private fun runInteractiveDemo() {
-        val webInterface = RequirementsWebInterface()
+        val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
         val samples = webInterface.generateSampleRequirements()
         
         println("Available Sample Requirements:")
