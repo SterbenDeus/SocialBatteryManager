@@ -1,12 +1,14 @@
 package com.example.socialbatterymanager.features.home
 
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.features.home.ui.SimpleHomeFragment
 import com.example.socialbatterymanager.features.notifications.NotificationService
-import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.Assert.assertEquals
@@ -51,5 +53,19 @@ class SimpleHomeFragmentTest {
 
         assertEquals("60%", tvEnergy.text.toString())
         verify { mockService.checkAndGenerateEnergyLowNotification(60) }
+    }
+
+    @Test
+    fun clickingNotifications_navigatesToNotifications() {
+        val controller = Robolectric.buildFragment(SimpleHomeFragment::class.java).create().start().resume()
+        val fragment = controller.get()
+
+        val navController = mockk<NavController>(relaxed = true)
+        Navigation.setViewNavController(fragment.requireView(), navController)
+
+        val btnNotifications = fragment.requireView().findViewById<ImageButton>(R.id.btnNotifications)
+        btnNotifications.performClick()
+
+        verify { navController.navigate(R.id.action_homeFragment_to_notificationsFragment) }
     }
 }
