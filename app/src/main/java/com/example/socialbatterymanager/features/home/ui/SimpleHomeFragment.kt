@@ -17,9 +17,12 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class SimpleHomeFragment : Fragment() {
 
-    private var _binding: FragmentHomeBinding? = null
-    val binding get() = _binding!!
-
+    private lateinit var btnNotifications: ImageButton
+    private lateinit var btnAddEnergy: Button
+    private lateinit var btnRemoveEnergy: Button
+    private lateinit var btnTestBattery: Button
+    private lateinit var tvWeeklyStats: TextView
+    private lateinit var tvEnergyPercentage: TextView
     private lateinit var notificationService: NotificationService
 
     private val viewModel: SimpleHomeViewModel by viewModels()
@@ -37,6 +40,13 @@ class SimpleHomeFragment : Fragment() {
         // Initialize notification service
         notificationService = NotificationService(requireContext())
 
+        // Initialize views
+        btnNotifications = view.findViewById(R.id.btnNotifications)
+        btnAddEnergy = view.findViewById(R.id.btnAddEnergy)
+        btnRemoveEnergy = view.findViewById(R.id.btnRemoveEnergy)
+        btnTestBattery = view.findViewById(R.id.btnTestBattery)
+        tvWeeklyStats = view.findViewById(R.id.tvWeeklyStats)
+        tvEnergyPercentage = view.findViewById(R.id.tvEnergyPercentage)
         setupClickListeners()
         if (BuildConfig.DEBUG) {
             generateSampleNotifications()
@@ -79,8 +89,8 @@ class SimpleHomeFragment : Fragment() {
         currentEnergyLevel = newLevel
 
         // Update UI
-        binding.tvEnergyPercentage.text = "$newLevel%"
-
+        tvEnergyPercentage.text = "$newLevel%"
+        
         // Check if we should generate a low energy notification
         notificationService.checkAndGenerateEnergyLowNotification(newLevel)
     }

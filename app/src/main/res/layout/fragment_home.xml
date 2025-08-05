@@ -32,10 +32,13 @@
                 android:textStyle="bold"
                 android:textColor="@android:color/white" />
 
-            <View
+            <ImageButton
+                android:id="@+id/btnNotifications"
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:background="@android:color/darker_gray" />
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/notifications"
+                app:srcCompat="@drawable/ic_notifications" />
 
         </LinearLayout>
 
