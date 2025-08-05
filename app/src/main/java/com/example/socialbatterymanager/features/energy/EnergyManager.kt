@@ -5,6 +5,7 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.data.model.CalendarActivityEvent
 import java.util.Calendar
+import java.util.concurrent.TimeUnit
 
 /**
  * Energy management service for calculating and tracking social battery levels
@@ -121,24 +122,24 @@ class EnergyManager {
                     id = 1,
                     title = "Team Meeting",
                     description = "Weekly standup with development team",
-                    startTime = todayStart + (9 * 60 * 60 * 1000), // 9:00 AM
-                    endTime = todayStart + (10.5 * 60 * 60 * 1000), // 10:30 AM
+                    startTime = todayStart + TimeUnit.HOURS.toMillis(9), // 9:00 AM
+                    endTime = todayStart + TimeUnit.HOURS.toMillis(10) + TimeUnit.MINUTES.toMillis(30), // 10:30 AM
                     source = "google",
                 ),
                 CalendarEvent(
                     id = 2,
                     title = "Lunch with Sarah",
                     description = "Catching up with close friend",
-                    startTime = todayStart + (12 * 60 * 60 * 1000), // 12:00 PM
-                    endTime = todayStart + (13 * 60 * 60 * 1000), // 1:00 PM
+                    startTime = todayStart + TimeUnit.HOURS.toMillis(12), // 12:00 PM
+                    endTime = todayStart + TimeUnit.HOURS.toMillis(13), // 1:00 PM
                     source = "manual",
                 ),
                 CalendarEvent(
                     id = 3,
                     title = "Client Presentation",
                     description = "Important project presentation",
-                    startTime = todayStart + (15 * 60 * 60 * 1000), // 3:00 PM
-                    endTime = todayStart + (16.5 * 60 * 60 * 1000), // 4:30 PM
+                    startTime = todayStart + TimeUnit.HOURS.toMillis(15), // 3:00 PM
+                    endTime = todayStart + TimeUnit.HOURS.toMillis(16) + TimeUnit.MINUTES.toMillis(30), // 4:30 PM
                     source = "outlook",
                 )
             )
