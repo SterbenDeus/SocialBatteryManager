@@ -29,7 +29,7 @@ class SimpleHomeFragmentTest {
         field.set(fragment, mockService)
 
         val btnAdd = fragment.requireView().findViewById<Button>(R.id.btnAddEnergy)
-        val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyLevel)
+        val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyPercentage)
 
         btnAdd.performClick()
 
@@ -47,7 +47,7 @@ class SimpleHomeFragmentTest {
         field.set(fragment, mockService)
 
         val btnRemove = fragment.requireView().findViewById<Button>(R.id.btnRemoveEnergy)
-        val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyLevel)
+        val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyPercentage)
 
         btnRemove.performClick()
 

@@ -25,7 +25,7 @@ class SimpleHomeFragment : Fragment() {
     private lateinit var btnRemoveEnergy: Button
     private lateinit var btnTestBattery: Button
     private lateinit var tvWeeklyStats: TextView
-    private lateinit var tvEnergyLevel: TextView
+    private lateinit var tvEnergyPercentage: TextView
     private lateinit var notificationService: NotificationService
 
     private val viewModel: SimpleHomeViewModel by viewModels()
@@ -49,7 +49,7 @@ class SimpleHomeFragment : Fragment() {
         btnRemoveEnergy = view.findViewById(R.id.btnRemoveEnergy)
         btnTestBattery = view.findViewById(R.id.btnTestBattery)
         tvWeeklyStats = view.findViewById(R.id.tvWeeklyStats)
-        tvEnergyLevel = view.findViewById(R.id.tvEnergyLevel)
+        tvEnergyPercentage = view.findViewById(R.id.tvEnergyPercentage)
 
         setupClickListeners()
         if (BuildConfig.DEBUG) {
@@ -89,7 +89,7 @@ class SimpleHomeFragment : Fragment() {
         currentEnergyLevel = newLevel
         
         // Update UI
-        tvEnergyLevel.text = "$newLevel%"
+        tvEnergyPercentage.text = "$newLevel%"
         
         // Check if we should generate a low energy notification
         notificationService.checkAndGenerateEnergyLowNotification(newLevel)
