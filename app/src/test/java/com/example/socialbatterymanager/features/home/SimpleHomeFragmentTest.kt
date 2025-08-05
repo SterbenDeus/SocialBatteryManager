@@ -1,12 +1,12 @@
 package com.example.socialbatterymanager.features.home
 
+
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.features.home.ui.SimpleHomeFragment
 import com.example.socialbatterymanager.features.notifications.NotificationService
 import io.mockk.mockk
@@ -27,10 +27,8 @@ class SimpleHomeFragmentTest {
         val field = SimpleHomeFragment::class.java.getDeclaredField("notificationService")
         field.isAccessible = true
         field.set(fragment, mockService)
-
         val btnAdd = fragment.requireView().findViewById<Button>(R.id.btnAddEnergy)
         val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyPercentage)
-
         btnAdd.performClick()
 
         assertEquals("70%", tvEnergy.text.toString())
@@ -45,10 +43,8 @@ class SimpleHomeFragmentTest {
         val field = SimpleHomeFragment::class.java.getDeclaredField("notificationService")
         field.isAccessible = true
         field.set(fragment, mockService)
-
         val btnRemove = fragment.requireView().findViewById<Button>(R.id.btnRemoveEnergy)
         val tvEnergy = fragment.requireView().findViewById<TextView>(R.id.tvEnergyPercentage)
-
         btnRemove.performClick()
 
         assertEquals("60%", tvEnergy.text.toString())

@@ -4,15 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
+import com.example.socialbatterymanager.databinding.FragmentHomeBinding
 import com.example.socialbatterymanager.features.notifications.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -30,15 +27,15 @@ class SimpleHomeFragment : Fragment() {
 
     private val viewModel: SimpleHomeViewModel by viewModels()
 
-
     // Current energy level
     private var currentEnergyLevel = 65
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        val view = inflater.inflate(R.layout.fragment_home, container, false)
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?,
+    ): View {
+        _binding = FragmentHomeBinding.inflate(inflater, container, false)
 
         // Initialize notification service
         notificationService = NotificationService(requireContext())
@@ -50,34 +47,37 @@ class SimpleHomeFragment : Fragment() {
         btnTestBattery = view.findViewById(R.id.btnTestBattery)
         tvWeeklyStats = view.findViewById(R.id.tvWeeklyStats)
         tvEnergyPercentage = view.findViewById(R.id.tvEnergyPercentage)
-
         setupClickListeners()
         if (BuildConfig.DEBUG) {
             generateSampleNotifications()
         }
 
         viewModel.weeklyActivityCount.observe(viewLifecycleOwner) { count ->
-            tvWeeklyStats.text = getString(R.string.weekly_stats_message, count)
+            binding.tvWeeklyStats.text = getString(R.string.weekly_stats_message, count)
         }
         viewModel.loadWeeklyStats()
 
-        return view
+        // Initialize energy display
+        binding.tvEnergyPercentage.text = "$currentEnergyLevel%"
+
+        return binding.root
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     private fun setupClickListeners() {
-        btnNotifications.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_notificationsFragment)
-        }
-
-        btnAddEnergy.setOnClickListener {
+        binding.btnAddEnergy.setOnClickListener {
             updateEnergyLevel(5)
         }
 
-        btnRemoveEnergy.setOnClickListener {
+        binding.btnRemoveEnergy.setOnClickListener {
             updateEnergyLevel(-5)
         }
 
-        btnTestBattery.setOnClickListener {
+        binding.btnTestBattery.setOnClickListener {
             val testLevels = listOf(95, 75, 55, 35, 15)
             val randomLevel = testLevels.random()
             updateEnergyLevel(randomLevel - currentEnergyLevel)
@@ -87,7 +87,7 @@ class SimpleHomeFragment : Fragment() {
     private fun updateEnergyLevel(change: Int) {
         val newLevel = (currentEnergyLevel + change).coerceIn(0, 100)
         currentEnergyLevel = newLevel
-        
+
         // Update UI
         tvEnergyPercentage.text = "$newLevel%"
         
@@ -103,3 +103,4 @@ class SimpleHomeFragment : Fragment() {
         }
     }
 }
+
