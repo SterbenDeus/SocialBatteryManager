@@ -1,6 +1,5 @@
 package com.example.requirements
 
-import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 import java.io.File
 
@@ -429,27 +428,6 @@ class RequirementProcessor {
             type = FileType.XML
         )
     }
-}
-
-@Serializable
-data class Requirements(
-    val projectName: String,
-    val description: String,
-    val features: List<Feature>
-)
-
-@Serializable
-data class Feature(
-    val name: String,
-    val description: String,
-    val type: FeatureType
-)
-
-@Serializable
-enum class FeatureType {
-    COMPONENT,  // UI components, fragments, activities
-    SERVICE,    // Background services, data processing
-    UTILITY     // Helper classes, utilities
 }
 
 data class CodeGenerationResult(
