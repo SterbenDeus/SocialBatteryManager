@@ -44,7 +44,7 @@ data class CalendarActivityEvent(
      * Calculate energy burn based on duration and activity type
      */
     fun calculateEnergyBurn(): Double {
-        val durationHours = (endTime - startTime) / (1000.0 * 60 * 60)
+        val durationHours = (endTime.toDouble() - startTime.toDouble()) / (1000 * 60 * 60).toDouble()
         val baseRate = when (activityType.lowercase()) {
             "meeting" -> 1.5
             "presentation" -> 2.0

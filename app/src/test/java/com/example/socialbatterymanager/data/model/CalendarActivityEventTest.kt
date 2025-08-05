@@ -12,7 +12,7 @@ class CalendarActivityEventTest {
             title = "Team Meeting",
             description = "Weekly standup",
             startTime = System.currentTimeMillis(),
-            endTime = System.currentTimeMillis() + (60 * 60 * 1000), // 1 hour later
+            endTime = System.currentTimeMillis() + (60 * 60 * 1000L), // 1 hour later
             location = "Conference Room",
             source = "google"
         )
@@ -31,7 +31,7 @@ class CalendarActivityEventTest {
     @Test
     fun `calculateEnergyBurn returns correct values for different activity types`() {
         val baseTime = System.currentTimeMillis()
-        val oneHourLater = baseTime + (60 * 60 * 1000)
+        val oneHourLater = baseTime + (60 * 60 * 1000L)
         
         // Meeting activity
         val meetingEvent = CalendarActivityEvent(
@@ -111,9 +111,9 @@ class CalendarActivityEventTest {
     @Test
     fun `getColorIndicator returns correct colors for energy levels`() {
         val baseTime = System.currentTimeMillis()
-        val thirtyMinutes = baseTime + (30 * 60 * 1000)
-        val oneHour = baseTime + (60 * 60 * 1000)
-        val twoHours = baseTime + (2 * 60 * 60 * 1000)
+        val thirtyMinutes = baseTime + (30 * 60 * 1000L)
+        val oneHour = baseTime + (60 * 60 * 1000L)
+        val twoHours = baseTime + (2 * 60 * 60 * 1000L)
         
         // Low energy activity (should be green)
         val lowEnergyEvent = CalendarActivityEvent(
