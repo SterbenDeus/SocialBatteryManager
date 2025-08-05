@@ -67,7 +67,7 @@ The system can handle requirements of varying complexity levels:
 The system includes a web interface component that can be integrated into web applications:
 
 ```kotlin
-val webInterface = RequirementsWebInterface()
+val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
 val result = webInterface.processWebRequirements(
     fileContent = requirementsText,
     fileName = "requirements.json"
@@ -240,7 +240,7 @@ class RequirementsController {
     
     @PostMapping("/process")
     fun processRequirements(@RequestBody requirements: String): WebProcessingResult {
-        val webInterface = RequirementsWebInterface()
+        val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
         return webInterface.processWebRequirements(requirements, "requirements.json")
     }
 }
