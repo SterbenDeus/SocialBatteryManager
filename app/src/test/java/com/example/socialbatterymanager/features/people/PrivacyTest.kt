@@ -12,7 +12,7 @@ class PrivacyTest {
     @Test
     fun testSocialEnergyVisibility() {
         val settings = PrivacySettings(
-            socialEnergyVisibility = VisibilityLevel.FRIENDS
+            socialEnergyVisibility = VisibilityLevel.FRIENDS_ONLY
         )
 
         // Close friends should be able to see
@@ -60,8 +60,8 @@ class PrivacyTest {
     @Test
     fun testPrivateSettings() {
         val settings = PrivacySettings(
-            socialEnergyVisibility = VisibilityLevel.PRIVATE,
-            moodVisibility = VisibilityLevel.PRIVATE
+            socialEnergyVisibility = VisibilityLevel.ONLY_ME,
+            moodVisibility = VisibilityLevel.ONLY_ME
         )
 
         // No one should be able to see private information

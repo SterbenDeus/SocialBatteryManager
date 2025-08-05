@@ -51,6 +51,7 @@ android {
     }
     buildFeatures {
         compose = true
+        // Enable View Binding for layout references
         viewBinding = true
     }
     composeOptions {

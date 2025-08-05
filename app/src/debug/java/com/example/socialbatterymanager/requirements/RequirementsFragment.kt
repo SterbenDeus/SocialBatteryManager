@@ -11,6 +11,7 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import com.example.requirements.RequirementsWebInterface
+import com.example.requirements.RequirementsWebInterfaceImpl
 import com.example.requirements.ComplexityLevel
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
@@ -29,7 +30,7 @@ class RequirementsFragment : Fragment() {
     private lateinit var resultText: TextView
     private lateinit var complexityText: TextView
     
-    private val webInterface = RequirementsWebInterface()
+    private val webInterface: RequirementsWebInterface = RequirementsWebInterfaceImpl()
     
     override fun onCreateView(
         inflater: LayoutInflater,
