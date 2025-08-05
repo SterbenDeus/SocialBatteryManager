@@ -12,12 +12,12 @@ repositories {
 }
 
 dependencies {
-    implementation("org.jetbrains.kotlin:kotlin-stdlib")
+    implementation(kotlin("stdlib", "1.8.10"))
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.0")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4")
-    
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+
+    testImplementation(kotlin("test", "1.8.10"))
+    testImplementation(kotlin("test-junit", "1.8.10"))
     testImplementation("junit:junit:4.13.2")
 }
 

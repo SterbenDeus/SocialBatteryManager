@@ -60,6 +60,9 @@ android {
 }
 
 dependencies {
+    // Kotlin
+    implementation(kotlin("stdlib", "1.9.24"))
+
     // Lottie
     implementation("com.airbnb.android:lottie:6.4.0")
 
