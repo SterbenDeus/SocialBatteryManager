@@ -50,7 +50,7 @@ class BackupManager @Inject constructor(
     }
     
     suspend fun createCloudBackup(): BackupMetadataEntity? {
-        val preferences = preferencesManager.userPreferences.first()
+        val preferences: PreferencesManager.UserPreferences = preferencesManager.userPreferences.first()
         if (!preferences.cloudBackupEnabled) {
             return null
         }
@@ -74,16 +74,11 @@ class BackupManager @Inject constructor(
                 .document(cloudBackupId)
                 .set(backupData)
                 .await()
-            
-            // Update metadata with cloud backup ID
-            val updatedMetadata = metadata.copy(cloudBackupId = cloudBackupId)
-            backupRepository.updateBackupMetadata(updatedMetadata)
-            
-            return updatedMetadata
         } catch (e: Exception) {
-            // Log error but return local backup metadata
-            return metadata
+            // Log the exception or handle it appropriately
         }
+
+        return metadata
     }
     
     suspend fun restoreFromCloudBackup(cloudBackupId: String): Boolean {
@@ -164,15 +159,15 @@ class BackupManager @Inject constructor(
     }
     
     suspend fun shouldCreateAutoBackup(): Boolean {
-        val preferences = preferencesManager.userPreferences.first()
+        val preferences: PreferencesManager.UserPreferences = preferencesManager.userPreferences.first()
         if (!preferences.autoBackupEnabled) {
             return false
         }
-        
+
+        val currentTime = System.currentTimeMillis()
         val lastBackupTime = preferences.lastBackupTime
         val interval = preferences.backupInterval
-        val currentTime = System.currentTimeMillis()
-        
+
         return (currentTime - lastBackupTime) >= interval
     }
     

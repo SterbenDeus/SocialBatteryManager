@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -32,6 +33,10 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
         private val NOTIFICATIONS_ENABLED_KEY = booleanPreferencesKey("notifications_enabled")
         private val SYNC_ENABLED_KEY = booleanPreferencesKey("sync_enabled")
         private val BATTERY_NOTIFICATION_THRESHOLD_KEY = intPreferencesKey("battery_notification_threshold")
+        private val LAST_BACKUP_TIME_KEY = longPreferencesKey("last_backup_time")
+        private val CLOUD_BACKUP_ENABLED_KEY = booleanPreferencesKey("cloud_backup_enabled")
+        private val AUTO_BACKUP_ENABLED_KEY = booleanPreferencesKey("auto_backup_enabled")
+        private val BACKUP_INTERVAL_KEY = longPreferencesKey("backup_interval")
         
         const val THEME_LIGHT = "light"
         const val THEME_DARK = "dark"
@@ -52,7 +57,7 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
                 throw e
             }
         }
-    
+
     /**
      * Emits whether onboarding is completed. Defaults to `false` on errors.
      */
@@ -128,6 +133,23 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
             }
         }
     
+    val userPreferences: Flow<UserPreferences> = dataStore.data
+        .map { preferences ->
+            UserPreferences(
+                cloudBackupEnabled = preferences[CLOUD_BACKUP_ENABLED_KEY] ?: false,
+                autoBackupEnabled = preferences[AUTO_BACKUP_ENABLED_KEY] ?: false,
+                lastBackupTime = preferences[LAST_BACKUP_TIME_KEY] ?: 0L,
+                backupInterval = preferences[BACKUP_INTERVAL_KEY] ?: 0L
+            )
+        }
+        .catch { e ->
+            if (e is IOException) {
+                emit(UserPreferences())
+            } else {
+                throw e
+            }
+        }
+
     suspend fun setTheme(theme: String) {
         dataStore.edit { preferences ->
             preferences[THEME_KEY] = theme
@@ -163,4 +185,17 @@ class PreferencesManager(private val dataStore: DataStore<Preferences>) {
             preferences[BATTERY_NOTIFICATION_THRESHOLD_KEY] = threshold
         }
     }
+
+    suspend fun updateLastBackupTime(time: Long) {
+        dataStore.edit { preferences ->
+            preferences[LAST_BACKUP_TIME_KEY] = time
+        }
+    }
+
+    data class UserPreferences(
+        val cloudBackupEnabled: Boolean = false,
+        val autoBackupEnabled: Boolean = false,
+        val lastBackupTime: Long = 0L,
+        val backupInterval: Long = 0L
+    )
 }

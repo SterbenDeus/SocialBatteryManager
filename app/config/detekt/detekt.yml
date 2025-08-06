@@ -72,7 +72,7 @@ complexity:
     threshold: 4
   ComplexInterface:
     active: false
-  ComplexMethod:
+  CyclomaticComplexMethod:
     active: true
     threshold: 15
   LabeledExpression:
@@ -120,8 +120,6 @@ coroutines:
     active: true
   SleepInsteadOfDelay:
     active: true
-  SuspendFunWithCoroutineScope:
-    active: false
   SuspendFunWithFlowReturnType:
     active: true
 
@@ -186,10 +184,6 @@ exceptions:
     active: false
   ThrowingExceptionsWithoutMessageOrCause:
     active: true
-    excludedExceptionTypes:
-      - IllegalArgumentException
-      - IllegalStateException
-      - IOException
   ThrowingNewInstanceOfSameException:
     active: true
   TooGenericExceptionCaught:
@@ -211,11 +205,6 @@ exceptions:
       - Exception
       - Throwable
       - RuntimeException
-
-formatting:
-  active: true
-  android: true
-  autoCorrect: true
 
 naming:
   active: true
@@ -240,9 +229,9 @@ naming:
     active: false
   FunctionNaming:
     active: true
-    excludeClassPattern: '$^'
+    excludeAnnotated: []
     functionPattern: '[a-z][a-zA-Z0-9]*'
-    excludeAnnotated: [Composable]
+    excludeClassPattern: '$^'
   FunctionParameterNaming:
     active: true
     parameterPattern: '[a-z][A-Za-z0-9]*'
@@ -264,8 +253,8 @@ naming:
   ObjectPropertyNaming:
     active: true
     constantPattern: '[A-Za-z][_A-Za-z0-9]*'
-    propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
-    privatePropertyPattern: '(_)?[A-Za-z][_A-Za-z0-9]*'
+    propertyPattern: '[A-Za-z][_A-ZaZ0-9]*'
+    privatePropertyPattern: '(_)?[A-Za-z][_A-ZaZ0-9]*'
   PackageNaming:
     active: true
     packagePattern: '[a-z]+(\.[a-z][A-Za-z0-9]*)*'
@@ -273,7 +262,7 @@ naming:
     active: true
     constantPattern: '[A-Z][_A-Z0-9]*'
     propertyPattern: '[A-Za-z][_A-Za-z0-9]*'
-    privatePropertyPattern: '_?[A-Za-z][_A-Za-z0-9]*'
+    privatePropertyPattern: '_?[A-Za-z][_A-ZaZ0-9]*'
   VariableMaxLength:
     active: false
   VariableMinLength:
@@ -281,7 +270,7 @@ naming:
   VariableNaming:
     active: true
     variablePattern: '[a-z][A-Za-z0-9]*'
-    privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'
+    privateVariablePattern: '(_)?[a-z][A-ZaZ0-9]*'
     excludeClassPattern: '$^'
 
 performance:
@@ -315,10 +304,7 @@ potential-bugs:
     active: true
   IgnoredReturnValue:
     active: true
-    restrictToAnnotatedMethods: true
-    returnValueAnnotations:
-      - '*.CheckReturnValue'
-      - '*.CheckResult'
+    restrictToConfig: true
   ImplicitDefaultLocale:
     active: true
   ImplicitUnitReturnType:
@@ -338,7 +324,7 @@ potential-bugs:
   NullableToStringCall:
     active: false
   RedundantElseInWhen:
-    active: true
+    active: false
   UnconditionalJumpStatementInLoop:
     active: false
   UnnecessaryNotNullOperator:
@@ -368,8 +354,6 @@ style:
     active: false
   CollapsibleIfStatements:
     active: false
-  DataClassContainsCustomGetterOrSetter:
-    active: false
   DataClassShouldBeImmutable:
     active: false
   DestructuringDeclarationWithTooManyEntries:
@@ -387,29 +371,16 @@ style:
     active: false
   ForbiddenComment:
     active: true
-    values: ['TODO:', 'FIXME:', 'STOPSHIP:', '@author', '@requiresApi']
-    allowedPatterns: ''
+    comments: ['TODO:', 'FIXME:', 'STOPSHIP:']
   ForbiddenImport:
     active: false
   ForbiddenMethodCall:
     active: false
-  ForbiddenPublicDataClass:
-    active: true
-    excludes: ['**']
-  ForbiddenVoid:
-    active: true
-    ignoreOverridden: false
-    ignoreUsageInGenerics: false
   FunctionOnlyReturningConstant:
     active: true
     ignoreOverridableFunction: true
     ignoreActualFunction: true
     excludedFunctions: []
-  LibraryCodeMustSpecifyReturnType:
-    active: true
-    excludes: ['**']
-  LibraryEntitiesShouldNotBePublic:
-    active: false
   LoopWithTooManyJumpStatements:
     active: true
     maxJumpCount: 1
@@ -427,8 +398,6 @@ style:
     ignoreEnums: false
     ignoreRanges: false
     ignoreExtensionFunctions: true
-  MandatoryBracesIfStatements:
-    active: false
   MandatoryBracesLoops:
     active: false
   MaxLineLength:

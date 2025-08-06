@@ -9,10 +9,12 @@ import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.fitness.Fitness
 import com.google.android.gms.fitness.FitnessOptions
-import com.google.android.gms.fitness.data.DataType
+import com.google.android.gms.fitness.data.DataPoint
+import com.google.android.gms.fitness.data.DataSet
 import com.google.android.gms.fitness.data.Field
+import com.google.android.gms.fitness.data.DataType
 import com.google.android.gms.fitness.request.DataReadRequest
-import com.google.android.gms.tasks.Task
+import com.google.android.gms.fitness.result.DataReadResponse
 import kotlinx.coroutines.suspendCancellableCoroutine
 import java.util.concurrent.TimeUnit
 import kotlin.coroutines.resume
@@ -74,7 +76,7 @@ class GoogleFitHelper(private val context: Context) {
             .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
             .build()
         
-        Fitness.getHistoryApi(context, getGoogleAccount())
+        Fitness.getHistoryClient(context, getGoogleAccount())
             .readData(readRequest)
             .addOnSuccessListener { response ->
                 val stepCount = response.buckets.firstOrNull()
@@ -106,7 +108,7 @@ class GoogleFitHelper(private val context: Context) {
             .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
             .build()
         
-        Fitness.getHistoryApi(context, getGoogleAccount())
+        Fitness.getHistoryClient(context, getGoogleAccount())
             .readData(readRequest)
             .addOnSuccessListener { response ->
                 val activities = response.dataSets.flatMap { dataSet ->
@@ -139,30 +141,30 @@ class GoogleFitHelper(private val context: Context) {
             continuation.resumeWithException(SecurityException("Google Fit permissions not granted"))
             return@suspendCancellableCoroutine
         }
-        
+
         val endTime = System.currentTimeMillis()
         val startTime = endTime - TimeUnit.HOURS.toMillis(24) // Last 24 hours
-        
+
         val readRequest = DataReadRequest.Builder()
             .read(DataType.TYPE_HEART_RATE_BPM)
             .setTimeRange(startTime, endTime, TimeUnit.MILLISECONDS)
             .build()
-        
-        Fitness.getHistoryApi(context, getGoogleAccount())
+
+        Fitness.getHistoryClient(context, getGoogleAccount())
             .readData(readRequest)
-            .addOnSuccessListener { response ->
-                val heartRateData = response.dataSets.flatMap { dataSet ->
-                    dataSet.dataPoints.map { dataPoint ->
+            .addOnSuccessListener { response: DataReadResponse ->
+                val heartRateData = response.dataSets.flatMap { dataSet: DataSet ->
+                    dataSet.dataPoints.map { dataPoint: DataPoint ->
                         val bpm = dataPoint.getValue(Field.FIELD_BPM).asFloat()
                         val timestamp = dataPoint.getStartTime(TimeUnit.MILLISECONDS)
-                        
+
                         HeartRateData(
                             bpm = bpm,
                             timestamp = timestamp
                         )
                     }
                 }
-                
+
                 continuation.resume(heartRateData)
             }
             .addOnFailureListener { exception ->

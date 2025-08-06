@@ -9,7 +9,7 @@
     <string name="remove_energy">- Remove Energy</string>
     <string name="add_energy">+ Add Energy</string>
     <string name="weekly_stats_message">This week: %1$d activities tracked</string>
-    <string name="weekly_stats_loading">Weekly stats loading...</string>
+    <string name="weekly_stats_loading">Weekly stats loading&#8230;</string>
     <string name="app_name">Social Battery Manager</string>
     <string name="activities_title">Activities</string>
     <string name="activities_empty">No activities yet. Tap the + button to add one!</string>
@@ -27,7 +27,7 @@
     <string name="edit">Edit</string>
     <string name="mark_as_used">Mark as Used</string>
     <string name="delete_activity_title">Delete Activity</string>
-    <string name="delete_activity_confirmation">Are you sure you want to delete '%1$s'?</string>
+    <string name="delete_activity_confirmation">Are you sure you want to delete \'%1$s\'?</string>
     <string name="activity_add_success">Activity added successfully!</string>
     <string name="activity_add_error">Error adding activity: %1$s</string>
     <string name="activity_update_success">Activity updated successfully!</string>
@@ -38,7 +38,7 @@
     <string name="activity_usage_error">Error updating usage: %1$s</string>
     <string name="error_activity_name_required">Please enter an activity name</string>
     <string name="weekly_capacity_warning">This activity will bring your weekly capacity down to %1$d%%. You may want to reschedule or reduce intensity.</string>
-    <string name="enter_person_name_hint">Enter person's name</string>
+    <string name="enter_person_name_hint">Enter person\'s name</string>
     <string name="add">Add</string>
     <string name="hours_format">%.1fh</string>
 
@@ -80,7 +80,7 @@
 
     <!-- Calendar messages -->
     <string name="event_label">Event: %1$s</string>
-    <string name="activity_scheduled_success">Activity '%1$s' scheduled successfully!</string>
+    <string name="activity_scheduled_success">Activity \'%1$s\' scheduled successfully!</string>
     <string name="error_creating_activity">Error creating activity: %1$s</string>
     <string name="sample_event_meeting_title">New Meeting</string>
     <string name="sample_event_meeting_description">Newly created meeting</string>
@@ -128,7 +128,7 @@ Energy Ranges:
 
     <!-- Energy tips -->
     <string name="energy_tips_title">Energy Tips</string>
-    <string name="energy_tip_high">You're in great shape! Consider taking on social activities.</string>
+    <string name="energy_tip_high">You\'re in great shape! Consider taking on social activities.</string>
     <string name="energy_tip_medium">Good energy levels. Balance social time with some rest.</string>
     <string name="energy_tip_low">Energy is getting low. Consider lighter social activities.</string>
     <string name="energy_tip_recharge">Time to recharge! Take some alone time to restore your energy.</string>
@@ -293,7 +293,7 @@ Energy Ranges:
 
     <!-- Requirements feature strings -->
     <string name="requirements_enter_prompt">Please enter requirements</string>
-    <string name="requirements_generating">Generating...</string>
+    <string name="requirements_generating">Generating&#8230;</string>
     <string name="requirements_generate_code">Generate Code</string>
     <string name="requirements_generate_success">Code generated successfully!</string>
     <string name="requirements_error">Error: %1$s</string>
@@ -321,7 +321,6 @@ Energy Ranges:
     <string name="email">Email</string>
     <string name="phone">Phone</string>
     <string name="notes">Notes</string>
-    <string name="cancel">Cancel</string>
 
     <!-- dialog_rate_activity -->
     <string name="rate_activity_title">Rate Your Activity</string>
@@ -345,7 +344,6 @@ Energy Ranges:
     <string name="per_social_activity">Per social activity</string>
     <string name="quick_actions">Quick Actions</string>
     <string name="log_activity">➕ Log Activity</string>
-    <string name="plan_day">📅 Plan Day</string>
     <string name="view_battery">🔍 View Battery</string>
     <string name="get_tips">💡 Get Tips</string>
     <string name="chart_icon">📊</string>
@@ -376,7 +374,12 @@ Energy Ranges:
     <string name="blocked_users_description">Users who cannot see your mood and energy</string>
     <string name="privacy_tips">Privacy Tips</string>
     <string name="privacy_tip_change_anytime">• You can change these settings anytime</string>
-    <string name="privacy_tip_blocked_not_notified">• Blocked users won't be notified</string>
+    <string name="privacy_tip_blocked_not_notified">• Blocked users won\'t be notified</string>
     <string name="privacy_tip_close_friends_manage">• Close friends list can be managed in Friends settings</string>
+    <string name="energy_percentage">%1$d%%</string>
+
+    <!-- New strings -->
+    <string name="error">Error</string>
+    <string name="error_loading_stats">Error loading stats</string>
 
 </resources>

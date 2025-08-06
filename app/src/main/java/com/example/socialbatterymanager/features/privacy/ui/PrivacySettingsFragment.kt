@@ -10,7 +10,6 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.RadioGroup
-import android.widget.Switch
 import android.widget.Toast
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
@@ -30,6 +29,7 @@ import com.example.socialbatterymanager.features.auth.data.AuthRepository
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
+import androidx.appcompat.widget.SwitchCompat
 
 private val Context.privacyDataStore by preferencesDataStore(name = "privacy_preferences")
 
@@ -41,9 +41,9 @@ class PrivacySettingsFragment : Fragment() {
     private lateinit var friendsOnlyRadioButton: RadioButton
     private lateinit var closeFriendsRadioButton: RadioButton
     private lateinit var onlyMeRadioButton: RadioButton
-    private lateinit var moodStatusSwitch: Switch
-    private lateinit var energyLevelSwitch: Switch
-    private lateinit var activityPatternsSwitch: Switch
+    private lateinit var moodStatusSwitch: SwitchCompat
+    private lateinit var energyLevelSwitch: SwitchCompat
+    private lateinit var activityPatternsSwitch: SwitchCompat
     private lateinit var addUserButton: Button
     private lateinit var blockedUsersRecyclerView: RecyclerView
 
@@ -130,7 +130,7 @@ class PrivacySettingsFragment : Fragment() {
                     currentPrivacySettings = UserPrivacySettings(
                         userId = userId,
                         moodVisibilityLevel = VisibilityLevel.valueOf(
-                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS.name
+                            preferences[VISIBILITY_LEVEL_KEY] ?: VisibilityLevel.FRIENDS_ONLY.name
                         ),
                         moodStatusEnabled = preferences[MOOD_STATUS_ENABLED_KEY] ?: true,
                         energyLevelEnabled = preferences[ENERGY_LEVEL_ENABLED_KEY] ?: true,
@@ -143,7 +143,8 @@ class PrivacySettingsFragment : Fragment() {
                         val listType = object : TypeToken<List<BlockedUser>>() {}.type
                         blockedUsers.addAll(gson.fromJson(blockedUsersJson, listType))
                     }
-                    blockedUsersAdapter.notifyDataSetChanged()
+                    // Replaced `notifyDataSetChanged` with specific change events
+                    blockedUsersAdapter.notifyItemRangeChanged(0, blockedUsers.size)
 
                     updateUI()
                 }
@@ -156,9 +157,9 @@ class PrivacySettingsFragment : Fragment() {
             // Update radio buttons
             when (settings.moodVisibilityLevel) {
                 VisibilityLevel.EVERYONE -> everyoneRadioButton.isChecked = true
-                VisibilityLevel.FRIENDS -> friendsOnlyRadioButton.isChecked = true
+                VisibilityLevel.FRIENDS_ONLY -> friendsOnlyRadioButton.isChecked = true
                 VisibilityLevel.CLOSE_FRIENDS -> closeFriendsRadioButton.isChecked = true
-                VisibilityLevel.PRIVATE -> onlyMeRadioButton.isChecked = true
+                VisibilityLevel.ONLY_ME -> onlyMeRadioButton.isChecked = true
             }
 
             // Update switches
@@ -173,10 +174,10 @@ class PrivacySettingsFragment : Fragment() {
             val userId = authRepository.currentUser?.uid ?: return@launch
             val visibilityLevel = when {
                 everyoneRadioButton.isChecked -> VisibilityLevel.EVERYONE
-                friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS
+                friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS_ONLY
                 closeFriendsRadioButton.isChecked -> VisibilityLevel.CLOSE_FRIENDS
-                onlyMeRadioButton.isChecked -> VisibilityLevel.PRIVATE
-                else -> VisibilityLevel.FRIENDS
+                onlyMeRadioButton.isChecked -> VisibilityLevel.ONLY_ME
+                else -> VisibilityLevel.FRIENDS_ONLY
             }
 
             requireContext().privacyDataStore.edit { preferences ->
@@ -295,13 +296,17 @@ class PrivacySettingsFragment : Fragment() {
         }
     }
 
+    /**
+     * Function to get the selected visibility level.
+     * Currently unused but retained for future use.
+     */
     private fun getSelectedVisibilityLevel(): VisibilityLevel {
         return when {
             everyoneRadioButton.isChecked -> VisibilityLevel.EVERYONE
-            friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS
+            friendsOnlyRadioButton.isChecked -> VisibilityLevel.FRIENDS_ONLY
             closeFriendsRadioButton.isChecked -> VisibilityLevel.CLOSE_FRIENDS
-            onlyMeRadioButton.isChecked -> VisibilityLevel.PRIVATE
-            else -> VisibilityLevel.FRIENDS
+            onlyMeRadioButton.isChecked -> VisibilityLevel.ONLY_ME
+            else -> VisibilityLevel.FRIENDS_ONLY
         }
     }
 }

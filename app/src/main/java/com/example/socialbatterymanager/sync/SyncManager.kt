@@ -82,10 +82,17 @@ class SyncManager(private val context: Context) {
      */
     fun isSyncRunning(): ListenableFuture<Boolean> {
         val workInfosFuture = workManager.getWorkInfosForUniqueWork(SYNC_WORK_NAME)
-        return CallbackToFutureAdapter.getFuture { completer ->
+        return CallbackToFutureAdapter.getFuture<Boolean> { completer ->
             workInfosFuture.addListener({
                 try {
-                    val isRunning = workInfosFuture.get().any { it.state == WorkInfo.State.RUNNING }
+                    var isRunning = false
+                    val workInfos = workInfosFuture.get()
+                    for (workInfo in workInfos) {
+                        if (workInfo.state == WorkInfo.State.RUNNING) {
+                            isRunning = true
+                            break
+                        }
+                    }
                     completer.set(isRunning)
                 } catch (e: Exception) {
                     completer.setException(e)

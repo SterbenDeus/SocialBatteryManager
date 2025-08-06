@@ -127,7 +127,8 @@ class HomeFragment : Fragment() {
 
     private fun updateEnergyDisplay() {
         energyBatteryView.setBatteryLevel(currentEnergyLevel, false)
-        tvEnergyPercentage.text = "$currentEnergyLevel%"
+        val energyPercentage = getString(R.string.energy_percentage, currentEnergyLevel)
+        tvEnergyPercentage.text = energyPercentage
         tvEnergyLabel.text = energyBatteryView.getEnergyLevelLabel()
         
         // Update percentage color based on energy level
@@ -191,8 +192,10 @@ class HomeFragment : Fragment() {
                 8.0 // Default if no data
             }
             
-            tvRemainingHours.text = String.format("%.1fh", remainingHours)
-            tvBurnRate.text = String.format("%.1fh", avgBurnRate)
+            val remainingHoursText = String.format(Locale.getDefault(), "%.1fh", remainingHours)
+            tvRemainingHours.text = remainingHoursText
+            val burnRateText = String.format(Locale.getDefault(), "%.1fh", avgBurnRate)
+            tvBurnRate.text = burnRateText
         }
     }
 
@@ -255,12 +258,12 @@ class HomeFragment : Fragment() {
     private fun setupClickListeners() {
         btnLogActivity.setOnClickListener {
             // Open activity logging dialog
-            val dialog = AddActivityDialog(requireContext()) { newActivity ->
+            val dialog = AddActivityDialog(requireContext(), onActivityAdded = { newActivity: ActivityEntity ->
                 lifecycleScope.launch {
                     database.activityDao().insertActivity(newActivity)
                     updateEnergyLevel(newActivity.energy)
                 }
-            }
+            })
             dialog.show()
         }
 
@@ -291,12 +294,12 @@ class HomeFragment : Fragment() {
         }
 
         fabAddActivity.setOnClickListener {
-            val dialog = AddActivityDialog(requireContext()) { newActivity ->
+            val dialog = AddActivityDialog(requireContext(), onActivityAdded = { newActivity: ActivityEntity ->
                 lifecycleScope.launch {
                     database.activityDao().insertActivity(newActivity)
                     updateEnergyLevel(newActivity.energy)
                 }
-            }
+            })
             dialog.show()
         }
 

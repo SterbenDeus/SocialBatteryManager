@@ -12,6 +12,43 @@ security-crypto = "1.1.0-beta01"
 sqlite-framework = "2.4.0"
 viewpager2 = "1.0.0"
 work-runtime-ktx = "2.9.0"
+android-database-sqlcipher = "4.5.4"
+opencsv = "5.12.0"
+pdfbox = "3.0.5"
+gson = "2.13.1"
+kotlinx-coroutines-android = "1.10.2"
+mpandroidchart = "v3.1.0"
+guava = "33.4.8-jre"
+junit = "4.13.2"
+core-testing = "2.2.0"
+kotlinx-coroutines-test = "1.10.2"
+mockk = "1.14.5"
+robolectric = "4.15.1"
+androidx-test-junit = "1.3.0"
+androidx-test-espresso = "3.7.0"
+compose-bom = "2024.09.00"
+work-testing = "2.10.3"
+fragment-testing = "1.8.8"
+ui-tooling = "1.0.0"
+ui-test-manifest = "1.0.0"
+ktlint = "13.0.0"
+detekt = "1.23.8"
+androidx-concurrent-futures = "1.3.0"
+material = "1.12.0"
+hilt-android = "2.57"
+hilt-compiler = "2.57"
+room-runtime = "2.7.2"
+room-ktx = "2.7.2"
+room-compiler = "2.7.2"
+navigation-fragment-ktx = "2.9.3"
+navigation-ui-ktx = "2.9.3"
+play-services-fitness = "21.3.0"
+play-services-auth = "21.4.0"
+firebase-bom = "34.0.0"
+google-services = "4.4.3"
+firebase-crashlytics-gradle = "3.0.5"
+hilt-android-gradle-plugin = "2.57"
+ksp = "1.9.0"
 
 [libraries]
 androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activity-compose" }
@@ -29,3 +66,44 @@ androidx-security-crypto = { group = "androidx.security", name = "security-crypt
 androidx-sqlite-framework = { group = "androidx.sqlite", name = "sqlite-framework", version.ref = "sqlite-framework" }
 androidx-viewpager2 = { group = "androidx.viewpager2", name = "viewpager2", version.ref = "viewpager2" }
 androidx-work-runtime-ktx = { group = "androidx.work", name = "work-runtime-ktx", version.ref = "work-runtime-ktx" }
+android-database-sqlcipher = { group = "net.zetetic", name = "android-database-sqlcipher", version.ref = "android-database-sqlcipher" }
+opencsv = { group = "com.opencsv", name = "opencsv", version.ref = "opencsv" }
+pdfbox = { group = "org.apache.pdfbox", name = "pdfbox", version.ref = "pdfbox" }
+gson = { group = "com.google.code.gson", name = "gson", version.ref = "gson" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "kotlinx-coroutines-android" }
+mpandroidchart = { group = "com.github.PhilJay", name = "MPAndroidChart", version.ref = "mpandroidchart" }
+guava = { group = "com.google.guava", name = "guava", version.ref = "guava" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+core-testing = { group = "androidx.arch.core", name = "core-testing", version.ref = "core-testing" }
+kotlinx-coroutines-test = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-test", version.ref = "kotlinx-coroutines-test" }
+mockk = { group = "io.mockk", name = "mockk", version.ref = "mockk" }
+robolectric = { group = "org.robolectric", name = "robolectric", version.ref = "robolectric" }
+androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
+androidx-test-espresso = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "androidx-test-espresso" }
+compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom" }
+work-testing = { group = "androidx.work", name = "work-testing", version.ref = "work-testing" }
+fragment-testing = { group = "androidx.fragment", name = "fragment-testing", version.ref = "fragment-testing" }
+ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling", version.ref = "ui-tooling" }
+ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest", version.ref = "ui-test-manifest" }
+ktlint = { group = "org.jlleitschuh.gradle", name = "ktlint", version.ref = "ktlint" }
+detekt = { group = "io.gitlab.arturbosch", name = "detekt", version.ref = "detekt" }
+androidx-concurrent-futures = { group = "androidx.concurrent", name = "concurrent-futures", version.ref = "androidx-concurrent-futures" }
+material = { group = "com.google.android.material", name = "material", version.ref = "material" }
+hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "hilt-android" }
+hilt-compiler = { group = "com.google.dagger", name = "hilt-compiler", version.ref = "hilt-compiler" }
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-runtime" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-ktx" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-compiler" }
+navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigation-fragment-ktx" }
+navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigation-ui-ktx" }
+play-services-fitness = { group = "com.google.android.gms", name = "play-services-fitness", version.ref = "play-services-fitness" }
+play-services-auth = { group = "com.google.android.gms", name = "play-services-auth", version.ref = "play-services-auth" }
+firebase-bom = { group = "com.google.firebase", name = "firebase-bom", version.ref = "firebase-bom" }
+google-services = { group = "com.google.gms", name = "google-services", version.ref = "google-services" }
+firebase-crashlytics-gradle = { group = "com.google.firebase", name = "firebase-crashlytics-gradle", version.ref = "firebase-crashlytics-gradle" }
+hilt-android-gradle-plugin = { group = "com.google.dagger", name = "hilt-android-gradle-plugin", version.ref = "hilt-android-gradle-plugin" }
+
+[plugins]
+googleServices = "com.google.gms.google-services:4.4.3"
+firebaseCrashlyticsGradle = "com.google.firebase.crashlytics:2.9.9"
+hiltAndroidGradlePlugin = "com.google.dagger.hilt.android:2.47"

@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.ImageButton
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -30,6 +33,9 @@ class SimpleHomeFragment : Fragment() {
     // Current energy level
     private var currentEnergyLevel = 65
 
+    private var _binding: FragmentHomeBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -41,12 +47,12 @@ class SimpleHomeFragment : Fragment() {
         notificationService = NotificationService(requireContext())
 
         // Initialize views
-        btnNotifications = view.findViewById(R.id.btnNotifications)
-        btnAddEnergy = view.findViewById(R.id.btnAddEnergy)
-        btnRemoveEnergy = view.findViewById(R.id.btnRemoveEnergy)
-        btnTestBattery = view.findViewById(R.id.btnTestBattery)
-        tvWeeklyStats = view.findViewById(R.id.tvWeeklyStats)
-        tvEnergyPercentage = view.findViewById(R.id.tvEnergyPercentage)
+        btnNotifications = requireView().findViewById(R.id.btnNotifications)
+        btnAddEnergy = requireView().findViewById(R.id.btnAddEnergy)
+        btnRemoveEnergy = requireView().findViewById(R.id.btnRemoveEnergy)
+        btnTestBattery = requireView().findViewById(R.id.btnTestBattery)
+        tvWeeklyStats = requireView().findViewById(R.id.tvWeeklyStats)
+        tvEnergyPercentage = requireView().findViewById(R.id.tvEnergyPercentage)
         setupClickListeners()
         if (BuildConfig.DEBUG) {
             generateSampleNotifications()
@@ -58,7 +64,7 @@ class SimpleHomeFragment : Fragment() {
         viewModel.loadWeeklyStats()
 
         // Initialize energy display
-        binding.tvEnergyPercentage.text = "$currentEnergyLevel%"
+        binding.tvEnergyPercentage.text = getString(R.string.energy_percentage, currentEnergyLevel)
 
         return binding.root
     }
@@ -89,8 +95,8 @@ class SimpleHomeFragment : Fragment() {
         currentEnergyLevel = newLevel
 
         // Update UI
-        tvEnergyPercentage.text = "$newLevel%"
-        
+        tvEnergyPercentage.text = getString(R.string.energy_percentage, newLevel)
+
         // Check if we should generate a low energy notification
         notificationService.checkAndGenerateEnergyLowNotification(newLevel)
     }
@@ -103,4 +109,3 @@ class SimpleHomeFragment : Fragment() {
         }
     }
 }
-

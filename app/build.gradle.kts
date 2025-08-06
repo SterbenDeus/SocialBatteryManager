@@ -1,22 +1,34 @@
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android")
+    id("org.jetbrains.kotlin.android") version "2.2.0"
     kotlin("kapt")
-    id("org.jlleitschuh.gradle.ktlint") version "12.1.0"
-    id("io.gitlab.arturbosch.detekt") version "1.23.4"
+    id("org.jlleitschuh.gradle.ktlint") version "13.0.0"
+    id("io.gitlab.arturbosch.detekt") version "1.23.8"
     id("com.google.gms.google-services")
     id("com.google.firebase.crashlytics")
     id("com.google.dagger.hilt.android")
+    id("org.jetbrains.kotlin.plugin.compose")
+    id("com.google.devtools.ksp") version libs.versions.ksp.get()
 }
 
+// Ensure the version catalog is properly imported
+val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
+
+// Explicitly import the version catalog
+val mainLibs = extensions.getByType<VersionCatalogsExtension>().named("mainLibs")
+
 android {
+    packaging {
+        resources.excludes.add("kotlin/reflect/reflect.kotlin_builtins")
+    }
+
     namespace = "com.example.socialbatterymanager"
-    compileSdk = 35
+    compileSdk = 36
 
     defaultConfig {
         applicationId = "com.example.socialbatterymanager"
         minSdk = 24
-        targetSdk = 35
+        targetSdk = 36
         versionCode = 2
         versionName = "1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -33,7 +45,6 @@ android {
 
     buildTypes {
         release {
-            // Enable code shrinking and obfuscation for release builds
             isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
@@ -46,114 +57,81 @@ android {
         sourceCompatibility = JavaVersion.VERSION_17
         targetCompatibility = JavaVersion.VERSION_17
     }
-    kotlinOptions {
-        jvmTarget = "17"
-    }
     buildFeatures {
         compose = true
-        // Enable View Binding for layout references
         viewBinding = true
-    }
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.15"
     }
 }
 
 dependencies {
-    // Kotlin
-    implementation(kotlin("stdlib", "1.9.24"))
+    implementation(kotlin("stdlib", "2.2.0"))
 
     // Lottie
-    implementation("com.airbnb.android:lottie:6.4.0")
+    implementation(mainLibs.findLibrary("lottie").get())
 
-    // AndroidX
-    implementation(libs.androidx.core.ktx)
-    implementation(libs.androidx.lifecycle.runtime.ktx)
-    implementation(libs.androidx.lifecycle.viewmodel.ktx)
-    implementation(libs.androidx.lifecycle.livedata.ktx)
-    implementation(libs.androidx.fragment.ktx)
-    implementation(libs.androidx.activity.ktx)
-    implementation(libs.androidx.activity.compose)
-    implementation(libs.androidx.appcompat)
-    implementation(libs.androidx.constraintlayout)
-    implementation(libs.androidx.work.runtime.ktx)
-    implementation(libs.androidx.datastore.preferences)
-    implementation(libs.androidx.viewpager2)
-    implementation(libs.androidx.biometric)
-    implementation(libs.androidx.security.crypto)
-    implementation(libs.androidx.sqlite.framework)
-    implementation("androidx.concurrent:concurrent-futures:1.1.0")
-    implementation("com.google.android.material:material:1.11.0")
-    implementation("androidx.cardview:cardview:1.0.0")
+    // AndroidX libraries
+    implementation(mainLibs.findLibrary("androidx-core-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-lifecycle-runtime-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-lifecycle-viewmodel-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-lifecycle-livedata-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-fragment-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-activity-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-activity-compose").get())
+    implementation(mainLibs.findLibrary("androidx-appcompat").get())
+    implementation(mainLibs.findLibrary("androidx-constraintlayout").get())
+    implementation(mainLibs.findLibrary("androidx-work-runtime-ktx").get())
+    implementation(mainLibs.findLibrary("androidx-datastore-preferences").get())
+    implementation(mainLibs.findLibrary("androidx-viewpager2").get())
+    implementation(mainLibs.findLibrary("androidx-biometric").get())
+    implementation(mainLibs.findLibrary("androidx-security-crypto").get())
+    implementation(mainLibs.findLibrary("androidx-sqlite-framework").get())
+    implementation(mainLibs.findLibrary("androidx-concurrent-futures").get())
+    implementation(mainLibs.findLibrary("material").get())
+    implementation(mainLibs.findLibrary("cardview").get())
 
-    // Hilt
-    implementation("com.google.dagger:hilt-android:2.48")
-    kapt("com.google.dagger:hilt-compiler:2.48")
-    implementation("androidx.hilt:hilt-navigation-fragment:1.2.0")
-
-    // Room
-    implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
-    kapt("androidx.room:room-compiler:2.6.1")
-
-    // Navigation
-    implementation("androidx.navigation:navigation-fragment-ktx:2.7.7")
-    implementation("androidx.navigation:navigation-ui-ktx:2.7.7")
-
-    // Jetpack Compose
-    implementation(platform("androidx.compose:compose-bom:2024.09.00"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.ui:ui-graphics")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.compose.material3:material3")
-
-    // Google / Firebase
-    implementation("com.google.android.gms:play-services-fitness:21.2.0")
-    implementation("com.google.android.gms:play-services-auth:21.2.0")
-    implementation(platform("com.google.firebase:firebase-bom:33.7.0"))
-    implementation("com.google.firebase:firebase-firestore-ktx")
-    implementation("com.google.firebase:firebase-auth-ktx")
-    implementation("com.google.firebase:firebase-crashlytics-ktx")
-
-    // SQLCipher
-    implementation("net.zetetic:android-database-sqlcipher:4.5.4")
-
-    // CSV/PDF export
-    implementation("com.opencsv:opencsv:5.8")
-    implementation("org.apache.pdfbox:pdfbox:2.0.30")
-
-    // Gson
-    implementation("com.google.code.gson:gson:2.10.1")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.8.1")
-
-    // Charts
-    implementation("com.github.PhilJay:MPAndroidChart:v3.1.0")
+    // Dagger Hilt and Room
+    implementation(mainLibs.findLibrary("hilt-android").get())
+    kapt(mainLibs.findLibrary("hilt-compiler").get())
+    implementation(mainLibs.findLibrary("hilt-navigation-fragment").get())
+    implementation(mainLibs.findLibrary("room-runtime").get())
+    implementation(mainLibs.findLibrary("room-ktx").get())
+    kapt(mainLibs.findLibrary("room-compiler").get())
+    implementation(mainLibs.findLibrary("navigation-fragment-ktx").get())
+    implementation(mainLibs.findLibrary("navigation-ui-ktx").get())
+    implementation(platform(mainLibs.findLibrary("compose-bom").get()))
+    implementation(mainLibs.findLibrary("compose-ui").get())
+    implementation(mainLibs.findLibrary("compose-ui-graphics").get())
+    implementation(mainLibs.findLibrary("compose-ui-tooling-preview").get())
+    implementation(mainLibs.findLibrary("compose-material3").get())
+    implementation(mainLibs.findLibrary("play-services-fitness").get())
+    implementation(mainLibs.findLibrary("play-services-auth").get())
+    implementation(platform(mainLibs.findLibrary("firebase-bom").get()))
+    implementation(mainLibs.findLibrary("firebase-firestore-ktx").get())
+    implementation(mainLibs.findLibrary("firebase-auth-ktx").get())
+    implementation(mainLibs.findLibrary("firebase-crashlytics-ktx").get())
+    implementation(mainLibs.findLibrary("pdfbox").get())
+    debugImplementation(mainLibs.findLibrary("fragment-testing").get())
 
     // Test dependencies
-    testImplementation("junit:junit:4.13.2")
-    testImplementation("androidx.arch.core:core-testing:2.2.0")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.8.1")
-    testImplementation("io.mockk:mockk:1.13.11")
-    testImplementation("org.robolectric:robolectric:4.12.1")
-
-    androidTestImplementation("androidx.test.ext:junit:1.1.5")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.00"))
-    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation("androidx.fragment:fragment-testing:1.8.8")
-    androidTestImplementation("androidx.work:work-testing:2.9.0")
-    debugImplementation("androidx.compose.ui:ui-tooling")
-    debugImplementation("androidx.compose.ui:ui-test-manifest")
-    debugImplementation("androidx.fragment:fragment-testing:1.8.8")
+    testImplementation(libs.findLibrary("junit").get())
+    testImplementation(libs.findLibrary("core-testing").get())
+    testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
+    testImplementation(libs.findLibrary("mockk").get())
+    testImplementation(libs.findLibrary("robolectric").get())
+    androidTestImplementation(libs.findLibrary("androidx-test-junit").get())
+    androidTestImplementation(libs.findLibrary("androidx-test-espresso").get())
+    androidTestImplementation(platform(libs.findLibrary("compose-bom").get()))
+    androidTestImplementation(libs.findLibrary("work-testing").get())
+    debugImplementation(libs.findLibrary("fragment-testing").get())
+    debugImplementation(libs.findLibrary("ui-tooling").get())
+    debugImplementation(libs.findLibrary("ui-test-manifest").get())
+    implementation(project(":requirements-processor"))
 }
 
 kapt {
     correctErrorTypes = true
 }
 
-// Ktlint configuration
 ktlint {
     version.set("1.0.1")
     debug.set(true)
@@ -169,7 +147,6 @@ ktlint {
     }
 }
 
-// Detekt configuration
 detekt {
     buildUponDefaultConfig = true
     allRules = false
@@ -177,5 +154,6 @@ detekt {
     baseline = file("$projectDir/config/detekt/baseline.xml")
 }
 
-apply(plugin = "com.google.gms.google-services")
-apply(plugin = "com.google.firebase.crashlytics")
+kotlin {
+    jvmToolchain(17)
+}

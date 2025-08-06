@@ -9,8 +9,8 @@ import android.widget.CalendarView
 import android.widget.ProgressBar
 import android.widget.TextView
 import android.widget.Toast
-import androidx.core.content.ContextCompat
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -18,8 +18,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
+import com.example.socialbatterymanager.features.energy.EnergyManager
 import com.example.socialbatterymanager.data.model.CalendarEvent
 import com.example.socialbatterymanager.ui.activities.CreateNewActivityDialog
+import com.example.socialbatterymanager.model.toEntity
 import kotlinx.coroutines.launch
 import java.util.Calendar
 
@@ -128,8 +130,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             // If no events exist, optionally create sample data in debug builds
             if (existingEvents.isEmpty() && BuildConfig.DEBUG) {
                 val sampleEvents = energyManager.createSampleTodayData()
-                sampleEvents.forEach { event ->
-                    database.calendarEventDao().insertEvent(event)
+                sampleEvents.forEach { event: CalendarEvent ->
+                    database.calendarEventDao().insert(event)
                 }
                 allEvents = sampleEvents
             } else {
@@ -182,7 +184,8 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
                 try {
                     // Save activity to database
                     val activityId = database.activityDao().insertActivity(activity.toEntity())
-                    
+                    println("Activity ID: $activityId")
+
                     // Create calendar event
                     val calendarEvent = CalendarEvent(
                         title = activity.name,
