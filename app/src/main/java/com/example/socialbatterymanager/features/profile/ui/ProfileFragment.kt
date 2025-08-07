@@ -54,6 +54,7 @@ class ProfileFragment : Fragment() {
 
     private var currentUser: User? = null
     private var selectedImageUri: Uri? = null
+    private var onPermissionGranted: (() -> Unit)? = null
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -80,7 +81,7 @@ class ProfileFragment : Fragment() {
         ActivityResultContracts.RequestPermission()
     ) { granted ->
         if (granted) {
-            showImageSourceDialog()
+            onPermissionGranted?.invoke()
         } else {
             Toast.makeText(requireContext(), getString(R.string.permission_denied), Toast.LENGTH_SHORT).show()
         }
@@ -172,9 +173,11 @@ class ProfileFragment : Fragment() {
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
                 Toast.makeText(requireContext(), getString(R.string.permission_access_photos), Toast.LENGTH_LONG).show()
+                onPermissionGranted = { showImageSourceDialog() }
                 permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
             else -> {
+                onPermissionGranted = { showImageSourceDialog() }
                 permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
             }
         }
@@ -199,16 +202,32 @@ class ProfileFragment : Fragment() {
     }
 
     private fun openCamera() {
-        val photoFile = java.io.File(
-            requireContext().getExternalFilesDir(null),
-            "profile_photo_${System.currentTimeMillis()}.jpg"
-        )
-        selectedImageUri = androidx.core.content.FileProvider.getUriForFile(
-            requireContext(),
-            "${requireContext().packageName}.fileprovider",
-            photoFile
-        )
-        cameraLauncher.launch(selectedImageUri)
+        when {
+            ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) == PackageManager.PERMISSION_GRANTED -> {
+                val photoFile = java.io.File(
+                    requireContext().getExternalFilesDir(null),
+                    "profile_photo_${System.currentTimeMillis()}.jpg"
+                )
+                selectedImageUri = androidx.core.content.FileProvider.getUriForFile(
+                    requireContext(),
+                    "${requireContext().packageName}.fileprovider",
+                    photoFile
+                )
+                cameraLauncher.launch(selectedImageUri)
+            }
+            shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
+                Toast.makeText(requireContext(), getString(R.string.permission_access_camera), Toast.LENGTH_LONG).show()
+                onPermissionGranted = { openCamera() }
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+            else -> {
+                onPermissionGranted = { openCamera() }
+                permissionLauncher.launch(Manifest.permission.CAMERA)
+            }
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

@@ -78,7 +78,7 @@ This implementation creates a comprehensive profile page for the Social Battery 
 - **Edit Mode Toggle**: Seamless switching between view and edit states
 
 ### Permissions & Security
-- **Runtime Permissions**: Proper handling of storage and camera permissions
+- **Runtime Permissions**: Requests storage and camera access at runtime and informs users if permissions are denied
 - **FileProvider**: Secure file access for camera functionality
 - **Data Validation**: Input validation and error handling
 
