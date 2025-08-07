@@ -1,3 +1,6 @@
+import org.gradle.testing.jacoco.tasks.JacocoCoverageVerification
+import org.gradle.testing.jacoco.tasks.JacocoReport
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android") version "2.2.0"
@@ -9,6 +12,7 @@ plugins {
     id("com.google.dagger.hilt.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("com.google.devtools.ksp") version libs.versions.ksp.get()
+    jacoco
 }
 
 // Ensure the version catalog is properly imported
@@ -123,9 +127,11 @@ dependencies {
     testImplementation(libs.findLibrary("robolectric").get())
     testImplementation(libs.findLibrary("work-testing").get())
     androidTestImplementation(libs.findLibrary("androidx-test-junit").get())
+    androidTestImplementation(libs.findLibrary("androidx-test-core").get())
     androidTestImplementation(libs.findLibrary("androidx-test-espresso").get())
     androidTestImplementation(platform(libs.findLibrary("compose-bom").get()))
     androidTestImplementation(libs.findLibrary("work-testing").get())
+    androidTestImplementation(libs.findLibrary("mockk-android").get())
     debugImplementation(libs.findLibrary("fragment-testing").get())
     debugImplementation(libs.findLibrary("ui-tooling").get())
     debugImplementation(libs.findLibrary("ui-test-manifest").get())
@@ -160,4 +166,45 @@ detekt {
 
 kotlin {
     jvmToolchain(17)
+}
+
+jacoco {
+    toolVersion = "0.8.11"
+}
+
+tasks.withType<Test> {
+    finalizedBy("jacocoTestReport")
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+    }
+    classDirectories.setFrom(
+        fileTree("${'$'}{buildDir}/tmp/kotlin-classes/debug") {
+            exclude("**/R.class", "**/R${'$'}*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*")
+        },
+    )
+    sourceDirectories.setFrom(files("src/main/java"))
+    executionData.setFrom(fileTree(buildDir) { include("**/jacoco/testDebugUnitTest.exec") })
+}
+
+tasks.register<JacocoCoverageVerification>("jacocoTestCoverageVerification") {
+    dependsOn("jacocoTestReport")
+    classDirectories.setFrom(
+        fileTree("${'$'}{buildDir}/tmp/kotlin-classes/debug") {
+            exclude("**/R.class", "**/R${'$'}*.class", "**/BuildConfig.*", "**/Manifest*.*", "**/*Test*.*")
+        },
+    )
+    sourceDirectories.setFrom(files("src/main/java"))
+    executionData.setFrom(fileTree(buildDir) { include("**/jacoco/testDebugUnitTest.exec") })
+    violationRules {
+        rule {
+            limit {
+                minimum = "0.5".toBigDecimal()
+            }
+        }
+    }
 }
