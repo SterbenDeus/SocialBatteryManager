@@ -3,12 +3,15 @@ package com.example.socialbatterymanager.data.repository
 import android.content.Context
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.security.keystore.KeyInfo
 import android.util.Base64
 import androidx.security.crypto.EncryptedSharedPreferences
-import androidx.security.crypto.MasterKeys
+import androidx.security.crypto.MasterKey
 import java.security.KeyStore
+import java.security.SecureRandom
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
+import javax.crypto.SecretKeyFactory
 
 class SecurityManager private constructor(private val context: Context) {
     
@@ -16,11 +19,13 @@ class SecurityManager private constructor(private val context: Context) {
     private val prefsName = "encrypted_prefs"
     
     private val encryptedPrefs by lazy {
-        val masterKeyAlias = MasterKeys.getOrCreate(MasterKeys.AES256_GCM_SPEC)
+        val masterKey = MasterKey.Builder(context)
+            .setKeyScheme(MasterKey.KeyScheme.AES256_GCM)
+            .build()
         EncryptedSharedPreferences.create(
-            prefsName,
-            masterKeyAlias,
             context,
+            prefsName,
+            masterKey,
             EncryptedSharedPreferences.PrefKeyEncryptionScheme.AES256_SIV,
             EncryptedSharedPreferences.PrefValueEncryptionScheme.AES256_GCM
         )
@@ -31,6 +36,17 @@ class SecurityManager private constructor(private val context: Context) {
             val keyStore = KeyStore.getInstance("AndroidKeyStore")
             keyStore.load(null)
             
+            // Regenerate the key if it was created without randomized encryption
+            if (keyStore.containsAlias(keyAlias)) {
+                val existingKey = keyStore.getKey(keyAlias, null) as SecretKey
+                val factory = SecretKeyFactory.getInstance(existingKey.algorithm, "AndroidKeyStore")
+                val keyInfo = factory.getKeySpec(existingKey, KeyInfo::class.java) as KeyInfo
+                if (!keyInfo.isRandomizedEncryptionRequired) {
+                    keyStore.deleteEntry(keyAlias)
+                    encryptedPrefs.edit().remove("db_passphrase").apply()
+                }
+            }
+
             // Generate a key if it doesn't exist
             if (!keyStore.containsAlias(keyAlias)) {
                 val keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore")
@@ -40,9 +56,8 @@ class SecurityManager private constructor(private val context: Context) {
                 )
                     .setBlockModes(KeyProperties.BLOCK_MODE_GCM)
                     .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_NONE)
-                    .setRandomizedEncryptionRequired(false)
                     .build()
-                
+
                 keyGenerator.init(keyGenParameterSpec)
                 keyGenerator.generateKey()
             }
@@ -56,7 +71,7 @@ class SecurityManager private constructor(private val context: Context) {
 
             passphrase
         } catch (e: Exception) {
-            // Fallback to a simple generated passphrase
+            // Fallback to a SecureRandom generated passphrase
             val fallbackPassphrase = generateFallbackPassphrase()
             encryptedPrefs.edit().putString("db_passphrase", fallbackPassphrase).apply()
             fallbackPassphrase
@@ -76,10 +91,10 @@ class SecurityManager private constructor(private val context: Context) {
     }
     
     private fun generateFallbackPassphrase(): String {
-        val chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
-        return (1..32)
-            .map { chars.random() }
-            .joinToString("")
+        val random = SecureRandom()
+        val bytes = ByteArray(32)
+        random.nextBytes(bytes)
+        return Base64.encodeToString(bytes, Base64.NO_WRAP)
     }
     
     fun clearEncryptionData() {

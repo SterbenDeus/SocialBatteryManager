@@ -2,6 +2,7 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.opencsv.CSVReader
 import com.opencsv.CSVWriter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -140,37 +141,40 @@ class ImportExportManager @Inject constructor(
 
     suspend fun importFromCsv(file: File): ImportResult {
         return try {
-            val activities = mutableListOf<ActivityEntity>()
             var successCount = 0
             var errorCount = 0
 
             file.bufferedReader().use { reader ->
-                val lines = reader.readLines()
-                if (lines.isEmpty()) {
-                    return ImportResult(0, 0, "File is empty")
-                }
-                for (i in 1 until lines.size) {
-                    try {
-                        val parts = lines[i].split(",")
-                        if (parts.size >= 7) {
-                            val activity = ActivityEntity(
-                                name = parts[1].trim('"'),
-                                type = parts[2].trim('"'),
-                                energy = parts[3].trim('"').toIntOrNull() ?: 0,
-                                people = parts[4].trim('"'),
-                                mood = parts[5].trim('"'),
-                                notes = parts[6].trim('"'),
-                                date = System.currentTimeMillis(),
-                                lastModified = System.currentTimeMillis(),
-                                updatedAt = System.currentTimeMillis()
-                            )
-                            activityRepository.insertActivity(activity, "import")
-                            successCount++
-                        } else {
+                CSVReader(reader).use { csvReader ->
+                    val headers = csvReader.readNext()?.map { it.trim() }
+                    if (headers == null || headers.size < 7) {
+                        return ImportResult(0, 0, "Invalid or missing headers")
+                    }
+
+                    var line = csvReader.readNext()
+                    while (line != null) {
+                        try {
+                            if (line.size >= 7) {
+                                val activity = ActivityEntity(
+                                    name = line[1].trim(),
+                                    type = line[2].trim(),
+                                    energy = line[3].trim().toIntOrNull() ?: 0,
+                                    people = line[4].trim(),
+                                    mood = line[5].trim(),
+                                    notes = line[6].trim(),
+                                    date = System.currentTimeMillis(),
+                                    lastModified = System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                                activityRepository.insertActivity(activity, "import")
+                                successCount++
+                            } else {
+                                errorCount++
+                            }
+                        } catch (e: Exception) {
                             errorCount++
                         }
-                    } catch (e: Exception) {
-                        errorCount++
+                        line = csvReader.readNext()
                     }
                 }
             }

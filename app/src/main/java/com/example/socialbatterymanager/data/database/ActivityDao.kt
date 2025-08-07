@@ -25,6 +25,7 @@ interface ActivityDao {
 
     @Query("SELECT * FROM activities WHERE firebaseId = :firebaseId AND isDeleted = 0")
     suspend fun getActivityByFirebaseId(firebaseId: String): ActivityEntity?
+
     
     @Query("UPDATE activities SET isDeleted = 1, updatedAt = :timestamp WHERE id = :id")
     suspend fun softDeleteActivity(id: Int, timestamp: Long = System.currentTimeMillis())

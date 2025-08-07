@@ -3,7 +3,6 @@ package com.example.socialbatterymanager.features.people.data
 import android.content.Context
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.Person
-import kotlinx.coroutines.flow.first
 
 data class PersonStats(
     val person: Person,
@@ -18,12 +17,7 @@ class PersonStatsCalculator(private val context: Context) {
     
     suspend fun calculateStats(person: Person): PersonStats {
         val db = AppDatabase.getDatabase(context)
-        val activities = db.activityDao().getAllActivities().first()
-        
-        // Filter activities that mention this person
-        val personActivities = activities.filter { activity ->
-            activity.people.contains(person.name, ignoreCase = true)
-        }
+        val personActivities = db.activityDao().getActivitiesByPersonName(person.name)
         
         val totalActivities = personActivities.size
         val averageEnergyImpact: Double = if (personActivities.isNotEmpty()) {
