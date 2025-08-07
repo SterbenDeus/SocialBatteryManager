@@ -22,7 +22,10 @@ interface AuditLogDao {
     
     @Query("DELETE FROM audit_logs WHERE timestamp < :cutoff")
     suspend fun deleteAuditLogsOlderThan(cutoff: Long)
-    
+
     @Query("SELECT COUNT(*) FROM audit_logs")
     suspend fun getAuditLogCount(): Int
+
+    @Query("DELETE FROM audit_logs")
+    suspend fun deleteAllAuditLogs()
 }

@@ -118,7 +118,7 @@ dependencies {
     testImplementation(libs.findLibrary("kotlinx-coroutines-test").get())
     testImplementation(libs.findLibrary("mockk").get())
     testImplementation(libs.findLibrary("robolectric").get())
-    testImplementation(libs.findLibrary("work-testing").get())
+    testImplementation(mainLibs.findLibrary("androidx-test-core").get())
     androidTestImplementation(libs.findLibrary("androidx-test-junit").get())
     androidTestImplementation(libs.findLibrary("androidx-test-espresso").get())
     androidTestImplementation(platform(libs.findLibrary("compose-bom").get()))

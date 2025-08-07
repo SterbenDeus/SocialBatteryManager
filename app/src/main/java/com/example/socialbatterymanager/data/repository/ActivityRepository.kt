@@ -66,5 +66,9 @@ class ActivityRepository(
     suspend fun hardDeleteOldActivities(cutoff: Long) {
         activityDao.hardDeleteOldActivities(cutoff)
     }
+
+    suspend fun clearAllActivities() {
+        activityDao.deleteAllActivities()
+    }
 }
 

@@ -62,4 +62,7 @@ interface ActivityDao {
 
     @Query("SELECT COALESCE(SUM(ABS(energy)), 0) FROM activities WHERE date >= :fromDate AND isDeleted = 0")
     suspend fun getTotalEnergyUsedFromDate(fromDate: Long): Int
+
+    @Query("DELETE FROM activities")
+    suspend fun deleteAllActivities()
 }
