@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import androidx.room.withTransaction
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import com.example.socialbatterymanager.data.model.SyncStatus
@@ -105,40 +106,56 @@ class SyncWorker(
                 .get()
                 .await()
             
-            for (document in querySnapshot.documents) {
-                val data = document.data ?: continue
-                
-                // Check if we already have this activity
-                val existingActivity = database.activityDao().getActivityById(
-                    data["id"] as? Int ?: continue
-                )
-                
-                val firebaseActivity = ActivityEntity(
-                    id = data["id"] as? Int ?: 0,
-                    name = data["name"] as? String ?: "",
-                    type = data["type"] as? String ?: "",
-                    energy = data["energy"] as? Int ?: 0,
-                    people = data["people"] as? String ?: "",
-                    mood = data["mood"] as? String ?: "",
-                    notes = data["notes"] as? String ?: "",
-                    date = data["date"] as? Long ?: 0L,
-                    duration = data["duration"] as? Long ?: 0L,
-                    location = data["location"] as? String,
-                    socialInteractionLevel = data["socialInteractionLevel"] as? Int ?: 0,
-                    stressLevel = data["stressLevel"] as? Int ?: 0,
-                    isManualEntry = data["isManualEntry"] as? Boolean ?: true,
-                    syncStatus = SyncStatus.SYNCED,
-                    lastModified = data["lastModified"] as? Long ?: 0L,
-                    firebaseId = document.id
-                )
-                
-                if (existingActivity == null) {
-                    // Insert new activity
-                    database.activityDao().insertActivity(firebaseActivity)
-                } else {
-                    // Update if Firebase version is newer
-                    if (firebaseActivity.lastModified > existingActivity.lastModified) {
-                        database.activityDao().updateActivity(firebaseActivity.copy(id = existingActivity.id))
+            database.withTransaction {
+                for (document in querySnapshot.documents) {
+                    val firebaseId = document.id
+                    if (firebaseId.isBlank()) {
+                        Log.e("SyncWorker", "Skipping document with missing ID")
+                        continue
+                    }
+
+                    val data = document.data
+                    if (data == null) {
+                        Log.e("SyncWorker", "Document $firebaseId has no data")
+                        continue
+                    }
+
+                    try {
+                        val existingActivity = database.activityDao().getActivityByFirebaseId(firebaseId)
+
+                        val firebaseActivity = ActivityEntity(
+                            id = existingActivity?.id ?: 0,
+                            name = data["name"] as? String ?: "",
+                            type = data["type"] as? String ?: "",
+                            energy = (data["energy"] as? Number)?.toInt() ?: 0,
+                            people = data["people"] as? String ?: "",
+                            mood = data["mood"] as? String ?: "",
+                            notes = data["notes"] as? String ?: "",
+                            date = (data["date"] as? Number)?.toLong() ?: 0L,
+                            duration = (data["duration"] as? Number)?.toLong() ?: 0L,
+                            location = data["location"] as? String,
+                            socialInteractionLevel = (data["socialInteractionLevel"] as? Number)?.toInt() ?: 0,
+                            stressLevel = (data["stressLevel"] as? Number)?.toInt() ?: 0,
+                            isManualEntry = data["isManualEntry"] as? Boolean ?: true,
+                            syncStatus = SyncStatus.SYNCED,
+                            lastModified = (data["lastModified"] as? Number)?.toLong() ?: 0L,
+                            firebaseId = firebaseId
+                        )
+
+                        if (existingActivity == null) {
+                            // Insert new activity
+                            database.activityDao().insertActivity(firebaseActivity)
+                        } else {
+                            // Update if Firebase version is newer
+                            if (firebaseActivity.lastModified > existingActivity.lastModified) {
+                                database.activityDao().updateActivity(firebaseActivity.copy(id = existingActivity.id))
+                            }
+                        }
+                    } catch (e: Exception) {
+                        Log.e("SyncWorker", "Malformed document $firebaseId", e)
+                        FirebaseCrashlytics.getInstance().recordException(
+                            RuntimeException("Malformed document $firebaseId", e)
+                        )
                     }
                 }
             }
