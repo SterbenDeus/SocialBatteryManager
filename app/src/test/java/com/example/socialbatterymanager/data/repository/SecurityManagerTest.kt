@@ -1,5 +1,6 @@
 package com.example.socialbatterymanager.data.repository
 
+import android.content.SharedPreferences
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import org.junit.Assert.*
 import org.junit.Test
@@ -20,6 +21,12 @@ class SecurityManagerTest {
         val passphrase = manager.generateDatabasePassphrase()
         val retrieved = manager.getDatabasePassphrase()
         assertEquals(passphrase, retrieved)
+
+        val field = SecurityManager::class.java.getDeclaredField("encryptedPrefs")
+        field.isAccessible = true
+        val prefs = field.get(manager) as SharedPreferences
+        val stored = prefs.getString("db_passphrase", null)
+        assertNotEquals(passphrase, stored)
 
         val prefsFile = File(context.filesDir.parent + "/shared_prefs/encrypted_prefs.xml")
         val content = prefsFile.readText()
