@@ -11,7 +11,10 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 enum class SortOption {
@@ -122,7 +125,24 @@ class PeopleViewModel @Inject constructor(private val peopleRepository: PeopleRe
             }
         }
     }
-    
+
+    suspend fun importContacts(contacts: List<Person>): Pair<Int, Int> {
+        return withContext(Dispatchers.IO) {
+            val existingPeople = peopleRepository.getAllPeople().first()
+            val existingNames = existingPeople.map { it.name.lowercase() }.toSet()
+
+            val newContacts = contacts.filter { contact ->
+                !existingNames.contains(contact.name.lowercase())
+            }
+
+            newContacts.forEach { contact ->
+                peopleRepository.insertPerson(contact)
+            }
+
+            Pair(newContacts.size, contacts.size - newContacts.size)
+        }
+    }
+
     fun searchPeople(query: String) {
         viewModelScope.launch {
             try {
