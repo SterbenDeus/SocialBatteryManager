@@ -27,6 +27,7 @@ import com.github.mikephil.charting.charts.BarChart
 import com.github.mikephil.charting.data.*
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.opencsv.CSVWriter
 import java.io.File
 import java.io.FileWriter
 import java.text.SimpleDateFormat
@@ -366,19 +367,25 @@ class ReportsFragment : Fragment() {
         viewModel.getActivitiesForPeriod(dateRange.first, dateRange.second) { activities ->
             try {
                 val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.csv")
-                val writer = FileWriter(file)
-
-                // Write CSV header
-                writer.append("Date,Activity,Type,Energy,Mood,People,Notes\n")
-
-                // Write data
                 val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
-                activities.forEach { activity ->
-                    val date = dateFormat.format(Date(activity.date))
-                    writer.append("$date,${activity.name},${activity.type},${activity.energy},${activity.mood},${activity.people},${activity.notes}\n")
-                }
 
-                writer.close()
+                CSVWriter(FileWriter(file)).use { writer ->
+                    writer.writeNext(arrayOf("Date", "Activity", "Type", "Energy", "Mood", "People", "Notes"))
+                    activities.forEach { activity ->
+                        val date = dateFormat.format(Date(activity.date))
+                        writer.writeNext(
+                            arrayOf(
+                                date,
+                                activity.name,
+                                activity.type,
+                                activity.energy.toString(),
+                                activity.mood,
+                                activity.people,
+                                activity.notes
+                            )
+                        )
+                    }
+                }
 
                 // Share file
                 val uri = FileProvider.getUriForFile(
