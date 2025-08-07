@@ -68,7 +68,8 @@ class SyncWorker(
                     "socialInteractionLevel" to activity.socialInteractionLevel,
                     "stressLevel" to activity.stressLevel,
                     "isManualEntry" to activity.isManualEntry,
-                    "lastModified" to activity.lastModified
+                    "lastModified" to activity.lastModified,
+                    "isDeleted" to activity.isDeleted
                 )
                 
                 val documentRef = if (activity.firebaseId != null) {
@@ -105,7 +106,9 @@ class SyncWorker(
                 .limit(100)
                 .get()
                 .await()
-            
+
+            val remoteIds = mutableSetOf<String>()
+
             database.withTransaction {
                 for (document in querySnapshot.documents) {
                     val firebaseId = document.id
@@ -113,6 +116,8 @@ class SyncWorker(
                         Log.e("SyncWorker", "Skipping document with missing ID")
                         continue
                     }
+
+                    remoteIds.add(firebaseId)
 
                     val data = document.data
                     if (data == null) {
@@ -122,6 +127,12 @@ class SyncWorker(
 
                     try {
                         val existingActivity = database.activityDao().getActivityByFirebaseId(firebaseId)
+
+                        val isDeletedRemote = when (val deletedVal = data["isDeleted"]) {
+                            is Number -> deletedVal.toInt()
+                            is Boolean -> if (deletedVal) 1 else 0
+                            else -> 0
+                        }
 
                         val firebaseActivity = ActivityEntity(
                             id = existingActivity?.id ?: 0,
@@ -139,15 +150,19 @@ class SyncWorker(
                             isManualEntry = data["isManualEntry"] as? Boolean ?: true,
                             syncStatus = SyncStatus.SYNCED,
                             lastModified = (data["lastModified"] as? Number)?.toLong() ?: 0L,
-                            firebaseId = firebaseId
+                            firebaseId = firebaseId,
+                            isDeleted = isDeletedRemote
                         )
 
                         if (existingActivity == null) {
-                            // Insert new activity
-                            database.activityDao().insertActivity(firebaseActivity)
+                            // Insert new activity if not deleted
+                            if (isDeletedRemote == 0) {
+                                database.activityDao().insertActivity(firebaseActivity)
+                            }
                         } else {
-                            // Update if Firebase version is newer
-                            if (firebaseActivity.lastModified > existingActivity.lastModified) {
+                            if (isDeletedRemote == 1) {
+                                database.activityDao().softDeleteActivity(existingActivity.id)
+                            } else if (firebaseActivity.lastModified > existingActivity.lastModified) {
                                 database.activityDao().updateActivity(firebaseActivity.copy(id = existingActivity.id))
                             }
                         }
@@ -158,8 +173,17 @@ class SyncWorker(
                         )
                     }
                 }
+
+                // Soft-delete local activities missing from Firebase
+                val localActivities = database.activityDao().getAllActivitiesForBackup()
+                for (local in localActivities) {
+                    val localFirebaseId = local.firebaseId
+                    if (localFirebaseId != null && !remoteIds.contains(localFirebaseId)) {
+                        database.activityDao().softDeleteActivity(local.id)
+                    }
+                }
             }
-            
+
         } catch (e: Exception) {
             Log.e("SyncWorker", "Failed to download updates from Firebase", e)
             FirebaseCrashlytics.getInstance().recordException(

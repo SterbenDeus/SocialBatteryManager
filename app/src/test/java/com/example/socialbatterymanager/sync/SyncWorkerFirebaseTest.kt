@@ -7,6 +7,8 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.testing.TestListenableWorkerBuilder
 import com.example.socialbatterymanager.data.database.AppDatabase
+import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.example.socialbatterymanager.data.model.SyncStatus
 import com.example.socialbatterymanager.shared.utils.NetworkStatusProvider
 import com.google.android.gms.tasks.Tasks
 import com.google.firebase.firestore.CollectionReference
@@ -137,5 +139,74 @@ class SyncWorkerFirebaseTest {
 
         val activities = db.activityDao().getAllActivitiesForBackup()
         assertTrue(activities.isEmpty())
+    }
+
+    @Test
+    fun softDeletesLocalActivityMissingFromFirebase() = runTest {
+        val activity = ActivityEntity(
+            name = "Local",
+            type = "Type",
+            energy = 5,
+            people = "",
+            mood = "",
+            notes = "",
+            date = 1L,
+            firebaseId = "missing",
+            syncStatus = SyncStatus.SYNCED
+        )
+        db.activityDao().insertActivity(activity)
+
+        val worker = buildWorker()
+        val result = worker.doWork()
+        assertTrue(result is ListenableWorker.Result.Success)
+
+        val cursor = db.query("SELECT isDeleted FROM activities WHERE firebaseId = ?", arrayOf<Any>("missing"))
+        assertTrue(cursor.moveToFirst())
+        assertEquals(1, cursor.getInt(0))
+        cursor.close()
+    }
+
+    @Test
+    fun softDeletesLocalActivityWhenRemoteMarkedDeleted() = runTest {
+        val activity = ActivityEntity(
+            name = "Local",
+            type = "Type",
+            energy = 5,
+            people = "",
+            mood = "",
+            notes = "",
+            date = 1L,
+            firebaseId = "remote1",
+            syncStatus = SyncStatus.SYNCED
+        )
+        db.activityDao().insertActivity(activity)
+
+        val doc = createDocument(
+            id = "remote1",
+            data = mapOf(
+                "name" to "Remote",
+                "type" to "Type",
+                "energy" to 5,
+                "people" to "",
+                "mood" to "",
+                "notes" to "",
+                "date" to 1L,
+                "duration" to 10L,
+                "socialInteractionLevel" to 1,
+                "stressLevel" to 2,
+                "isManualEntry" to true,
+                "lastModified" to 1L,
+                "isDeleted" to 1
+            )
+        )
+
+        val worker = buildWorker(doc)
+        val result = worker.doWork()
+        assertTrue(result is ListenableWorker.Result.Success)
+
+        val cursor = db.query("SELECT isDeleted FROM activities WHERE firebaseId = ?", arrayOf<Any>("remote1"))
+        assertTrue(cursor.moveToFirst())
+        assertEquals(1, cursor.getInt(0))
+        cursor.close()
     }
 }
