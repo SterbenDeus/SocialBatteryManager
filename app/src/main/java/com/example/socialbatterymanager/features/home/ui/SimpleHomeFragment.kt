@@ -15,6 +15,7 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.databinding.FragmentHomeBinding
 import com.example.socialbatterymanager.features.notifications.NotificationService
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -26,7 +27,7 @@ class SimpleHomeFragment : Fragment() {
     private lateinit var btnTestBattery: Button
     private lateinit var tvWeeklyStats: TextView
     private lateinit var tvEnergyPercentage: TextView
-    private lateinit var notificationService: NotificationService
+    @Inject lateinit var notificationService: NotificationService
 
     private val viewModel: SimpleHomeViewModel by viewModels()
 
@@ -42,9 +43,6 @@ class SimpleHomeFragment : Fragment() {
         savedInstanceState: Bundle?,
     ): View {
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-
-        // Initialize notification service
-        notificationService = NotificationService(requireContext())
 
         // Initialize views
         btnNotifications = requireView().findViewById(R.id.btnNotifications)
