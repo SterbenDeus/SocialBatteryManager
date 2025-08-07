@@ -25,6 +25,7 @@ private class FakeActivityDao : ActivityDao {
     }
     override fun getAllActivities(): Flow<List<ActivityEntity>> = MutableStateFlow(activities.toList())
     override suspend fun getActivityById(id: Int): ActivityEntity? = activities.find { it.id == id }
+    override suspend fun getActivityByFirebaseId(firebaseId: String): ActivityEntity? = activities.find { it.firebaseId == firebaseId }
     override suspend fun softDeleteActivity(id: Int, timestamp: Long) {
         val index = activities.indexOfFirst { it.id == id }
         if (index >= 0) {
