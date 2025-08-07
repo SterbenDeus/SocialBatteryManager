@@ -2,9 +2,7 @@ package com.example.socialbatterymanager.features.profile.ui
 
 import android.Manifest
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
@@ -23,26 +21,21 @@ import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
-import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.intPreferencesKey
-import androidx.datastore.preferences.core.stringPreferencesKey
-import androidx.datastore.preferences.preferencesDataStore
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.fragment.findNavController
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.User
-import kotlinx.coroutines.flow.map
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 
-private val Context.dataStore by preferencesDataStore(name = "profile_preferences")
-
+@AndroidEntryPoint
 class ProfileFragment : Fragment() {
 
-    private lateinit var sharedPreferences: SharedPreferences
+    private val viewModel: ProfileViewModel by viewModels()
     private lateinit var profileImage: ImageView
     private lateinit var nameEditText: EditText
     private lateinit var emailEditText: EditText
@@ -61,15 +54,6 @@ class ProfileFragment : Fragment() {
 
     private var currentUser: User? = null
     private var selectedImageUri: Uri? = null
-
-    // DataStore keys
-    private val NAME_KEY = stringPreferencesKey("user_name")
-    private val EMAIL_KEY = stringPreferencesKey("user_email")
-    private val CAPACITY_KEY = intPreferencesKey("battery_capacity")
-    private val WARNING_KEY = intPreferencesKey("warning_level")
-    private val NOTIFICATIONS_KEY = booleanPreferencesKey("notifications_enabled")
-    private val MOOD_KEY = stringPreferencesKey("current_mood")
-    private val PHOTO_KEY = stringPreferencesKey("profile_photo")
 
     private val imagePickerLauncher = registerForActivityResult(
         ActivityResultContracts.GetContent()
@@ -107,13 +91,10 @@ class ProfileFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_profile, container, false)
-        
-        sharedPreferences = requireActivity().getSharedPreferences("profile_prefs", Context.MODE_PRIVATE)
-        
+
         initializeViews(view)
         setupClickListeners()
-        loadUserProfile()
-        
+
         return view
     }
 
@@ -230,21 +211,11 @@ class ProfileFragment : Fragment() {
         cameraLauncher.launch(selectedImageUri)
     }
 
-    private fun loadUserProfile() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
         viewLifecycleOwner.lifecycleScope.launch {
             viewLifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
-                requireContext().dataStore.data.map { preferences ->
-                    User(
-                        id = "1",
-                        name = preferences[NAME_KEY] ?: getString(R.string.default_user_name),
-                        email = preferences[EMAIL_KEY] ?: getString(R.string.default_user_email),
-                        photoUri = preferences[PHOTO_KEY],
-                        batteryCapacity = preferences[CAPACITY_KEY] ?: 100,
-                        warningLevel = preferences[WARNING_KEY] ?: 30,
-                        currentMood = preferences[MOOD_KEY] ?: getString(R.string.default_mood),
-                        notificationsEnabled = preferences[NOTIFICATIONS_KEY] ?: true
-                    )
-                }.collect { user ->
+                viewModel.user.collect { user ->
                     currentUser = user
                     updateUI()
                 }
@@ -295,25 +266,19 @@ class ProfileFragment : Fragment() {
     }
 
     private fun saveProfileChanges() {
-        lifecycleScope.launch {
-            requireContext().dataStore.edit { preferences ->
-                preferences[NAME_KEY] = nameEditText.text.toString()
-                preferences[EMAIL_KEY] = emailEditText.text.toString()
-                preferences[CAPACITY_KEY] = capacitySeekBar.progress
-                preferences[WARNING_KEY] = warningSeekBar.progress
-                preferences[NOTIFICATIONS_KEY] = notificationsSwitch.isChecked
-                preferences[MOOD_KEY] = getMoodFromSpinner()
-            }
-            Toast.makeText(requireContext(), getString(R.string.profile_updated_success), Toast.LENGTH_SHORT).show()
-        }
+        viewModel.saveProfile(
+            nameEditText.text.toString(),
+            emailEditText.text.toString(),
+            capacitySeekBar.progress,
+            warningSeekBar.progress,
+            notificationsSwitch.isChecked,
+            getMoodFromSpinner()
+        )
+        Toast.makeText(requireContext(), getString(R.string.profile_updated_success), Toast.LENGTH_SHORT).show()
     }
 
     private fun saveImageUri(uri: String) {
-        lifecycleScope.launch {
-            requireContext().dataStore.edit { preferences ->
-                preferences[PHOTO_KEY] = uri
-            }
-        }
+        viewModel.saveImageUri(uri)
     }
 
     private fun getMoodFromSpinner(): String {
@@ -356,34 +321,20 @@ class ProfileFragment : Fragment() {
     }
 
     private fun performSignOut() {
-        lifecycleScope.launch {
-            requireContext().dataStore.edit { preferences ->
-                preferences.clear()
-            }
-            Toast.makeText(requireContext(), getString(R.string.sign_out_success), Toast.LENGTH_SHORT).show()
-            requireActivity().finish()
-        }
+        viewModel.signOut()
+        Toast.makeText(requireContext(), getString(R.string.sign_out_success), Toast.LENGTH_SHORT).show()
+        requireActivity().finish()
     }
 
     private fun performDeleteAccount() {
-        lifecycleScope.launch {
-            requireContext().dataStore.edit { preferences ->
-                preferences.clear()
-            }
-            // In a real app, this would also delete from server/database
-            Toast.makeText(requireContext(), getString(R.string.account_deleted_success), Toast.LENGTH_SHORT).show()
-            requireActivity().finish()
-        }
+        viewModel.deleteAccount()
+        // In a real app, this would also delete from server/database
+        Toast.makeText(requireContext(), getString(R.string.account_deleted_success), Toast.LENGTH_SHORT).show()
+        requireActivity().finish()
     }
 
     private fun performRecalibration() {
-        lifecycleScope.launch {
-            requireContext().dataStore.edit { preferences ->
-                preferences[CAPACITY_KEY] = 100
-                preferences[WARNING_KEY] = 30
-            }
-            loadUserProfile()
-            Toast.makeText(requireContext(), getString(R.string.battery_recalibrated_success), Toast.LENGTH_SHORT).show()
-        }
+        viewModel.recalibrate()
+        Toast.makeText(requireContext(), getString(R.string.battery_recalibrated_success), Toast.LENGTH_SHORT).show()
     }
 }
