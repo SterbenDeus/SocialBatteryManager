@@ -16,6 +16,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
     versionCatalogs {
+        // Load dependencies from gradle/libs.versions.toml
         create("libs")
     }
 }
