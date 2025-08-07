@@ -19,7 +19,7 @@ private class FakeActivityDao(private val count: Int) : ActivityDao {
     override suspend fun updateActivity(activity: ActivityEntity) = throw NotImplementedError()
     override fun getAllActivities(): Flow<List<ActivityEntity>> = throw NotImplementedError()
     override suspend fun getActivityById(id: Int): ActivityEntity? = throw NotImplementedError()
-    override suspend fun getActivitiesByPersonName(personName: String): List<ActivityEntity> = throw NotImplementedError()
+    override suspend fun getActivityByFirebaseId(firebaseId: String): ActivityEntity? = throw NotImplementedError()
     override suspend fun softDeleteActivity(id: Int, timestamp: Long) = throw NotImplementedError()
     override suspend fun deleteActivity(activity: ActivityEntity) = throw NotImplementedError()
     override suspend fun getAllActivitiesForBackup(): List<ActivityEntity> = throw NotImplementedError()
