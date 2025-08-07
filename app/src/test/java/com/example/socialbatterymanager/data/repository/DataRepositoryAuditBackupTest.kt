@@ -43,6 +43,7 @@ private class FakeActivityDao : ActivityDao {
     override suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity> = emptyList()
     override suspend fun getActivitiesCountFromDate(fromDate: Long): Int = 0
     override suspend fun getTotalEnergyUsedFromDate(fromDate: Long): Int = 0
+    override suspend fun deleteAllActivities() { activities.clear() }
 }
 
 private class FakeAuditLogDao : AuditLogDao {
@@ -59,6 +60,7 @@ private class FakeAuditLogDao : AuditLogDao {
         logs.value = logs.value.filter { it.timestamp >= cutoff }
     }
     override suspend fun getAuditLogCount(): Int = logs.value.size
+    override suspend fun deleteAllAuditLogs() { logs.value = emptyList() }
 }
 
 private class FakeBackupMetadataDao : BackupMetadataDao {

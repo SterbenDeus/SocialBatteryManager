@@ -1,9 +1,12 @@
 package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
+import androidx.room.withTransaction
+import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.BackupData
 import com.example.socialbatterymanager.data.model.BackupMetadataEntity
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -21,8 +24,10 @@ class BackupManager @Inject constructor(
     private val auditRepository: AuditRepository,
     private val backupRepository: BackupRepository,
     private val preferencesManager: PreferencesManager,
+    private val database: AppDatabase,
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance(),
-    private val gson: Gson = Gson()
+    private val gson: Gson = Gson(),
+    private val crashlytics: FirebaseCrashlytics = FirebaseCrashlytics.getInstance(),
 ) {
     
     suspend fun createLocalBackup(): BackupMetadataEntity {
@@ -75,7 +80,7 @@ class BackupManager @Inject constructor(
                 .set(backupData)
                 .await()
         } catch (e: Exception) {
-            // Log the exception or handle it appropriately
+            crashlytics.recordException(e)
         }
 
         return metadata
@@ -96,6 +101,7 @@ class BackupManager @Inject constructor(
                 false
             }
         } catch (e: Exception) {
+            crashlytics.recordException(e)
             false
         }
     }
@@ -112,35 +118,35 @@ class BackupManager @Inject constructor(
                 false
             }
         } catch (e: Exception) {
+            crashlytics.recordException(e)
             false
         }
     }
     
     private suspend fun restoreFromBackupData(backupData: BackupData) {
-        // Clear existing data (this is a full restore)
-        // Note: In a real app, you might want to create a backup before restoring
-        
-        // Restore activities
-        for (activity in backupData.activities) {
-            activityRepository.insertActivityRaw(activity)
-        }
+        database.withTransaction {
+            activityRepository.clearAllActivities()
+            auditRepository.clearAuditLogs()
 
-        // Restore audit logs
-        for (auditLog in backupData.auditLogs) {
-            auditRepository.insertAuditLogRaw(auditLog)
+            for (activity in backupData.activities) {
+                activityRepository.insertActivityRaw(activity)
+            }
+
+            for (auditLog in backupData.auditLogs) {
+                auditRepository.insertAuditLogRaw(auditLog)
+            }
+
+            val restoreMetadata = BackupMetadataEntity(
+                id = UUID.randomUUID().toString(),
+                timestamp = System.currentTimeMillis(),
+                version = backupData.version,
+                dataCount = backupData.activities.size,
+                checksum = backupData.checksum,
+                isRestored = true
+            )
+
+            backupRepository.insertBackupMetadata(restoreMetadata)
         }
-        
-        // Create restore metadata
-        val restoreMetadata = BackupMetadataEntity(
-            id = UUID.randomUUID().toString(),
-            timestamp = System.currentTimeMillis(),
-            version = backupData.version,
-            dataCount = backupData.activities.size,
-            checksum = backupData.checksum,
-            isRestored = true
-        )
-        
-        backupRepository.insertBackupMetadata(restoreMetadata)
     }
     
     suspend fun getAvailableBackups(): List<BackupMetadataEntity> {

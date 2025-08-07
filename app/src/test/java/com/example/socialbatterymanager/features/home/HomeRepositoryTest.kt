@@ -30,6 +30,7 @@ private class FakeActivityDao(private val count: Int) : ActivityDao {
     override suspend fun incrementUsageCount(id: Int) = throw NotImplementedError()
     override suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity> = throw NotImplementedError()
     override suspend fun getTotalEnergyUsedFromDate(fromDate: Long): Int = throw NotImplementedError()
+    override suspend fun deleteAllActivities() = throw NotImplementedError()
 }
 
 private class FakeAppDatabase(private val activityDao: ActivityDao) : AppDatabase() {

@@ -42,5 +42,9 @@ class AuditRepository(
     suspend fun insertAuditLogRaw(auditLog: AuditLogEntity) {
         auditLogDao.insertAuditLog(auditLog)
     }
+
+    suspend fun clearAuditLogs() {
+        auditLogDao.deleteAllAuditLogs()
+    }
 }
 
