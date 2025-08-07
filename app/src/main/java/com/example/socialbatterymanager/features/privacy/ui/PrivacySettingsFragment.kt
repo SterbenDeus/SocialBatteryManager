@@ -30,9 +30,12 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.launch
 import androidx.appcompat.widget.SwitchCompat
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 private val Context.privacyDataStore by preferencesDataStore(name = "privacy_preferences")
 
+@AndroidEntryPoint
 class PrivacySettingsFragment : Fragment() {
 
     // UI Components
@@ -51,7 +54,7 @@ class PrivacySettingsFragment : Fragment() {
     private var currentPrivacySettings: UserPrivacySettings? = null
     private val blockedUsers = mutableListOf<BlockedUser>()
     private lateinit var blockedUsersAdapter: BlockedUsersAdapter
-    private val authRepository = AuthRepository()
+    @Inject lateinit var authRepository: AuthRepository
     private val gson = Gson()
 
     // DataStore keys
