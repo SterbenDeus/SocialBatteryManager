@@ -1,7 +1,10 @@
 package com.example.socialbatterymanager.reports
 
+import android.content.Context
 import android.content.Intent
 import android.graphics.Color
+import android.graphics.Paint
+import android.graphics.pdf.PdfDocument
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.VisibleForTesting
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -400,60 +404,64 @@ class ReportsFragment : Fragment() {
         val dateRange = getDateRangeForPeriod(currentPeriod)
         viewModel.getActivitiesForPeriod(dateRange.first, dateRange.second) { activities ->
             try {
-                // Group activities by date for trends
-                val dateFormat = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
-                val trends = activities.groupBy { activity ->
-                    val date = Date(activity.date)
-                    dateFormat.format(date)
-                }.map { (date, activitiesForDate) ->
-                    val avgEnergy: Double = activitiesForDate.map { it.energy }.average()
-                    val mostCommonMood: String = activitiesForDate.groupBy { it.mood }
-                        .maxByOrNull { it.value.size }?.key ?: "Unknown"
-
-                    TrendData(
-                        date = date,
-                        avgEnergy = avgEnergy,
-                        avgMood = mostCommonMood,
-                        activityCount = activitiesForDate.size
-                    )
-                }.sortedByDescending { it.date }
-
-                // Create simple text report (PDF generation would require more complex implementation)
-                val file = File(requireContext().getExternalFilesDir(null), "social_battery_report.txt")
-                val writer = FileWriter(file)
-
-                writer.append("Social Battery Manager Report\n")
-                writer.append("Generated: ${SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date())}\n\n")
-
-                writer.append("DAILY TRENDS:\n")
-                trends.forEach { trend ->
-                    writer.append("${trend.date}: Energy: ${String.format("%.1f", trend.avgEnergy)}, Mood: ${trend.avgMood}, Activities: ${trend.activityCount}\n")
-                }
-
-                writer.append("\nDETAILED ACTIVITIES:\n")
-                activities.forEach { activity ->
-                    val date = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date(activity.date))
-                    writer.append("$date - ${activity.name} (${activity.type}): Energy: ${activity.energy}, Mood: ${activity.mood}\n")
-                }
-
-                writer.close()
-
-                // Share file
-                val uri = FileProvider.getUriForFile(
-                    requireContext(),
-                    "${requireContext().packageName}.fileprovider",
-                    file
-                )
-
-                val intent = Intent(Intent.ACTION_SEND)
-                intent.type = "text/plain"
-                intent.putExtra(Intent.EXTRA_STREAM, uri)
-                intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-
+                val file = generatePdfReport(requireContext(), activities)
+                val intent = createShareIntent(requireContext(), file)
                 startActivity(Intent.createChooser(intent, getString(R.string.export_report_title)))
-
             } catch (e: Exception) {
                 Toast.makeText(requireContext(), getString(R.string.error_export_report, e.message), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    companion object {
+        @VisibleForTesting
+        @JvmStatic
+        internal fun generatePdfReport(context: Context, activities: List<ActivityEntity>): File {
+            val file = File(context.getExternalFilesDir(null), "social_battery_report.pdf")
+            val pdfDocument = PdfDocument()
+            val pageInfo = PdfDocument.PageInfo.Builder(595, 842, 1).create()
+            val page = pdfDocument.startPage(pageInfo)
+            val canvas = page.canvas
+            val paint = Paint().apply { textSize = 12f }
+            var yPosition = 25f
+
+            canvas.drawText("Social Battery Manager Report", 10f, yPosition, paint)
+            yPosition += 20f
+            canvas.drawText(
+                "Generated: " +
+                    SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()).format(Date()),
+                10f,
+                yPosition,
+                paint
+            )
+            yPosition += 20f
+
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault())
+            activities.forEach { activity ->
+                val line =
+                    "${dateFormat.format(Date(activity.date))} - ${activity.name} (${activity.type}): Energy: ${activity.energy}, Mood: ${activity.mood}"
+                yPosition += 20f
+                canvas.drawText(line, 10f, yPosition, paint)
+            }
+
+            pdfDocument.finishPage(page)
+            file.outputStream().use { pdfDocument.writeTo(it) }
+            pdfDocument.close()
+            return file
+        }
+
+        @VisibleForTesting
+        @JvmStatic
+        internal fun createShareIntent(context: Context, file: File): Intent {
+            val uri = FileProvider.getUriForFile(
+                context,
+                "${context.packageName}.fileprovider",
+                file
+            )
+            return Intent(Intent.ACTION_SEND).apply {
+                type = "application/pdf"
+                putExtra(Intent.EXTRA_STREAM, uri)
+                addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             }
         }
     }
