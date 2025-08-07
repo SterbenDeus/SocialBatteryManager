@@ -7,10 +7,12 @@ import android.provider.ContactsContract
 import androidx.core.content.ContextCompat
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.R
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 class ContactsImporter(private val context: Context) {
     
-    fun importContacts(): List<Person> {
+    suspend fun importContacts(): List<Person> {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS)
             != PackageManager.PERMISSION_GRANTED
         ) {
@@ -18,44 +20,46 @@ class ContactsImporter(private val context: Context) {
         }
 
         val contacts = mutableListOf<Person>()
-        
-        val cursor = context.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            arrayOf(
-                ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
-                ContactsContract.CommonDataKinds.Phone.NUMBER
-            ),
-            null,
-            null,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
-        )
-        
-        cursor?.use { cursor ->
-            val contactIdColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
-            val nameColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
-            val phoneColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
-            
-            val processedContacts = mutableSetOf<String>()
-            
-            while (cursor.moveToNext()) {
-                val contactId = cursor.getString(contactIdColumn)
-                val name = cursor.getString(nameColumn)
-                val phone = cursor.getString(phoneColumn)
-                
-                if (!processedContacts.contains(contactId) && !name.isNullOrEmpty()) {
-                    processedContacts.add(contactId)
-                    
-                    val email = getContactEmail(contactId)
-                    
-                    contacts.add(
-                        Person(
-                            name = name,
-                            email = email,
-                            phone = phone,
-                            notes = context.getString(R.string.imported_from_contacts)
+
+        withContext(Dispatchers.IO) {
+            val cursor = context.contentResolver.query(
+                ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+                arrayOf(
+                    ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
+                    ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+                    ContactsContract.CommonDataKinds.Phone.NUMBER
+                ),
+                null,
+                null,
+                ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME + " ASC"
+            )
+
+            cursor?.use { cursor ->
+                val contactIdColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.CONTACT_ID)
+                val nameColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME)
+                val phoneColumn = cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER)
+
+                val processedContacts = mutableSetOf<String>()
+
+                while (cursor.moveToNext()) {
+                    val contactId = cursor.getString(contactIdColumn)
+                    val name = cursor.getString(nameColumn)
+                    val phone = cursor.getString(phoneColumn)
+
+                    if (!processedContacts.contains(contactId) && !name.isNullOrEmpty()) {
+                        processedContacts.add(contactId)
+
+                        val email = getContactEmail(contactId)
+
+                        contacts.add(
+                            Person(
+                                name = name,
+                                email = email,
+                                phone = phone,
+                                notes = context.getString(R.string.imported_from_contacts)
+                            )
                         )
-                    )
+                    }
                 }
             }
         }

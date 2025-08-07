@@ -20,13 +20,13 @@ import dagger.hilt.android.AndroidEntryPoint
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.socialbatterymanager.R
-import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.features.people.data.ContactsImporter
 import com.example.socialbatterymanager.features.people.data.PersonWithStats
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @AndroidEntryPoint
 class PeopleFragment : Fragment() {
@@ -258,51 +258,28 @@ class PeopleFragment : Fragment() {
         lifecycleScope.launch {
             try {
                 val importer = ContactsImporter(requireContext())
-                val contacts = importer.importContacts()
+                val contacts = withContext(Dispatchers.IO) { importer.importContacts() }
 
-                val db = AppDatabase.getDatabase(requireContext())
-                val personDao = db.personDao()
+                val (imported, duplicates) = viewModel.importContacts(contacts)
 
-                // Get existing people to avoid duplicates
-                val existingPeople = personDao.getAllPeople().first()
-                val existingNames = existingPeople.map { it.name.lowercase() }.toSet()
-
-                val newContacts = contacts.filter { contact ->
-                    !existingNames.contains(contact.name.lowercase())
-                }
-
-                newContacts.forEach { contact ->
-                    personDao.insertPerson(contact)
-                }
-
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(
-                            R.string.imported_contacts,
-                            newContacts.size,
-                            contacts.size - newContacts.size
-                        ),
-                        Toast.LENGTH_LONG
-                    ).show()
-                    viewModel.refreshData()
-                }
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.imported_contacts, imported, duplicates),
+                    Toast.LENGTH_LONG
+                ).show()
+                viewModel.refreshData()
             } catch (e: SecurityException) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.contacts_permission_not_granted),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.contacts_permission_not_granted),
+                    Toast.LENGTH_LONG
+                ).show()
             } catch (e: Exception) {
-                requireActivity().runOnUiThread {
-                    Toast.makeText(
-                        requireContext(),
-                        getString(R.string.error_importing_contacts, e.message),
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+                Toast.makeText(
+                    requireContext(),
+                    getString(R.string.error_importing_contacts, e.message),
+                    Toast.LENGTH_LONG
+                ).show()
             }
         }
     }
