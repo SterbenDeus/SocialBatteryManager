@@ -5,26 +5,34 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.core.app.NotificationCompat
+import androidx.hilt.work.HiltWorker
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.database.AppDatabase
+import com.example.socialbatterymanager.shared.preferences.PreferencesManager
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.first
 
-class EnergyReminderWorker(
-    private val context: Context,
-    workerParams: WorkerParameters
-
-) : CoroutineWorker(context, workerParams) {
+@HiltWorker
+class EnergyReminderWorker @AssistedInject constructor(
+    @Assisted private val appContext: Context,
+    @Assisted workerParams: WorkerParameters,
+    private val database: AppDatabase,
+    private val preferencesManager: PreferencesManager
+) : CoroutineWorker(appContext, workerParams) {
 
     override suspend fun doWork(): Result {
         return try {
-            val database = AppDatabase.getDatabase(context)
-            val latestEnergyLog = database.energyLogDao().getLatestEnergyLog()
+            val notificationsEnabled = preferencesManager.notificationsEnabledFlow.first()
+            if (!notificationsEnabled) return Result.success()
 
+            val threshold = preferencesManager.batteryNotificationThresholdFlow.first()
+            val latestEnergyLog = database.energyLogDao().getLatestEnergyLog()
             val energyLevel = latestEnergyLog?.energyLevel ?: 65
 
-            // Show notification if energy is low
-            if (energyLevel < 30) {
+            if (energyLevel < threshold) {
                 showNotification(
                     "Low Social Battery",
                     "Your social battery is at $energyLevel%. Consider taking a break or doing something relaxing."
@@ -39,8 +47,8 @@ class EnergyReminderWorker(
 
     private fun showNotification(title: String, message: String) {
         createNotificationChannel()
-        
-        val notification = NotificationCompat.Builder(context, CHANNEL_ID)
+
+        val notification = NotificationCompat.Builder(appContext, CHANNEL_ID)
             .setSmallIcon(R.drawable.ic_launcher_foreground)
             .setContentTitle(title)
             .setContentText(message)
@@ -49,7 +57,8 @@ class EnergyReminderWorker(
             .setAutoCancel(true)
             .build()
 
-        val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         notificationManager.notify(NOTIFICATION_ID, notification)
     }
 
@@ -62,8 +71,9 @@ class EnergyReminderWorker(
             ).apply {
                 description = "Reminders about your social battery level"
             }
-            
-            val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+            val notificationManager =
+                appContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
         }
     }
@@ -73,3 +83,4 @@ class EnergyReminderWorker(
         const val NOTIFICATION_ID = 1
     }
 }
+
