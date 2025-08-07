@@ -79,7 +79,7 @@
 ### Profile Photo
 - **Tap**: Opens image selection dialog
 - **Options**: Camera or Gallery
-- **Permissions**: Auto-requests storage/camera permissions
+- **Permissions**: Requests storage and camera permissions at runtime
 
 ### Edit Profile Button
 - **View Mode**: Shows "Edit Profile" 

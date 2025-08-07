@@ -227,6 +227,7 @@ Energy Ranges:
     <!-- Profile strings -->
     <string name="permission_denied">Permission denied</string>
     <string name="permission_access_photos">Permission needed to access photos</string>
+    <string name="permission_access_camera">Permission needed to access camera</string>
     <string name="choose_from_gallery">Choose from Gallery</string>
     <string name="take_photo">Take Photo</string>
     <string name="cancel">Cancel</string>
