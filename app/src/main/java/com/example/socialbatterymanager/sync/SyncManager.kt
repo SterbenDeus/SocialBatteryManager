@@ -8,18 +8,19 @@ import androidx.work.NetworkType
 import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.common.util.concurrent.ListenableFuture
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
+import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
 
 /**
  * Manager class for handling sync operations
  */
-class SyncManager(private val context: Context) {
-    
-    private val workManager = WorkManager.getInstance(context)
-    private val preferencesManager = PreferencesManager(context)
+class SyncManager(
+    private val context: Context,
+    private val workManager: WorkManager = WorkManager.getInstance(context),
+    private val preferencesManager: PreferencesManager = PreferencesManager(context),
+) {
     
     companion object {
         private const val SYNC_WORK_NAME = "social_battery_sync"
