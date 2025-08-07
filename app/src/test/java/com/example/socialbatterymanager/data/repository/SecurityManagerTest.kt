@@ -1,11 +1,45 @@
 package com.example.socialbatterymanager.data.repository
 
-import org.junit.Assert.assertEquals
-import org.junit.Assert.assertFalse
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.junit.Assert.*
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RuntimeEnvironment
+import java.io.File
 import java.util.Base64
 
+@RunWith(AndroidJUnit4::class)
 class SecurityManagerTest {
+
+    @Test
+    fun generatePassphrase_isStoredEncrypted() {
+        val context = RuntimeEnvironment.getApplication()
+        val manager = SecurityManager.getInstance(context)
+        manager.clearEncryptionData()
+
+        val passphrase = manager.generateDatabasePassphrase()
+        val retrieved = manager.getDatabasePassphrase()
+        assertEquals(passphrase, retrieved)
+
+        val prefsFile = File(context.filesDir.parent + "/shared_prefs/encrypted_prefs.xml")
+        val content = prefsFile.readText()
+        assertFalse(content.contains("db_passphrase"))
+        assertFalse(content.contains(passphrase))
+
+        manager.clearEncryptionData()
+    }
+
+    @Test
+    fun fallbackPassphrase_usesSecureRandom() {
+        val context = RuntimeEnvironment.getApplication()
+        val manager = SecurityManager.getInstance(context)
+        val method = SecurityManager::class.java.getDeclaredMethod("generateFallbackPassphrase")
+        method.isAccessible = true
+        val pass1 = method.invoke(manager) as String
+        val pass2 = method.invoke(manager) as String
+        assertNotEquals(pass1, pass2)
+        assertFalse(pass1.contains("\n"))
+    }
 
     @Test
     fun encodingWithoutWrap_producesPassphraseWithoutLineBreaks() {
@@ -14,15 +48,5 @@ class SecurityManagerTest {
         assertFalse(encoded.contains("\n"))
         assertFalse(encoded.contains("\r"))
     }
-
-    @Test
-    fun passphraseStoresAndRetrievesWithoutLineBreaks() {
-        val bytes = ByteArray(100) { it.toByte() }
-        val generated = Base64.getEncoder().encodeToString(bytes)
-        // Simulate storing and retrieving the passphrase
-        val retrieved = generated
-        assertEquals(generated, retrieved)
-        assertFalse(retrieved.contains("\n"))
-        assertFalse(retrieved.contains("\r"))
-    }
 }
+

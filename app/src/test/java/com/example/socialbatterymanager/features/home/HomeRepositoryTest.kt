@@ -19,6 +19,7 @@ private class FakeActivityDao(private val count: Int) : ActivityDao {
     override suspend fun updateActivity(activity: ActivityEntity) = throw NotImplementedError()
     override fun getAllActivities(): Flow<List<ActivityEntity>> = throw NotImplementedError()
     override suspend fun getActivityById(id: Int): ActivityEntity? = throw NotImplementedError()
+    override suspend fun getActivityByFirebaseId(firebaseId: String): ActivityEntity? = throw NotImplementedError()
     override suspend fun softDeleteActivity(id: Int, timestamp: Long) = throw NotImplementedError()
     override suspend fun deleteActivity(activity: ActivityEntity) = throw NotImplementedError()
     override suspend fun getAllActivitiesForBackup(): List<ActivityEntity> = throw NotImplementedError()
@@ -30,6 +31,7 @@ private class FakeActivityDao(private val count: Int) : ActivityDao {
     override suspend fun incrementUsageCount(id: Int) = throw NotImplementedError()
     override suspend fun getActivitiesByDateRangeSync(start: Long, end: Long): List<ActivityEntity> = throw NotImplementedError()
     override suspend fun getTotalEnergyUsedFromDate(fromDate: Long): Int = throw NotImplementedError()
+    override suspend fun deleteAllActivities() = throw NotImplementedError()
 }
 
 private class FakeAppDatabase(private val activityDao: ActivityDao) : AppDatabase() {

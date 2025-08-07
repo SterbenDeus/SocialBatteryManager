@@ -1,21 +1,31 @@
 package com.example.socialbatterymanager.auth
 
+import com.example.socialbatterymanager.features.auth.data.AuthRepository
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.verify
+import kotlin.test.assertEquals
 import org.junit.Test
-import org.junit.Assert.*
 
 class AuthRepositoryTest {
-    
+
+    private val firebaseAuth: FirebaseAuth = mockk(relaxed = true)
+    private val authRepository = AuthRepository(firebaseAuth)
+
     @Test
-    fun `test AuthRepository initialization`() {
-        val authRepository = AuthRepository()
-        assertNotNull(authRepository)
+    fun `currentUser returns value from FirebaseAuth`() {
+        val user: FirebaseUser = mockk()
+        every { firebaseAuth.currentUser } returns user
+
+        assertEquals(user, authRepository.currentUser)
     }
-    
+
     @Test
-    fun `test initial user state`() {
-        val authRepository = AuthRepository()
-        // User should not be logged in initially without Firebase setup
-        // This is a basic test to ensure the class structure works
-        assertTrue(authRepository.currentUser == null)
+    fun `signOut delegates to FirebaseAuth`() {
+        authRepository.signOut()
+
+        verify { firebaseAuth.signOut() }
     }
 }

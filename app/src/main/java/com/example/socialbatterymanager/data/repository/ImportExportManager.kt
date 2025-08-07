@@ -2,6 +2,7 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
+import com.opencsv.CSVReader
 import com.opencsv.CSVWriter
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
@@ -80,7 +81,7 @@ class ImportExportManager @Inject constructor(
             val margin = 40f
             val yStart = page.mediaBox.height - margin
             var yPosition = yStart
-            val contentStream = PDPageContentStream(document, page)
+            var contentStream = PDPageContentStream(document, page)
 
             // Title
             contentStream.beginText()
@@ -100,32 +101,28 @@ class ImportExportManager @Inject constructor(
 
             // Table Header
             val headers = listOf("ID", "Name", "Type", "Energy", "People", "Mood", "Date")
-            contentStream.beginText()
-            contentStream.setFont(PDType1Font.HELVETICA_BOLD, 10f)
-            contentStream.newLineAtOffset(margin, yPosition)
-            contentStream.showText(headers.joinToString("    "))
-            contentStream.endText()
-            yPosition -= 16f
+            yPosition = writeRow(contentStream, margin, yPosition, headers, true)
 
             // Table Rows
-            contentStream.setFont(PDType1Font.HELVETICA, 9f)
             for (activity in activities) {
-                if (yPosition < margin + 20) break // Simple single-page support
-                contentStream.beginText()
-                contentStream.newLineAtOffset(margin, yPosition)
-                contentStream.showText(
-                    listOf(
-                        activity.id.toString(),
-                        activity.name,
-                        activity.type,
-                        activity.energy.toString(),
-                        activity.people,
-                        activity.mood,
-                        dateFormat.format(Date(activity.date))
-                    ).joinToString("    ")
+                if (yPosition < margin) {
+                    contentStream.close()
+                    val newPage = PDPage(PDRectangle.A4)
+                    document.addPage(newPage)
+                    contentStream = PDPageContentStream(document, newPage)
+                    yPosition = yStart
+                    yPosition = writeRow(contentStream, margin, yPosition, headers, true)
+                }
+                val row = listOf(
+                    activity.id.toString(),
+                    activity.name,
+                    activity.type,
+                    activity.energy.toString(),
+                    activity.people,
+                    activity.mood,
+                    dateFormat.format(Date(activity.date))
                 )
-                contentStream.endText()
-                yPosition -= 14f
+                yPosition = writeRow(contentStream, margin, yPosition, row)
             }
 
             contentStream.close()
@@ -133,44 +130,68 @@ class ImportExportManager @Inject constructor(
             document.close()
             return file
         } catch (e: IOException) {
+            try {
+                contentStream.close()
+            } catch (_: Exception) {
+            }
             document.close()
             return null
         }
     }
 
+    private fun writeRow(
+        contentStream: PDPageContentStream,
+        margin: Float,
+        yPosition: Float,
+        values: List<String>,
+        isHeader: Boolean = false
+    ): Float {
+        contentStream.beginText()
+        val font = if (isHeader) PDType1Font.HELVETICA_BOLD else PDType1Font.HELVETICA
+        val fontSize = if (isHeader) 10f else 9f
+        contentStream.setFont(font, fontSize)
+        contentStream.newLineAtOffset(margin, yPosition)
+        contentStream.showText(values.joinToString("    "))
+        contentStream.endText()
+        return yPosition - if (isHeader) 16f else 14f
+    }
+
     suspend fun importFromCsv(file: File): ImportResult {
         return try {
-            val activities = mutableListOf<ActivityEntity>()
             var successCount = 0
             var errorCount = 0
 
             file.bufferedReader().use { reader ->
-                val lines = reader.readLines()
-                if (lines.isEmpty()) {
-                    return ImportResult(0, 0, "File is empty")
-                }
-                for (i in 1 until lines.size) {
-                    try {
-                        val parts = lines[i].split(",")
-                        if (parts.size >= 7) {
-                            val activity = ActivityEntity(
-                                name = parts[1].trim('"'),
-                                type = parts[2].trim('"'),
-                                energy = parts[3].trim('"').toIntOrNull() ?: 0,
-                                people = parts[4].trim('"'),
-                                mood = parts[5].trim('"'),
-                                notes = parts[6].trim('"'),
-                                date = System.currentTimeMillis(),
-                                lastModified = System.currentTimeMillis(),
-                                updatedAt = System.currentTimeMillis()
-                            )
-                            activityRepository.insertActivity(activity, "import")
-                            successCount++
-                        } else {
+                CSVReader(reader).use { csvReader ->
+                    val headers = csvReader.readNext()?.map { it.trim() }
+                    if (headers == null || headers.size < 7) {
+                        return ImportResult(0, 0, "Invalid or missing headers")
+                    }
+
+                    var line = csvReader.readNext()
+                    while (line != null) {
+                        try {
+                            if (line.size >= 7) {
+                                val activity = ActivityEntity(
+                                    name = line[1].trim(),
+                                    type = line[2].trim(),
+                                    energy = line[3].trim().toIntOrNull() ?: 0,
+                                    people = line[4].trim(),
+                                    mood = line[5].trim(),
+                                    notes = line[6].trim(),
+                                    date = System.currentTimeMillis(),
+                                    lastModified = System.currentTimeMillis(),
+                                    updatedAt = System.currentTimeMillis()
+                                )
+                                activityRepository.insertActivity(activity, "import")
+                                successCount++
+                            } else {
+                                errorCount++
+                            }
+                        } catch (e: Exception) {
                             errorCount++
                         }
-                    } catch (e: Exception) {
-                        errorCount++
+                        line = csvReader.readNext()
                     }
                 }
             }
