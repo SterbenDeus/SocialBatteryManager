@@ -12,6 +12,8 @@ import java.security.SecureRandom
 import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.SecretKeyFactory
+import javax.crypto.Cipher
+import javax.crypto.spec.GCMParameterSpec
 
 class SecurityManager private constructor(private val context: Context) {
     
@@ -62,14 +64,16 @@ class SecurityManager private constructor(private val context: Context) {
                 keyGenerator.generateKey()
             }
             
-            // Get the key and create a passphrase
+            // Get the key and create a random passphrase
             val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
-            val passphrase = Base64.encodeToString(secretKey.encoded, Base64.NO_WRAP)
+            val passphraseBytes = ByteArray(32)
+            SecureRandom().nextBytes(passphraseBytes)
+            val encrypted = encryptPassphrase(secretKey, passphraseBytes)
 
-            // Store the passphrase in encrypted preferences
-            encryptedPrefs.edit().putString("db_passphrase", passphrase).apply()
+            // Store the encrypted passphrase in encrypted preferences
+            encryptedPrefs.edit().putString("db_passphrase", encrypted).apply()
 
-            passphrase
+            Base64.encodeToString(passphraseBytes, Base64.NO_WRAP)
         } catch (e: Exception) {
             // Fallback to a SecureRandom generated passphrase
             val fallbackPassphrase = generateFallbackPassphrase()
@@ -77,9 +81,18 @@ class SecurityManager private constructor(private val context: Context) {
             fallbackPassphrase
         }
     }
-    
+
     fun getDatabasePassphrase(): String? {
-        return encryptedPrefs.getString("db_passphrase", null)
+        val stored = encryptedPrefs.getString("db_passphrase", null) ?: return null
+        return try {
+            val keyStore = KeyStore.getInstance("AndroidKeyStore")
+            keyStore.load(null)
+            val secretKey = keyStore.getKey(keyAlias, null) as SecretKey
+            val passphraseBytes = decryptPassphrase(secretKey, stored)
+            Base64.encodeToString(passphraseBytes, Base64.NO_WRAP)
+        } catch (e: Exception) {
+            stored
+        }
     }
     
     fun isEncryptionEnabled(): Boolean {
@@ -95,6 +108,27 @@ class SecurityManager private constructor(private val context: Context) {
         val bytes = ByteArray(32)
         random.nextBytes(bytes)
         return Base64.encodeToString(bytes, Base64.NO_WRAP)
+    }
+
+    private fun encryptPassphrase(secretKey: SecretKey, passphrase: ByteArray): String {
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        cipher.init(Cipher.ENCRYPT_MODE, secretKey)
+        val iv = cipher.iv
+        val encrypted = cipher.doFinal(passphrase)
+        val ivBase64 = Base64.encodeToString(iv, Base64.NO_WRAP)
+        val encryptedBase64 = Base64.encodeToString(encrypted, Base64.NO_WRAP)
+        return "$ivBase64:$encryptedBase64"
+    }
+
+    private fun decryptPassphrase(secretKey: SecretKey, data: String): ByteArray {
+        val parts = data.split(":")
+        require(parts.size == 2)
+        val iv = Base64.decode(parts[0], Base64.NO_WRAP)
+        val encrypted = Base64.decode(parts[1], Base64.NO_WRAP)
+        val cipher = Cipher.getInstance("AES/GCM/NoPadding")
+        val spec = GCMParameterSpec(128, iv)
+        cipher.init(Cipher.DECRYPT_MODE, secretKey, spec)
+        return cipher.doFinal(encrypted)
     }
     
     fun clearEncryptionData() {
