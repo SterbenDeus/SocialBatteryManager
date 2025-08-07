@@ -112,6 +112,7 @@ dependencies {
     implementation(mainLibs.findLibrary("firebase-auth-ktx").get())
     implementation(mainLibs.findLibrary("firebase-crashlytics-ktx").get())
     implementation(mainLibs.findLibrary("pdfbox").get())
+    implementation(mainLibs.findLibrary("opencsv").get())
     debugImplementation(mainLibs.findLibrary("fragment-testing").get())
 
     // Test dependencies

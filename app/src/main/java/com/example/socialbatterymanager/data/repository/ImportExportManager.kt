@@ -2,8 +2,8 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import com.example.socialbatterymanager.data.model.ActivityEntity
-import com.opencsv.CSVReader
-import com.opencsv.CSVWriter
+import com.opencsv.CSVReaderBuilder
+import com.opencsv.CSVWriterBuilder
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -34,7 +34,7 @@ class ImportExportManager @Inject constructor(
             val fileName = "social_battery_export_${System.currentTimeMillis()}.csv"
             val file = File(context.getExternalFilesDir(null), fileName)
 
-            CSVWriter(FileWriter(file)).use { writer ->
+            CSVWriterBuilder(FileWriter(file)).build().use { writer ->
                 writer.writeNext(
                     arrayOf(
                         "ID", "Name", "Type", "Energy", "People",
@@ -162,7 +162,7 @@ class ImportExportManager @Inject constructor(
             var errorCount = 0
 
             file.bufferedReader().use { reader ->
-                CSVReader(reader).use { csvReader ->
+                CSVReaderBuilder(reader).build().use { csvReader ->
                     val headers = csvReader.readNext()?.map { it.trim() }
                     if (headers == null || headers.size < 7) {
                         return ImportResult(0, 0, "Invalid or missing headers")
