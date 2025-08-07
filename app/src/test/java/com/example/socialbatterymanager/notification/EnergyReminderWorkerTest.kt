@@ -7,6 +7,8 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerParameters
 import androidx.work.WorkerFactory
 import androidx.work.testing.TestListenableWorkerBuilder
+import androidx.work.Configuration
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.database.EnergyLogDao
 import com.example.socialbatterymanager.data.model.EnergyLog
@@ -19,12 +21,17 @@ import io.mockk.verify
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.runTest
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.robolectric.RobolectricTestRunner
 
+@RunWith(RobolectricTestRunner::class)
 class EnergyReminderWorkerTest {
 
     @Test
     fun doesNotShowNotificationWhenDisabled() = runTest {
         val context = spyk(ApplicationProvider.getApplicationContext<Context>())
+        val config = Configuration.Builder().build()
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
         val notificationManager = mockk<NotificationManager>(relaxed = true)
         every { context.getSystemService(Context.NOTIFICATION_SERVICE) } returns notificationManager
 

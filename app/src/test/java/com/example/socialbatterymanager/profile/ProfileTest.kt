@@ -1,14 +1,12 @@
 package com.example.socialbatterymanager.profile
 
-import android.content.Context
-import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.robolectric.RobolectricTestRunner
 import com.example.socialbatterymanager.data.model.User
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.junit.Assert.*
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class ProfileTest {
 
     @Test
