@@ -1,7 +1,7 @@
 package com.example.socialbatterymanager.features.notifications
 
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.robolectric.RobolectricTestRunner
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.database.NotificationDao
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
@@ -20,7 +20,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import androidx.room.Room
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class NotificationServiceTest {
     private lateinit var database: AppDatabase
     private lateinit var dao: NotificationDao

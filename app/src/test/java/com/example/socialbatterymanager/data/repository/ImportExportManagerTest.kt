@@ -2,7 +2,7 @@ package com.example.socialbatterymanager.data.repository
 
 import android.content.Context
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.robolectric.RobolectricTestRunner
 import com.example.socialbatterymanager.data.model.ActivityEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -21,7 +21,7 @@ import org.junit.runner.RunWith
 import java.io.File
 import java.io.FileWriter
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class ImportExportManagerTest {
 
     @Test

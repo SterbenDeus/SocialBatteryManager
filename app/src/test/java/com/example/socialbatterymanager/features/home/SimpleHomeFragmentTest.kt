@@ -7,7 +7,7 @@ import android.widget.TextView
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import androidx.test.core.app.ApplicationProvider
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import org.robolectric.RobolectricTestRunner
 import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.features.home.ui.SimpleHomeFragment
 import com.example.socialbatterymanager.features.notifications.NotificationService
@@ -22,7 +22,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.robolectric.Robolectric
 
-@RunWith(AndroidJUnit4::class)
+@RunWith(RobolectricTestRunner::class)
 class SimpleHomeFragmentTest {
 
     @Test
