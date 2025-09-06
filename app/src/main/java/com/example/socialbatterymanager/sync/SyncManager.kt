@@ -1,6 +1,5 @@
 package com.example.socialbatterymanager.sync
 
-import android.content.Context
 import androidx.concurrent.futures.CallbackToFutureAdapter
 import androidx.work.Constraints
 import androidx.work.ExistingPeriodicWorkPolicy
@@ -12,14 +11,14 @@ import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.google.common.util.concurrent.ListenableFuture
 import kotlinx.coroutines.flow.first
 import java.util.concurrent.TimeUnit
+import javax.inject.Inject
 
 /**
  * Manager class for handling sync operations
  */
-class SyncManager(
-    private val context: Context,
-    private val workManager: WorkManager = WorkManager.getInstance(context),
-    private val preferencesManager: PreferencesManager = PreferencesManager(context),
+class SyncManager @Inject constructor(
+    private val workManager: WorkManager,
+    private val preferencesManager: PreferencesManager,
 ) {
     
     companion object {
