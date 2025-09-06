@@ -3,7 +3,6 @@ package com.example.socialbatterymanager.di
 import android.content.Context
 import com.example.socialbatterymanager.data.database.AppDatabase
 import com.example.socialbatterymanager.data.repository.SecurityManager
-import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.google.gson.Gson
 import dagger.Module
 import dagger.Provides
@@ -39,8 +38,4 @@ class AppModule {
     @Singleton
     fun provideGson(): Gson = Gson()
 
-    @Provides
-    @Singleton
-    fun providePreferencesManager(@ApplicationContext context: Context): PreferencesManager =
-        PreferencesManager(context)
 }
