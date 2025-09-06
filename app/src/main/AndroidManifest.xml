@@ -17,10 +17,7 @@
     
     <!-- Biometric permissions -->
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
-    
-    <!-- Google Fit permissions -->
-    <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
+    <!-- Removed USE_FINGERPRINT and ACTIVITY_RECOGNITION as they are not used -->
     
     <!-- Notification permissions -->
 

@@ -1,12 +1,18 @@
 package com.example.socialbatterymanager
 
+import android.Manifest
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.util.Log
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -19,10 +25,16 @@ import java.io.IOException
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
-    
+
     private lateinit var preferencesManager: PreferencesManager
     private lateinit var syncManager: SyncManager
     private lateinit var bottomNavigationView: BottomNavigationView
+
+    private val notificationPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) {
+        // No-op; permission result handled silently
+    }
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -73,6 +85,8 @@ class MainActivity : AppCompatActivity() {
 
             bottomNavigationView = findViewById<BottomNavigationView>(R.id.bottomNavigationView)
             bottomNavigationView.setupWithNavController(navController)
+
+            requestNotificationPermissionIfNeeded()
 
             // Check onboarding status and navigate accordingly
             checkOnboardingStatus(navController)
@@ -154,6 +168,30 @@ class MainActivity : AppCompatActivity() {
                         }
                     }
                 }
+        }
+    }
+
+    private fun requestNotificationPermissionIfNeeded() {
+        if (!BuildConfig.FEATURE_NOTIFICATIONS) return
+
+        if (android.os.Build.VERSION.SDK_INT >= 33 &&
+            ContextCompat.checkSelfPermission(
+                this,
+                Manifest.permission.POST_NOTIFICATIONS
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                AlertDialog.Builder(this)
+                    .setTitle(R.string.notification_permission_title)
+                    .setMessage(R.string.notification_permission_message)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
+            } else {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            }
         }
     }
 }

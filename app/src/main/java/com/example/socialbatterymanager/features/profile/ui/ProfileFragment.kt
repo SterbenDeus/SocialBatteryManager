@@ -172,9 +172,15 @@ class ProfileFragment : Fragment() {
                 showImageSourceDialog()
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_IMAGES) -> {
-                Toast.makeText(requireContext(), getString(R.string.permission_access_photos), Toast.LENGTH_LONG).show()
-                onPermissionGranted = { showImageSourceDialog() }
-                permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.permission_required)
+                    .setMessage(R.string.permission_access_photos)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        onPermissionGranted = { showImageSourceDialog() }
+                        permissionLauncher.launch(Manifest.permission.READ_MEDIA_IMAGES)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
             }
             else -> {
                 onPermissionGranted = { showImageSourceDialog() }
@@ -219,9 +225,15 @@ class ProfileFragment : Fragment() {
                 cameraLauncher.launch(selectedImageUri)
             }
             shouldShowRequestPermissionRationale(Manifest.permission.CAMERA) -> {
-                Toast.makeText(requireContext(), getString(R.string.permission_access_camera), Toast.LENGTH_LONG).show()
-                onPermissionGranted = { openCamera() }
-                permissionLauncher.launch(Manifest.permission.CAMERA)
+                AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.permission_required)
+                    .setMessage(R.string.permission_access_camera)
+                    .setPositiveButton(android.R.string.ok) { _, _ ->
+                        onPermissionGranted = { openCamera() }
+                        permissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show()
             }
             else -> {
                 onPermissionGranted = { openCamera() }
