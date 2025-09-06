@@ -16,3 +16,9 @@ local.properties
 
 # Firebase configuration (provided via CI secrets)
 google-services.json
+
+# Ignore IDE configuration
+.idea/
+
+# Ignore build directories in all modules
+**/build/
