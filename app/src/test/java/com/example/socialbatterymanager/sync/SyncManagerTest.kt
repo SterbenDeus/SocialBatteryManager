@@ -45,5 +45,36 @@ class SyncManagerTest {
 
         verify { workManager.enqueue(any()) }
     }
+
+    @Test
+    fun schedulePeriodicSync_enqueuesWithCorrectNameAndPolicy() = runBlocking {
+        val workManager = mockk<WorkManager>(relaxed = true)
+        val preferences = mockk<PreferencesManager>()
+        every { preferences.syncEnabledFlow } returns flowOf(true)
+        val manager = SyncManager(context, workManager, preferences)
+
+        manager.schedulePeriodicSync()
+
+        verify {
+            workManager.enqueueUniquePeriodicWork(
+                "social_battery_sync",
+                ExistingPeriodicWorkPolicy.KEEP,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun schedulePeriodicSync_cancelsAndDoesNotEnqueueWhenDisabled() = runBlocking {
+        val workManager = mockk<WorkManager>(relaxed = true)
+        val preferences = mockk<PreferencesManager>()
+        every { preferences.syncEnabledFlow } returns flowOf(false)
+        val manager = SyncManager(context, workManager, preferences)
+
+        manager.schedulePeriodicSync()
+
+        verify { workManager.cancelUniqueWork("social_battery_sync") }
+        verify(exactly = 0) { workManager.enqueueUniquePeriodicWork(any(), any(), any()) }
+    }
 }
 
