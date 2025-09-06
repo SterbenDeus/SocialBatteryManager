@@ -190,7 +190,23 @@ abstract class AppDatabase : RoomDatabase() {
                 MIGRATION_5_6,
                 MIGRATION_6_7
             )
-            return builder.build()
+                .fallbackToDestructiveMigration()
+
+            val db = builder.build()
+
+            if (passphrase != null) {
+                try {
+                    db.openHelper.writableDatabase
+                } catch (e: Exception) {
+                    android.util.Log.e(
+                        "AppDatabase",
+                        "Invalid database passphrase provided",
+                        e
+                    )
+                    throw IllegalStateException("Invalid database passphrase", e)
+                }
+            }
+            return db
         }
 
         fun clearInstance() {
