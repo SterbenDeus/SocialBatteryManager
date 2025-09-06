@@ -14,6 +14,5 @@
 .cxx
 local.properties
 
-# Firebase
-# Remove this line when you add your real google-services.json
-# google-services.json
+# Firebase configuration (provided via CI secrets)
+google-services.json
