@@ -15,9 +15,6 @@ plugins {
     jacoco
 }
 
-// Ensure the version catalog is properly imported
-val libs = extensions.getByType<VersionCatalogsExtension>().named("libs")
-
 android {
     packaging {
         resources.excludes.add("kotlin/reflect/reflect.kotlin_builtins")

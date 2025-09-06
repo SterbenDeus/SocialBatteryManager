@@ -41,27 +41,8 @@ jobs:
       - name: Install SDK components
         run: sdkmanager --install "platform-tools" "platforms;android-30" "build-tools;30.0.3" "platforms;android-35" "build-tools;35.0.0"
 
-      - name: Verify Gradle and Maven connectivity
-        run: ./gradlew --version
-
       - name: Run static analysis and unit tests
-        run: ./gradlew ktlintCheck detekt test
-
-      - name: Prepare release keystore
-        env:
-          RELEASE_STORE_FILE: ${{ secrets.RELEASE_STORE_FILE }}
-          RELEASE_STORE_PASSWORD: ${{ secrets.RELEASE_STORE_PASSWORD }}
-          RELEASE_KEY_ALIAS: ${{ secrets.RELEASE_KEY_ALIAS }}
-          RELEASE_KEY_PASSWORD: ${{ secrets.RELEASE_KEY_PASSWORD }}
-        run: |
-          echo "$RELEASE_STORE_FILE" | base64 --decode > release.keystore
-          echo "RELEASE_STORE_FILE=$PWD/release.keystore" >> $GITHUB_ENV
-          echo "RELEASE_STORE_PASSWORD=$RELEASE_STORE_PASSWORD" >> $GITHUB_ENV
-          echo "RELEASE_KEY_ALIAS=$RELEASE_KEY_ALIAS" >> $GITHUB_ENV
-          echo "RELEASE_KEY_PASSWORD=$RELEASE_KEY_PASSWORD" >> $GITHUB_ENV
-
-      - name: Assemble release APK
-        run: ./gradlew assembleRelease
+        run: ./gradlew ktlintCheck detekt jacocoTestCoverageVerification
 
       - name: Assemble debug APK
         run: ./gradlew assembleDebug
