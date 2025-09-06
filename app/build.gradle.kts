@@ -33,6 +33,10 @@ android {
         versionCode = 2
         versionName = "1.1"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("Boolean", "FEATURE_CONTACTS_IMPORT", "true")
+        buildConfigField("Boolean", "FEATURE_CALENDAR_IMPORT", "true")
+        buildConfigField("Boolean", "FEATURE_NOTIFICATIONS", "true")
     }
 
     signingConfigs {

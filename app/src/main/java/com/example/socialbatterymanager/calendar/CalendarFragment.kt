@@ -85,9 +85,12 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
         view.findViewById<Button>(R.id.btnAddActivity).setOnClickListener {
             showCreateNewActivityDialog()
         }
-        
-        view.findViewById<Button>(R.id.btnImportEvents).setOnClickListener {
-            requestCalendarPermissionAndImport()
+
+        val importButton = view.findViewById<Button>(R.id.btnImportEvents)
+        if (BuildConfig.FEATURE_CALENDAR_IMPORT) {
+            importButton.setOnClickListener { requestCalendarPermissionAndImport() }
+        } else {
+            importButton.visibility = View.GONE
         }
         
         // Load initial data
@@ -227,6 +230,15 @@ class CalendarFragment : Fragment(R.layout.fragment_calendar) {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             importCalendarEvents()
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CALENDAR)) {
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.calendar_permission_title)
+                .setMessage(R.string.calendar_permission_message)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    calendarPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         } else {
             calendarPermissionLauncher.launch(Manifest.permission.READ_CALENDAR)
         }

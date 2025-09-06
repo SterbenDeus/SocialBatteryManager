@@ -225,6 +225,13 @@ Energy Ranges:
     <string name="yes">Yes</string>
 
     <!-- Profile strings -->
+    <string name="permission_required">Permission required</string>
+    <string name="contacts_permission_title">Contacts access required</string>
+    <string name="contacts_permission_message">This allows importing contacts to manage relationships.</string>
+    <string name="calendar_permission_title">Calendar access required</string>
+    <string name="calendar_permission_message">This allows importing events to manage your schedule.</string>
+    <string name="notification_permission_title">Notification permission required</string>
+    <string name="notification_permission_message">Allow notifications to receive reminders and updates.</string>
     <string name="permission_denied">Permission denied</string>
     <string name="permission_access_photos">Permission needed to access photos</string>
     <string name="permission_access_camera">Permission needed to access camera</string>
