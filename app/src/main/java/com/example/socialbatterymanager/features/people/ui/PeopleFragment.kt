@@ -23,6 +23,7 @@ import com.example.socialbatterymanager.R
 import com.example.socialbatterymanager.data.model.Person
 import com.example.socialbatterymanager.features.people.data.ContactsImporter
 import com.example.socialbatterymanager.features.people.data.PersonWithStats
+import com.example.socialbatterymanager.BuildConfig
 import com.google.android.material.button.MaterialButton
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.Dispatchers
@@ -101,8 +102,10 @@ class PeopleFragment : Fragment() {
             showAddPersonDialog()
         }
 
-        btnImportContacts.setOnClickListener {
-            importContacts()
+        if (BuildConfig.FEATURE_CONTACTS_IMPORT) {
+            btnImportContacts.setOnClickListener { importContacts() }
+        } else {
+            btnImportContacts.visibility = View.GONE
         }
 
         btnSortEnergyDrain.setOnClickListener {
@@ -249,6 +252,15 @@ class PeopleFragment : Fragment() {
             ) == PackageManager.PERMISSION_GRANTED
         ) {
             performContactsImport()
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_CONTACTS)) {
+            android.app.AlertDialog.Builder(requireContext())
+                .setTitle(R.string.contacts_permission_title)
+                .setMessage(R.string.contacts_permission_message)
+                .setPositiveButton(android.R.string.ok) { _, _ ->
+                    contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+                }
+                .setNegativeButton(android.R.string.cancel, null)
+                .show()
         } else {
             contactsPermissionLauncher.launch(Manifest.permission.READ_CONTACTS)
         }
