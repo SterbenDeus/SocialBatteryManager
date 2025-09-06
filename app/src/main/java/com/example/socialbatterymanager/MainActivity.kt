@@ -15,6 +15,7 @@ import androidx.navigation.ui.setupWithNavController
 import com.example.socialbatterymanager.BuildConfig
 import com.example.socialbatterymanager.shared.preferences.PreferencesManager
 import com.example.socialbatterymanager.sync.SyncManager
+import javax.inject.Inject
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import dagger.hilt.android.AndroidEntryPoint
@@ -26,8 +27,10 @@ import java.io.IOException
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var preferencesManager: PreferencesManager
-    private lateinit var syncManager: SyncManager
+    @Inject
+    lateinit var preferencesManager: PreferencesManager
+    @Inject
+    lateinit var syncManager: SyncManager
     private lateinit var bottomNavigationView: BottomNavigationView
 
     private val notificationPermissionLauncher = registerForActivityResult(
@@ -39,9 +42,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
-        preferencesManager = PreferencesManager(this)
-        syncManager = SyncManager(this)
-
         // Show a splash screen while preferences load
         setContentView(R.layout.activity_splash)
 
