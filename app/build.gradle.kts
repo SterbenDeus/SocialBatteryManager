@@ -85,7 +85,6 @@ dependencies {
     implementation(libs.androidx.biometric)
     implementation(libs.androidx.security.crypto)
     implementation(libs.androidx.sqlite.framework)
-    implementation(libs.androidx.concurrent.futures)
     implementation(libs.material)
     implementation(libs.cardview)
 
